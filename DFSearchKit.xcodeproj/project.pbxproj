@@ -10,6 +10,8 @@
 		23D90849209E71F70096E42A /* DFSearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23D9083F209E71F60096E42A /* DFSearchKit.framework */; };
 		23D9084E209E71F70096E42A /* DFSearchKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D9084D209E71F70096E42A /* DFSearchKitTests.swift */; };
 		23D90850209E71F70096E42A /* DFSearchKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D90842209E71F70096E42A /* DFSearchKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		23D9085A209E72250096E42A /* DFSKIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D90859209E72250096E42A /* DFSKIndex.swift */; };
+		23D9085B209E72250096E42A /* DFSKIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D90859209E72250096E42A /* DFSKIndex.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +31,9 @@
 		23D90848209E71F70096E42A /* DFSearchKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DFSearchKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23D9084D209E71F70096E42A /* DFSearchKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSearchKitTests.swift; sourceTree = "<group>"; };
 		23D9084F209E71F70096E42A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		23D90859209E72250096E42A /* DFSKIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSKIndex.swift; sourceTree = "<group>"; };
+		23D9085C209E9A4D0096E42A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		23D9085D209E9B730096E42A /* SKSearchKit_Play.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSearchKit_Play.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +58,7 @@
 		23D90835209E71F60096E42A = {
 			isa = PBXGroup;
 			children = (
+				23D9085C209E9A4D0096E42A /* README.md */,
 				23D90841209E71F60096E42A /* DFSearchKit */,
 				23D9084C209E71F70096E42A /* DFSearchKitTests */,
 				23D90840209E71F60096E42A /* Products */,
@@ -73,6 +79,8 @@
 			children = (
 				23D90842209E71F70096E42A /* DFSearchKit.h */,
 				23D90843209E71F70096E42A /* Info.plist */,
+				23D90859209E72250096E42A /* DFSKIndex.swift */,
+				23D9085D209E9B730096E42A /* SKSearchKit_Play.swift */,
 			);
 			path = DFSearchKit;
 			sourceTree = "<group>";
@@ -148,6 +156,7 @@
 				TargetAttributes = {
 					23D9083E209E71F60096E42A = {
 						CreatedOnToolsVersion = 9.3;
+						LastSwiftMigration = 0930;
 					};
 					23D90847209E71F70096E42A = {
 						CreatedOnToolsVersion = 9.3;
@@ -194,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23D9085A209E72250096E42A /* DFSKIndex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,6 +211,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23D9085B209E72250096E42A /* DFSKIndex.swift in Sources */,
 				23D9084E209E71F70096E42A /* DFSearchKitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -338,6 +349,7 @@
 		23D90854209E71F70096E42A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -356,6 +368,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.darrenford.DFSearchKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -363,6 +376,7 @@
 		23D90855209E71F70096E42A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -388,6 +402,7 @@
 		23D90857209E71F70096E42A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = DFSearchKitTests/Info.plist;
@@ -405,6 +420,7 @@
 		23D90858209E71F70096E42A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = DFSearchKitTests/Info.plist;

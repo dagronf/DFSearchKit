@@ -7,7 +7,30 @@
 		<key>DFSearchKit.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>helptool.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>238FAD7120A11B5F00092FCD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>23D9083E209E71F60096E42A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>23D90847209E71F70096E42A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

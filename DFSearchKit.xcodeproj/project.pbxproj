@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23614DBB20B95F45001F187F /* StopWords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBA20B95F45001F187F /* StopWords.swift */; };
+		23614DBD20B95FFB001F187F /* APACHE_LICENSE.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 23614DBC20B95FFB001F187F /* APACHE_LICENSE.pdf */; };
+		23614DBF20B978A1001F187F /* DFSKDataIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBE20B978A1001F187F /* DFSKDataIndex.swift */; };
+		23614DC020B978A1001F187F /* DFSKDataIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBE20B978A1001F187F /* DFSKDataIndex.swift */; };
+		23614DC220B978C0001F187F /* DFSKFileIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DC120B978C0001F187F /* DFSKFileIndex.swift */; };
+		23614DC320B978C0001F187F /* DFSKFileIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DC120B978C0001F187F /* DFSKFileIndex.swift */; };
+		23614DC420B97AAA001F187F /* DFSKFileIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DC120B978C0001F187F /* DFSKFileIndex.swift */; };
+		23614DC520B97AE6001F187F /* DFSKIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D90859209E72250096E42A /* DFSKIndex.swift */; };
+		238FAD7520A11B5F00092FCD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FAD7420A11B5F00092FCD /* main.swift */; };
 		23D90849209E71F70096E42A /* DFSearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23D9083F209E71F60096E42A /* DFSearchKit.framework */; };
 		23D9084E209E71F70096E42A /* DFSearchKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D9084D209E71F70096E42A /* DFSearchKitTests.swift */; };
 		23D90850209E71F70096E42A /* DFSearchKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D90842209E71F70096E42A /* DFSearchKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -24,7 +33,25 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		238FAD7020A11B5F00092FCD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		23614DBA20B95F45001F187F /* StopWords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopWords.swift; sourceTree = "<group>"; };
+		23614DBC20B95FFB001F187F /* APACHE_LICENSE.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = APACHE_LICENSE.pdf; sourceTree = "<group>"; };
+		23614DBE20B978A1001F187F /* DFSKDataIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSKDataIndex.swift; sourceTree = "<group>"; };
+		23614DC120B978C0001F187F /* DFSKFileIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSKFileIndex.swift; sourceTree = "<group>"; };
+		238FAD7220A11B5F00092FCD /* helptool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = helptool; sourceTree = BUILT_PRODUCTS_DIR; };
+		238FAD7420A11B5F00092FCD /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		23D9083F209E71F60096E42A /* DFSearchKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DFSearchKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		23D90842209E71F70096E42A /* DFSearchKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DFSearchKit.h; sourceTree = "<group>"; };
 		23D90843209E71F70096E42A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -37,6 +64,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		238FAD6F20A11B5F00092FCD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		23D9083B209E71F60096E42A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -55,12 +89,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		238FAD7320A11B5F00092FCD /* helptool */ = {
+			isa = PBXGroup;
+			children = (
+				238FAD7420A11B5F00092FCD /* main.swift */,
+			);
+			path = helptool;
+			sourceTree = "<group>";
+		};
 		23D90835209E71F60096E42A = {
 			isa = PBXGroup;
 			children = (
 				23D9085C209E9A4D0096E42A /* README.md */,
 				23D90841209E71F60096E42A /* DFSearchKit */,
 				23D9084C209E71F70096E42A /* DFSearchKitTests */,
+				238FAD7320A11B5F00092FCD /* helptool */,
 				23D90840209E71F60096E42A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -70,6 +113,7 @@
 			children = (
 				23D9083F209E71F60096E42A /* DFSearchKit.framework */,
 				23D90848209E71F70096E42A /* DFSearchKitTests.xctest */,
+				238FAD7220A11B5F00092FCD /* helptool */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -80,6 +124,8 @@
 				23D90842209E71F70096E42A /* DFSearchKit.h */,
 				23D90843209E71F70096E42A /* Info.plist */,
 				23D90859209E72250096E42A /* DFSKIndex.swift */,
+				23614DBE20B978A1001F187F /* DFSKDataIndex.swift */,
+				23614DC120B978C0001F187F /* DFSKFileIndex.swift */,
 				23D9085D209E9B730096E42A /* SKSearchKit_Play.swift */,
 			);
 			path = DFSearchKit;
@@ -88,8 +134,10 @@
 		23D9084C209E71F70096E42A /* DFSearchKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				23614DBC20B95FFB001F187F /* APACHE_LICENSE.pdf */,
 				23D9084D209E71F70096E42A /* DFSearchKitTests.swift */,
 				23D9084F209E71F70096E42A /* Info.plist */,
+				23614DBA20B95F45001F187F /* StopWords.swift */,
 			);
 			path = DFSearchKitTests;
 			sourceTree = "<group>";
@@ -108,6 +156,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		238FAD7120A11B5F00092FCD /* helptool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 238FAD7820A11B5F00092FCD /* Build configuration list for PBXNativeTarget "helptool" */;
+			buildPhases = (
+				238FAD6E20A11B5F00092FCD /* Sources */,
+				238FAD6F20A11B5F00092FCD /* Frameworks */,
+				238FAD7020A11B5F00092FCD /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = helptool;
+			productName = helptool;
+			productReference = 238FAD7220A11B5F00092FCD /* helptool */;
+			productType = "com.apple.product-type.tool";
+		};
 		23D9083E209E71F60096E42A /* DFSearchKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 23D90853209E71F70096E42A /* Build configuration list for PBXNativeTarget "DFSearchKit" */;
@@ -154,6 +219,9 @@
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Darren Ford";
 				TargetAttributes = {
+					238FAD7120A11B5F00092FCD = {
+						CreatedOnToolsVersion = 9.3;
+					};
 					23D9083E209E71F60096E42A = {
 						CreatedOnToolsVersion = 9.3;
 						LastSwiftMigration = 0930;
@@ -177,6 +245,7 @@
 			targets = (
 				23D9083E209E71F60096E42A /* DFSearchKit */,
 				23D90847209E71F70096E42A /* DFSearchKitTests */,
+				238FAD7120A11B5F00092FCD /* helptool */,
 			);
 		};
 /* End PBXProject section */
@@ -193,16 +262,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23614DBD20B95FFB001F187F /* APACHE_LICENSE.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		238FAD6E20A11B5F00092FCD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				23614DC420B97AAA001F187F /* DFSKFileIndex.swift in Sources */,
+				238FAD7520A11B5F00092FCD /* main.swift in Sources */,
+				23614DC520B97AE6001F187F /* DFSKIndex.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		23D9083A209E71F60096E42A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23614DC220B978C0001F187F /* DFSKFileIndex.swift in Sources */,
+				23614DBF20B978A1001F187F /* DFSKDataIndex.swift in Sources */,
 				23D9085A209E72250096E42A /* DFSKIndex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -211,7 +293,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23614DC020B978A1001F187F /* DFSKDataIndex.swift in Sources */,
 				23D9085B209E72250096E42A /* DFSKIndex.swift in Sources */,
+				23614DC320B978C0001F187F /* DFSKFileIndex.swift in Sources */,
+				23614DBB20B95F45001F187F /* StopWords.swift in Sources */,
 				23D9084E209E71F70096E42A /* DFSearchKitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -227,6 +312,24 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		238FAD7620A11B5F00092FCD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		238FAD7720A11B5F00092FCD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
 		23D90851209E71F70096E42A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -438,6 +541,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		238FAD7820A11B5F00092FCD /* Build configuration list for PBXNativeTarget "helptool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				238FAD7620A11B5F00092FCD /* Debug */,
+				238FAD7720A11B5F00092FCD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		23D90839209E71F60096E42A /* Build configuration list for PBXProject "DFSearchKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

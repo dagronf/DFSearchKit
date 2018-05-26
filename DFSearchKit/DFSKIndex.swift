@@ -9,106 +9,245 @@
 import Cocoa
 import CoreServices
 
-class DFSKDocument: NSObject {
-	fileprivate let document: SKDocument
-	let urlID: NSURL
-	let properties: Dictionary<String, String>
+class DFSKIndex: NSObject
+{
+	struct Properties
+	{
+		init(indexType: SKIndexType = kSKIndexInverted,
+			 proximityIndexing: Bool = false,
+			 stopWords: Set<String> = [],
+			 minTermLength: Int = 0) {
+			self.indexType = indexType
+			self.proximityIndexing = proximityIndexing
+			self.stopWords = stopWords
+			self.minTermLength = minTermLength
+		}
+
+		func CFDictionary() -> CFDictionary
+		{
+			let properties: [CFString: Any] =
+				[
+					kSKProximityIndexing: self.proximityIndexing,
+					kSKStopWords: self.stopWords,
+					kSKMinTermLength: self.minTermLength
+			]
+			return properties as CFDictionary
+		}
+
+		var indexType: SKIndexType = kSKIndexInverted
+		var proximityIndexing: Bool = false
+		var stopWords: Set<String> = Set<String>()
+		var minTermLength: Int = 0
+	}
+
+	private var index: SKIndex?
 	
-	init(urlID: NSURL, properties: Dictionary<String, String> = [:] ) {
-		self.urlID = urlID
-		self.properties = properties
-		self.document = SKDocumentCreateWithURL(urlID).takeRetainedValue()
+	private lazy var dataExtractorLoaded: Bool = {
+		SKLoadDefaultExtractorPlugIns()
+		return true
+	}()
+
+	/// lazy loaded stop words set
+	private(set) lazy var stopWords: Set<String> = {
+		var stopWords: Set<String> = []
+		if let index = self.index,
+			let properties = SKIndexGetAnalysisProperties(self.index),
+			let sp = properties.takeUnretainedValue() as? [String:Any]
+		{
+			stopWords = sp[kSKStopWords as String] as! Set<String>
+		}
+		return stopWords
+	}()
+
+	init(index: SKIndex)
+	{
+		self.index = index
 		super.init()
 	}
-}
 
-class DFSKIndex: NSObject {
-
-	let data = NSMutableData()
-	private var index: SKIndex?
-
-	fileprivate var proximityIndexing: Bool = false
-	fileprivate var indexType: SKIndexType = kSKIndexInverted
-
-	fileprivate func configure() -> Bool {
-		let properties: [String: Any?] = [ kSKProximityIndexing as String: self.proximityIndexing ]
-		self.index = SKIndexCreateWithMutableData(self.data, nil, self.indexType, properties as CFDictionary).takeUnretainedValue()
-		return true
+	deinit
+	{
+		self.close()
 	}
 
-	fileprivate func add(document: DFSKDocument, text: String) -> Bool {
-		return SKIndexAddDocumentWithText(self.index!, document.document, text as CFString, true)
+	func close()
+	{
+		if let index = self.index
+		{
+			SKIndexClose(index)
+			self.index = nil
+		}
 	}
 
-	fileprivate func flush() {
-		SKIndexFlush(self.index)
+	func add(_ url: URL, text: String) -> Bool
+	{
+		guard let index = self.index,
+			let document = SKDocumentCreateWithURL(url as CFURL) else
+		{
+			return false
+		}
+
+		return SKIndexAddDocumentWithText(index, document.takeUnretainedValue(), text as CFString, true)
 	}
 
-	fileprivate func search(_ query: String, limit: Int = 10, timeout: TimeInterval = 1.0) -> [ (NSURL, Float) ] {
+	func add(url: URL, mimeType: String? = nil) -> Bool
+	{
+		guard self.dataExtractorLoaded,
+			let index = self.index,
+			let document = SKDocumentCreateWithURL(url as CFURL) else
+		{
+			return false
+		}
+
+		return SKIndexAddDocument(index, document.takeUnretainedValue(), mimeType != nil ? mimeType! as CFString : nil, true)
+	}
+
+	func remove(url: URL) -> Bool
+	{
+		guard let index = self.index,
+			let document = SKDocumentCreateWithURL(url as CFURL) else
+		{
+			return false
+		}
+		return SKIndexRemoveDocument(index, document.takeUnretainedValue())
+	}
+
+	func flush()
+	{
+		if let index = self.index
+		{
+			SKIndexFlush(index)
+		}
+	}
+
+	func compact()
+	{
+		if let index = self.index
+		{
+			SKIndexCompact(index)
+		}
+	}
+
+	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout Array<(URL, SKDocument, SKDocumentID)>)
+	{
+		guard let index = self.index else
+		{
+			return
+		}
+
+		var isLeaf = true
+
+		let iterator = SKIndexDocumentIteratorCreate (index, inParentDocument).takeUnretainedValue()
+		while let skDocument = SKIndexDocumentIteratorCopyNext(iterator)
+		{
+			isLeaf = false
+			self.addLeafURLs(index: index, inParentDocument: skDocument.takeUnretainedValue(), docs: &docs)
+		}
+
+		if isLeaf && inParentDocument != nil && kSKDocumentStateNotIndexed != SKIndexGetDocumentState(index, inParentDocument)
+		{
+			if let temp = SKDocumentCopyURL(inParentDocument)
+			{
+				let burl = temp.takeUnretainedValue()
+				let bid = SKIndexGetDocumentID(index, inParentDocument)
+				docs.append((burl as URL, inParentDocument!, bid))
+			}
+		}
+	}
+
+	private func allDocuments() -> Array<(URL, SKDocument, SKDocumentID)>
+	{
+		guard let index = self.index else
+		{
+			return []
+		}
+
+		var allDocs = Array<(URL, SKDocument, SKDocumentID)>()
+		self.addLeafURLs(index: index, inParentDocument: nil, docs: &allDocs)
+		return allDocs
+	}
+
+	/// Returns all the document URLs loaded into the index
+	func documents() -> [URL]
+	{
+		guard let index = self.index else
+		{
+			return []
+		}
+
+		var allDocs = Array<(URL, SKDocument, SKDocumentID)>()
+		self.addLeafURLs(index: index, inParentDocument: nil, docs: &allDocs)
+		return allDocs.map { $0.0 }
+	}
+
+	/// Returns an array containing the terms and counts for a specified URL
+	func termsAndCounts(for url: URL) -> [(term: String, count:Int)]
+	{
+		guard let index = self.index else
+		{
+			return []
+		}
+
+		var result = Array<(String, Int)>()
+
+		let document = SKDocumentCreateWithURL(url as CFURL).takeUnretainedValue()
+		let documentID = SKIndexGetDocumentID(index, document);
+
+		guard let termVals = SKIndexCopyTermIDArrayForDocumentID(index, documentID),
+			let terms = termVals.takeUnretainedValue() as? Array<CFIndex>
+			else
+		{
+			return []
+		}
+
+		for term in terms
+		{
+			if let termVal = SKIndexCopyTermStringForTermID(index, term)
+			{
+				let termString = termVal.takeUnretainedValue() as String
+				if !self.stopWords.contains(termString)
+				{
+					let count = SKIndexGetDocumentTermFrequency(index, documentID, term) as Int
+					result.append( (termString, count) )
+				}
+			}
+		}
+
+		return result
+	}
+
+	func search(_ query: String, limit: Int = 10, timeout: TimeInterval = 1.0) -> [ (url: URL, score: Float) ]
+	{
+		guard let index = self.index else
+		{
+			return []
+		}
 
 		let options = SKSearchOptions( kSKSearchOptionDefault )
-		let search = SKSearchCreate(self.index, query as CFString, options).takeRetainedValue()
+		let search = SKSearchCreate(index, query as CFString, options).takeRetainedValue()
 
 		var scores: [Float] = Array(repeating: 0.0, count: limit)
 		var urls: [Unmanaged<CFURL>?] = Array(repeating: nil, count: limit)
 		var documentIDs: [SKDocumentID] = Array(repeating: 0, count: limit)
 		var foundCount = 0
 
-		SKSearchFindMatches(search, limit, &documentIDs, &scores, timeout, &foundCount)
+		var results: [(URL, Float)] = []
 
-		SKIndexCopyDocumentURLsForDocumentIDs(self.index, foundCount, &documentIDs, &urls)
+		var moreData = true
+		while moreData
+		{
+			moreData = SKSearchFindMatches(search, limit, &documentIDs, &scores, timeout, &foundCount)
+			SKIndexCopyDocumentURLsForDocumentIDs(index, foundCount, &documentIDs, &urls)
 
-		let results: [(NSURL, Float)] = zip(urls[0 ..< foundCount], scores).compactMap({
-			(cfurl, score) -> (NSURL, Float)? in
-			guard let url = cfurl?.takeRetainedValue() as NSURL?
-				else { return nil }
-			return (url, score)
-		})
+			let partialResults = zip(urls[0 ..< foundCount], scores).compactMap({
+				(cfurl, score) -> (URL, Float)? in
+				guard let url = cfurl?.takeUnretainedValue() as URL?
+					else { return nil }
+				return (url, score)
+			})
+			results.append(contentsOf: partialResults)
+		}
 
 		return results
-	}
-}
-
-class DFSKIndexer: NSObject
-{
-	private(set) var documents = Array<DFSKDocument>()
-	private let index: DFSKIndex
-
-	init(indexType: SKIndexType = kSKIndexInverted,
-		 proximityIndexing: Bool = false,
-		 stopWords: [String] = []) {
-
-		self.index = DFSKIndex()
-		self.index.proximityIndexing = proximityIndexing
-		self.index.indexType = indexType
-		_ = self.index.configure()
-		super.init()
-	}
-
-	func add(document withURL: NSURL, text: String, properties: Dictionary<String, String> = [:]) -> Bool {
-
-		let doc = DFSKDocument(urlID: withURL, properties: properties)
-		if index.add(document: doc, text: text) {
-			self.documents.append(doc)
-			return true
-		}
-		return false
-	}
-
-	func flush() {
-		self.index.flush()
-	}
-
-	func search(_ query: String, limit: Int = 10, timeout: TimeInterval = 1.0) -> [ (DFSKDocument, Float) ] {
-
-		let results = self.index.search(query, limit: limit, timeout: timeout)
-
-		var docs = [(DFSKDocument, Float)]()
-		for result in results {
-			if let match = self.documents.first(where: { $0.urlID == result.0 } ) {
-				docs.append( (match, result.1) )
-			}
-		}
-		return docs
 	}
 }

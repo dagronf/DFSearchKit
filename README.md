@@ -10,7 +10,7 @@ I was interesting in learning about SKSearchKit, and there was a lack of (simple
 
 ## Todo
 
-Asynchronous search, stop words, lots of other stuff! This is a learning project only. Maybe it will be useful to someone 
+Asynchronous search, lots of other stuff! This is a learning project only. Maybe it will be useful to someone 
 
 ## Thanks
 
@@ -26,3 +26,6 @@ Apple
 
 [https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/SearchKitConcepts/searchKit_concepts/searchKit_concepts.html](https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/SearchKitConcepts/searchKit_concepts/searchKit_concepts.html)
 
+Philip Dow (SPSearchStore)
+
+[https://github.com/phildow/SPSearchStore](https://github.com/phildow/SPSearchStore)

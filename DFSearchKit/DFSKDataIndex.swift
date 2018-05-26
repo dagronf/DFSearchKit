@@ -13,7 +13,7 @@ class DFSKDataIndex: DFSKIndex
 	// The data index store
 	private var data = NSMutableData()
 
-	init(data: NSMutableData, index: SKIndex)
+	private init(data: NSMutableData, index: SKIndex)
 	{
 		super.init(index: index)
 		self.data = data
@@ -31,21 +31,20 @@ class DFSKDataIndex: DFSKIndex
 		return nil
 	}
 
-	static func load(from data: NSData) -> DFSKDataIndex?
+	static func load(from data: Data) -> DFSKDataIndex?
 	{
-		let data = data.mutableCopy() as! NSMutableData
-		if let skIndex = SKIndexOpenWithMutableData(data, nil)
+		if let rawData = (data as NSData).mutableCopy() as? NSMutableData,
+			let skIndex = SKIndexOpenWithMutableData(rawData, nil)
 		{
-			return DFSKDataIndex.init(data: data, index: skIndex.takeUnretainedValue())
+			return DFSKDataIndex.init(data: rawData, index: skIndex.takeUnretainedValue())
 		}
 
 		return nil
 	}
 
-	func save() -> NSData?
+	func save() -> Data?
 	{
 		flush()
-		compact()
-		return self.data.copy() as? NSData;
+		return self.data.copy() as? Data
 	}
 }

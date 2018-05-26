@@ -216,7 +216,11 @@ class DFSearchKitTests: XCTestCase
 	func testSimpleBadData()
 	{
 		let str: NSString = NSString.init(string: "hello")
-		let data = str.data(using: 4)! as NSData
+		guard let data = str.data(using: String.Encoding.utf8.rawValue) else
+		{
+			XCTFail()
+			return
+		}
 		XCTAssertNil(DFSKDataIndex.load(from: data))
 	}
 

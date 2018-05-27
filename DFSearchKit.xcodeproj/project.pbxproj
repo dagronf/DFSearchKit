@@ -16,6 +16,7 @@
 		23614DC420B97AAA001F187F /* DFSKFileIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DC120B978C0001F187F /* DFSKFileIndex.swift */; };
 		23614DC520B97AE6001F187F /* DFSKIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D90859209E72250096E42A /* DFSKIndex.swift */; };
 		238FAD7520A11B5F00092FCD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FAD7420A11B5F00092FCD /* main.swift */; };
+		23A843B920BA319600129133 /* StopWords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBA20B95F45001F187F /* StopWords.swift */; };
 		23D90849209E71F70096E42A /* DFSearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23D9083F209E71F60096E42A /* DFSearchKit.framework */; };
 		23D9084E209E71F70096E42A /* DFSearchKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D9084D209E71F70096E42A /* DFSearchKitTests.swift */; };
 		23D90850209E71F70096E42A /* DFSearchKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D90842209E71F70096E42A /* DFSearchKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -51,7 +52,7 @@
 		23614DBE20B978A1001F187F /* DFSKDataIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSKDataIndex.swift; sourceTree = "<group>"; };
 		23614DC120B978C0001F187F /* DFSKFileIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSKFileIndex.swift; sourceTree = "<group>"; };
 		238FAD7220A11B5F00092FCD /* dfskindex */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dfskindex; sourceTree = BUILT_PRODUCTS_DIR; };
-		238FAD7420A11B5F00092FCD /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		238FAD7420A11B5F00092FCD /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = main.swift; path = ../dfskindex/main.swift; sourceTree = "<group>"; };
 		23D9083F209E71F60096E42A /* DFSearchKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DFSearchKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		23D90842209E71F70096E42A /* DFSearchKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DFSearchKit.h; sourceTree = "<group>"; };
 		23D90843209E71F70096E42A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -89,11 +90,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		238FAD7320A11B5F00092FCD /* helptool */ = {
+		238FAD7320A11B5F00092FCD /* dfskindex */ = {
 			isa = PBXGroup;
 			children = (
 				238FAD7420A11B5F00092FCD /* main.swift */,
 			);
+			name = dfskindex;
 			path = helptool;
 			sourceTree = "<group>";
 		};
@@ -103,7 +105,7 @@
 				23D9085C209E9A4D0096E42A /* README.md */,
 				23D90841209E71F60096E42A /* DFSearchKit */,
 				23D9084C209E71F70096E42A /* DFSearchKitTests */,
-				238FAD7320A11B5F00092FCD /* helptool */,
+				238FAD7320A11B5F00092FCD /* dfskindex */,
 				23D90840209E71F60096E42A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -127,6 +129,7 @@
 				23614DBE20B978A1001F187F /* DFSKDataIndex.swift */,
 				23614DC120B978C0001F187F /* DFSKFileIndex.swift */,
 				23D9085D209E9B730096E42A /* SKSearchKit_Play.swift */,
+				23614DBA20B95F45001F187F /* StopWords.swift */,
 			);
 			path = DFSearchKit;
 			sourceTree = "<group>";
@@ -137,7 +140,6 @@
 				23614DBC20B95FFB001F187F /* APACHE_LICENSE.pdf */,
 				23D9084D209E71F70096E42A /* DFSearchKitTests.swift */,
 				23D9084F209E71F70096E42A /* Info.plist */,
-				23614DBA20B95F45001F187F /* StopWords.swift */,
 			);
 			path = DFSearchKitTests;
 			sourceTree = "<group>";
@@ -276,6 +278,7 @@
 				23614DC420B97AAA001F187F /* DFSKFileIndex.swift in Sources */,
 				238FAD7520A11B5F00092FCD /* main.swift in Sources */,
 				23614DC520B97AE6001F187F /* DFSKIndex.swift in Sources */,
+				23A843B920BA319600129133 /* StopWords.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

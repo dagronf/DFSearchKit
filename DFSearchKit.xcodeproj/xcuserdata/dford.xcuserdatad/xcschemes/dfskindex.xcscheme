@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "238FAD7120A11B5F00092FCD"
-               BuildableName = "helptool"
-               BlueprintName = "helptool"
+               BuildableName = "dfskindex"
+               BlueprintName = "dfskindex"
                ReferencedContainer = "container:DFSearchKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,8 +33,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "238FAD7120A11B5F00092FCD"
-            BuildableName = "helptool"
-            BlueprintName = "helptool"
+            BuildableName = "dfskindex"
+            BlueprintName = "dfskindex"
             ReferencedContainer = "container:DFSearchKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -56,8 +56,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "238FAD7120A11B5F00092FCD"
-            BuildableName = "helptool"
-            BlueprintName = "helptool"
+            BuildableName = "dfskindex"
+            BlueprintName = "dfskindex"
             ReferencedContainer = "container:DFSearchKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -67,8 +67,16 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "search NVivoOnlineHelp.index &quot;visualization&quot;"
+            argument = "terms blah.index file:///User/dford/Desktop/LICENSE"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "add_file blah.index file:///User/dford/Desktop/LICENSE &quot;plain/text&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "search NVivoOnlineHelp.index &quot;visualization&quot;"
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
@@ -85,8 +93,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "238FAD7120A11B5F00092FCD"
-            BuildableName = "helptool"
-            BlueprintName = "helptool"
+            BuildableName = "dfskindex"
+            BlueprintName = "dfskindex"
             ReferencedContainer = "container:DFSearchKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

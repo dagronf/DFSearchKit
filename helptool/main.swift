@@ -251,30 +251,13 @@ let args = CommandLine.arguments
 //print("args = \(args)")
 
 if args.count < 2 {
-	print("Must provide either 'create' or 'search'")
+	print("Must provide either 'create', 'add_text' or 'search'")
 	exit(-1)
 }
 
 if args[1] == "create" {
 
-	if args.count < 2 {
-		print("Must provide a filename to create the index in")
-		exit(-1)
-	}
 	let indexFile = args[2]
-
-	let fileList = FileManager.default.subpaths(atPath: args[3])
-	if fileList == nil
-	{
-		print("Must provide either 'create' or 'search'")
-		exit(-1)
-	}
-
-	let files = fileList!
-	if FileManager.default.fileExists(atPath: indexFile) {
-		print("Index file already exists \(indexFile)")
-		try? FileManager.default.removeItem(atPath: indexFile)
-	}
 
 	let props = DFSKIndex.Properties.init(proximityIndexing: true, stopWords: gStopWords)
 	guard let index = DFSKFileIndex.create(with: URL(string: indexFile)!, properties: props) else
@@ -282,23 +265,89 @@ if args[1] == "create" {
 		exit(-1)
 	}
 
-	let htmls = files.filter { $0.hasSuffix(".htm") }
-	print("files = \(htmls)")
+	index.save()
+	index.close()
 
-	for file in htmls
+	exit(1)
+}
+else if args[1] == "add_text" {
+
+	let indexFile = args[2]
+	let url = args[3]
+	let message = args[4]
+
+	guard let index = DFSKFileIndex.load(from: URL(string: indexFile)!, writable: true) else
 	{
-		let uuu = "\(args[3])/\(file)"
-		let fileURL = NSURL.fileURL(withPath: uuu)
-		if let str = try? String.init(contentsOf: fileURL) {
-			let lines = str.split(separator: "\n")
-			if !(lines[1].contains("Primary.WindowsOnly"))
-			{
-				index.add(url: fileURL)
-			}
-		}
+		exit(-1)
+	}
+
+	guard index.add(URL(string: url)!, text: message) else
+	{
+		exit(-1)
 	}
 
 	index.save()
+	index.close()
+
+	exit(1)
+}
+else if args[1] == "add_file" {
+
+	let indexFile = args[2]
+	let url = args[3]
+	let mimetype = args[4]
+
+	guard let index = DFSKFileIndex.load(from: URL(string: indexFile)!, writable: true) else
+	{
+		exit(-1)
+	}
+
+	guard index.add(url: URL(string: url)!, mimeType: mimetype) else
+	{
+		exit(-1)
+	}
+
+	index.flush()
+	index.save()
+	index.close()
+
+	exit(1)
+}
+else if args[1] == "documents" {
+
+	let indexFile = args[2]
+
+	guard let index = DFSKFileIndex.load(from: URL(string: indexFile)!, writable: true) else
+	{
+		exit(-1)
+	}
+
+	let docs = index.documents()
+	for item in docs {
+		print("\(item)")
+	}
+
+	index.close()
+
+	exit(1)
+}
+else if args[1] == "terms" {
+
+	let indexFile = args[2]
+	let url = args[3]
+
+	guard let index = DFSKFileIndex.load(from: URL(string: indexFile)!, writable: true) else
+	{
+		exit(-1)
+	}
+
+	let docs = index.termsAndCounts(for: URL(string: url)!)
+	let sortedDocs = docs.sorted(by: { $0.count > $1.count })
+
+	for item in sortedDocs {
+		print("\(item.0): \(item.1)")
+	}
+
 	index.close()
 
 	exit(1)

@@ -21,7 +21,7 @@ if args[1] == "create" {
 
 	let indexFile = args[2]
 
-	let props = DFSKIndex.Properties.init(proximityIndexing: true, stopWords: gStopWords)
+	let props = DFSKIndex.CreateProperties.init(proximityIndexing: true, stopWords: gStopWords)
 	guard let index = DFSKFileIndex.create(with: URL(string: indexFile)!, properties: props) else
 	{
 		exit(-1)
@@ -38,7 +38,7 @@ else if args[1] == "add_text" {
 	let url = args[3]
 	let message = args[4]
 
-	guard let index = DFSKFileIndex.load(from: URL(string: indexFile)!, writable: true) else
+	guard let index = DFSKFileIndex.open(from: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
 	}
@@ -58,7 +58,7 @@ else if args[1] == "add_file" {
 	let indexFile = args[2]
 	let url = args[3]
 
-	guard let index = DFSKFileIndex.load(from: URL(string: indexFile)!, writable: true) else
+	guard let index = DFSKFileIndex.open(from: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
 	}
@@ -89,7 +89,7 @@ else if args[1] == "documents" {
 
 	let indexFile = args[2]
 
-	guard let index = DFSKFileIndex.load(from: URL(string: indexFile)!, writable: true) else
+	guard let index = DFSKFileIndex.open(from: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
 	}
@@ -108,7 +108,7 @@ else if args[1] == "terms" {
 	let indexFile = args[2]
 	let url = args[3]
 
-	guard let index = DFSKFileIndex.load(from: URL(string: indexFile)!, writable: true) else
+	guard let index = DFSKFileIndex.open(from: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
 	}
@@ -128,7 +128,7 @@ else if args[1] == "search" {
 	let indexFile = args[2]
 	let query = args[3].split(separator: " ").map({ "\($0)*" }).joined(separator:" ")
 
-	guard let index = DFSKFileIndex.load(from: URL(string: indexFile)!, writable: false) else
+	guard let index = DFSKFileIndex.open(from: URL(string: indexFile)!, writable: false) else
 	{
 		exit(-1)
 	}

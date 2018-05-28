@@ -11,7 +11,7 @@ import CoreServices
 
 class DFSKIndex: NSObject
 {
-	struct Properties
+	struct CreateProperties
 	{
 		init(indexType: SKIndexType = kSKIndexInverted,
 			 proximityIndexing: Bool = false,
@@ -47,7 +47,7 @@ class DFSKIndex: NSObject
 		return true
 	}()
 
-	/// lazy loaded stop words set
+	/// Stop words for the index
 	private(set) lazy var stopWords: Set<String> = {
 		var stopWords: Set<String> = []
 		if let index = self.index,
@@ -70,6 +70,7 @@ class DFSKIndex: NSObject
 		self.close()
 	}
 
+	/// Close the index
 	func close()
 	{
 		if let index = self.index
@@ -78,8 +79,21 @@ class DFSKIndex: NSObject
 			self.index = nil
 		}
 	}
+}
 
-	func add(_ url: URL, text: String) -> Bool
+// MARK: Add and remove documents and text
+
+extension DFSKIndex
+{
+
+	/// Add some text to the index
+	///
+	/// - Parameters:
+	///   - url: The identifying URL for the text
+	///   - text: The text to add
+	///   - canReplace: if true, can attempt to replace an existing document with the new one.
+	/// - Returns: true if the text was successfully added to the index, false otherwise
+	func add(_ url: URL, text: String, canReplace: Bool = true) -> Bool
 	{
 		guard let index = self.index,
 			let document = SKDocumentCreateWithURL(url as CFURL) else
@@ -87,10 +101,18 @@ class DFSKIndex: NSObject
 			return false
 		}
 
-		return SKIndexAddDocumentWithText(index, document.takeUnretainedValue(), text as CFString, true)
+		return SKIndexAddDocumentWithText(index, document.takeUnretainedValue(), text as CFString, canReplace)
 	}
 
-	func add(url: URL, mimeType: String? = nil) -> Bool
+	/// Add a file as a document to the index
+	///
+	/// - Parameters:
+	///   - url: The file URL for the document (of the form file:///Users/blahblah....doc.txt)
+	///   - mimeType: An optional mimetype.  If nil, attempts to work out the type of file from the content.
+	///   - canReplace: if true, can attempt to replace an existing document with the new one.
+	/// - Returns: true if the command was successful.
+	///				**NOTE** If the document _wasnt_ updated it also returns true!
+	func add(url: URL, mimeType: String? = nil, canReplace: Bool = true) -> Bool
 	{
 		guard self.dataExtractorLoaded,
 			let index = self.index,
@@ -101,7 +123,12 @@ class DFSKIndex: NSObject
 
 		return SKIndexAddDocument(index, document.takeUnretainedValue(), mimeType != nil ? mimeType! as CFString : nil, true)
 	}
-
+	
+	/// Remove a document from the index
+	///
+	/// - Parameter url: The identifying URL for the document
+	/// - Returns: true if the document was successfully removed, false otherwise.
+	/// 		   **NOTE** if the document didn't exist, this returns true as well
 	func remove(url: URL) -> Bool
 	{
 		guard let index = self.index,
@@ -111,23 +138,12 @@ class DFSKIndex: NSObject
 		}
 		return SKIndexRemoveDocument(index, document.takeUnretainedValue())
 	}
+}
 
-	func flush()
-	{
-		if let index = self.index
-		{
-			SKIndexFlush(index)
-		}
-	}
+// MARK: Terms and documents
 
-	func compact()
-	{
-		if let index = self.index
-		{
-			SKIndexCompact(index)
-		}
-	}
-
+extension DFSKIndex
+{
 	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout Array<(URL, SKDocument, SKDocumentID)>)
 	{
 		guard let index = self.index else
@@ -168,6 +184,8 @@ class DFSKIndex: NSObject
 	}
 
 	/// Returns all the document URLs loaded into the index
+	///
+	/// - Returns: An array containing all the document URLs
 	func documents() -> [URL]
 	{
 		guard let index = self.index else
@@ -215,7 +233,12 @@ class DFSKIndex: NSObject
 
 		return result
 	}
+}
 
+// MARK: Search
+
+extension DFSKIndex
+{
 	func search(_ query: String, limit: Int = 10, timeout: TimeInterval = 1.0) -> [ (url: URL, score: Float) ]
 	{
 		guard let index = self.index else
@@ -249,5 +272,26 @@ class DFSKIndex: NSObject
 		}
 
 		return results
+	}
+}
+
+// MARK: Utilities
+
+extension DFSKIndex
+{
+	func flush()
+	{
+		if let index = self.index
+		{
+			SKIndexFlush(index)
+		}
+	}
+
+	func compact()
+	{
+		if let index = self.index
+		{
+			SKIndexCompact(index)
+		}
 	}
 }

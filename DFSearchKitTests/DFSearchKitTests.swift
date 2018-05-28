@@ -9,6 +9,22 @@
 import XCTest
 @testable import DFSearchKit
 
+class TempFile
+{
+	let fileURL: URL = {
+		let directory = NSTemporaryDirectory()
+		let fileName = NSUUID().uuidString
+
+		// This returns a URL? even though it is an NSURL class method
+		return NSURL.fileURL(withPathComponents: [directory, fileName])! as URL
+	}()
+
+	deinit
+	{
+		try? FileManager.default.removeItem(at: fileURL)
+	}
+}
+
 class DFSearchKitTests: XCTestCase
 {
 	override func setUp()
@@ -23,11 +39,6 @@ class DFSearchKitTests: XCTestCase
 		super.tearDown()
 	}
 
-	func url(_ val: String) -> URL
-	{
-		return URL(string: val)!
-	}
-
 	func testSimpleAdd()
 	{
 		let indexer = DFSKDataIndex.create()
@@ -37,17 +48,44 @@ class DFSearchKitTests: XCTestCase
 		XCTAssertTrue(indexer!.add(d1, text: "Today I am feeling fine!"))
 	}
 
-	func testSimpleSearch()
+	func testSimpleAddWithNoReplace()
 	{
-		let indexer = DFSKDataIndex.create()
-		XCTAssertNotNil(indexer)
+		guard let indexer = DFSKDataIndex.create() else
+		{
+			XCTFail()
+			return
+		}
 
 		let d1 = url("doc-url://d1.txt")
-		XCTAssertTrue(indexer!.add(d1, text: "Today I am feeling fine!"))
+		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine!"))
+		indexer.flush()
+		XCTAssertEqual(1, indexer.search("fine").count)
 
-		indexer?.flush()
+		// Verify doc exists
+		let docs = indexer.documents()
+		XCTAssertTrue(docs.contains(d1))
 
-		let result = indexer!.search("fine")
+		// Now, verify that adding a new document with the same url without replace support doesn't update the index
+		// The apple api SKIndexAddDocument doesn't return false if the document can't be updated.  Dunno why
+		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling blue!", canReplace: false))
+		indexer.flush()
+		XCTAssertEqual(0, indexer.search("Blue").count)
+	}
+
+	func testSimpleSearch()
+	{
+		guard let indexer = DFSKDataIndex.create() else
+		{
+			XCTFail()
+			return
+		}
+
+		let d1 = url("doc-url://d1.txt")
+		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine!"))
+
+		indexer.flush()
+
+		let result = indexer.search("fine")
 		XCTAssertEqual(1, result.count)
 		XCTAssertEqual(d1, result[0].url)
 	}
@@ -90,8 +128,7 @@ class DFSearchKitTests: XCTestCase
 
 	func testTwoSearch()
 	{
-		let dataIndexer = DFSKDataIndex.create()
-		guard let indexer = dataIndexer else
+		guard let indexer = DFSKDataIndex.create() else
 		{
 			XCTFail()
 			return
@@ -118,9 +155,8 @@ class DFSearchKitTests: XCTestCase
 
 	func testProximitySearch()
 	{
-		let props = DFSKIndex.Properties(proximityIndexing: true)
-		let dataIndexer = DFSKDataIndex.create(properties: props)
-		guard let indexer = dataIndexer else
+		let props = DFSKIndex.CreateProperties(proximityIndexing: true)
+		guard let indexer = DFSKDataIndex.create(properties: props) else
 		{
 			XCTFail()
 			return
@@ -143,8 +179,7 @@ class DFSearchKitTests: XCTestCase
 
 	func testSimpleSaveLoad()
 	{
-		let dataIndexer = DFSKDataIndex.create()
-		guard let indexer = dataIndexer else
+		guard let indexer = DFSKDataIndex.create() else
 		{
 			XCTFail()
 			return
@@ -189,9 +224,8 @@ class DFSearchKitTests: XCTestCase
 
 	func testSimpleStopWords()
 	{
-		let props = DFSKIndex.Properties(stopWords: ["Caterpillars"])
-		let dataIndexer = DFSKDataIndex.create(properties: props)
-		guard let indexer = dataIndexer else
+		let props = DFSKIndex.CreateProperties(stopWords: ["Caterpillars"])
+		guard let indexer = DFSKDataIndex.create(properties: props) else
 		{
 			XCTFail()
 			return
@@ -224,18 +258,10 @@ class DFSearchKitTests: XCTestCase
 		XCTAssertNil(DFSKDataIndex.load(from: data))
 	}
 
-	func temporary() -> URL
-	{
-		let directory = NSTemporaryDirectory()
-		let fileName = NSUUID().uuidString
-
-		// This returns a URL? even though it is an NSURL class method
-		return NSURL.fileURL(withPathComponents: [directory, fileName])! as URL
-	}
-
 	func testSimpleCreateWithFile()
 	{
-		guard let indexer = DFSKFileIndex.create(with: temporary()) else
+		let file = TempFile()
+		guard let indexer = DFSKFileIndex.create(with: file.fileURL) else
 		{
 			XCTFail()
 			return
@@ -262,28 +288,29 @@ class DFSearchKitTests: XCTestCase
 	/// Attempt to load from a non-existent file
 	func testSimpleLoadWithFileFailure()
 	{
-		XCTAssertNil(DFSKFileIndex.load(from: temporary(), writable: true))
+		let file = TempFile()
+		XCTAssertNil(DFSKFileIndex.open(from: file.fileURL, writable: true))
 	}
 
 	/// Attempt to create an index on a file that already exists
 	func testAttemptCreateOnSameFile()
 	{
-		let file = temporary()
-		guard DFSKFileIndex.create(with: file) != nil else
+		let file = TempFile()
+		guard DFSKFileIndex.create(with: file.fileURL) != nil else
 		{
 			XCTFail()
 			return
 		}
 
-		XCTAssertNil(DFSKFileIndex.create(with: file))
+		XCTAssertNil(DFSKFileIndex.create(with: file.fileURL))
 	}
 
 	/// Create file index, save and close.  Verify we can open and read
 	func testSimpleLoadWithFile()
 	{
 		// Create a file
-		let file = temporary()
-		guard let indexer = DFSKFileIndex.create(with: file) else
+		let file = TempFile()
+		guard let indexer = DFSKFileIndex.create(with: file.fileURL) else
 		{
 			XCTFail()
 			return
@@ -308,7 +335,7 @@ class DFSearchKitTests: XCTestCase
 		XCTAssertFalse(indexer.add(d3, text: "Noodles and blue caterpillars!"))
 
 		// Open again
-		guard let openIndexer = DFSKFileIndex.load(from: file, writable: true) else
+		guard let openIndexer = DFSKFileIndex.open(from: file.fileURL, writable: true) else
 		{
 			XCTFail()
 			return
@@ -335,7 +362,7 @@ class DFSearchKitTests: XCTestCase
 		openIndexer.close()
 
 		// Open again, check that our changes have saved correctly
-		guard let openIndexer2 = DFSKFileIndex.load(from: file, writable: true) else
+		guard let openIndexer2 = DFSKFileIndex.open(from: file.fileURL, writable: true) else
 		{
 			XCTFail()
 			return
@@ -352,7 +379,7 @@ class DFSearchKitTests: XCTestCase
 		openIndexer2.close()
 
 		// Attempt open in read-only mode, attempt to write
-		guard let openIndexer3 = DFSKFileIndex.load(from: file, writable: false) else
+		guard let openIndexer3 = DFSKFileIndex.open(from: file.fileURL, writable: false) else
 		{
 			XCTFail()
 			return
@@ -372,7 +399,7 @@ class DFSearchKitTests: XCTestCase
 
 	func testLoadDocumentFromFile()
 	{
-		let props = DFSKIndex.Properties.init(stopWords: gStopWords)
+		let props = DFSKIndex.CreateProperties.init(stopWords: gStopWords)
 		guard let indexer = DFSKDataIndex.create(properties: props) else
 		{
 			XCTFail()
@@ -382,31 +409,30 @@ class DFSearchKitTests: XCTestCase
 		let text = NSString.init(string: "Caterpillar and gourds!")
 
 		// Write the text to a temporary file and add
-		let tempFile = temporary()
-		try? text.write(to: tempFile as URL, atomically: true, encoding: String.Encoding.utf8.rawValue)
-		XCTAssertTrue(indexer.add(url: tempFile, mimeType: "text/plain"))
+		let tempFile = TempFile()
+		try? text.write(to: tempFile.fileURL as URL, atomically: true, encoding: String.Encoding.utf8.rawValue)
+		XCTAssertTrue(indexer.add(url: tempFile.fileURL, mimeType: "text/plain"))
 
 		// Load in a pdf, and make sure we can load from it
-		let testBundle = Bundle(for: type(of: self))
-		let filePath = testBundle.url(forResource: "APACHE_LICENSE", withExtension: "pdf")
-		XCTAssertNotNil(filePath)
-
-		XCTAssertTrue(indexer.add(url: filePath!, mimeType: "application/pdf"))
-
+		let apacheURL = self.addApacheLicenseFile(indexer: indexer, canReplace: true)
+		XCTAssertTrue(indexer.add(url: apacheURL, mimeType: "application/pdf"))
 		indexer.flush()
+
+		let docs = indexer.documents()
+		XCTAssertTrue(docs.contains(apacheURL))
 
 		// Check for terms only in the text
 		var result = indexer.search("gourds")
 		XCTAssertEqual(1, result.count)
-		XCTAssertEqual(result[0].url, tempFile)
+		XCTAssertEqual(result[0].url, tempFile.fileURL)
 
 		// Check for terms only in the pdf
 		result = indexer.search("license")
 		XCTAssertEqual(1, result.count)
-		XCTAssertEqual(result[0].url, filePath)
+		XCTAssertEqual(result[0].url, apacheURL)
 		result = indexer.search("Licensor")
 		XCTAssertEqual(1, indexer.search("Licensor").count)
-		XCTAssertEqual(result[0].url, filePath)
+		XCTAssertEqual(result[0].url, apacheURL)
 
 		// Because of our stop words, 'the' and 'and' should not exist at all
 		XCTAssertEqual(0, indexer.search("the").count)
@@ -415,7 +441,7 @@ class DFSearchKitTests: XCTestCase
 
 	func testTermFrequenciesSimple()
 	{
-		let props = DFSKIndex.Properties.init(stopWords: [ "the" ])
+		let props = DFSKIndex.CreateProperties.init(stopWords: [ "the" ])
 		guard let indexer = DFSKDataIndex.create(properties: props) else
 		{
 			XCTFail()
@@ -450,7 +476,7 @@ class DFSearchKitTests: XCTestCase
 
 	func testTermFrequenciesComplex()
 	{
-		let props = DFSKIndex.Properties.init(stopWords: gStopWords)
+		let props = DFSKIndex.CreateProperties.init(stopWords: gStopWords)
 		guard let indexer = DFSKDataIndex.create(properties: props) else
 		{
 			XCTFail()
@@ -458,15 +484,11 @@ class DFSearchKitTests: XCTestCase
 		}
 
 		// Load in a pdf, and make sure we can load from it
-		let testBundle = Bundle(for: type(of: self))
-		let filePath = testBundle.url(forResource: "APACHE_LICENSE", withExtension: "pdf")
-		XCTAssertNotNil(filePath)
-
-		XCTAssertTrue(indexer.add(url: filePath!, mimeType: "application/pdf"))
+		let filePath = self.addApacheLicenseFile(indexer: indexer, canReplace: true)
 		indexer.flush()
 
 		// Grab the frequencies for the pdf document
-		let termFreq = indexer.termsAndCounts(for: filePath!)
+		let termFreq = indexer.termsAndCounts(for: filePath)
 
 		// Check that some of the terms exist
 		var theTerm = termFreq.filter { $0.term == "licensor" }
@@ -481,5 +503,24 @@ class DFSearchKitTests: XCTestCase
 		theTerm = termFreq.filter { $0.term == "the" }
 		XCTAssertEqual(0, theTerm.count)
 	}
+}
 
+// MARK: Utilities
+
+extension DFSearchKitTests
+{
+	func url(_ val: String) -> URL
+	{
+		return URL(string: val)!
+	}
+
+	func addApacheLicenseFile(indexer: DFSKIndex, canReplace: Bool) -> URL
+	{
+		let testBundle = Bundle(for: type(of: self))
+		let filePath = testBundle.url(forResource: "APACHE_LICENSE", withExtension: "pdf")
+		XCTAssertNotNil(filePath)
+
+		XCTAssertTrue(indexer.add(url: filePath!, mimeType: "application/pdf", canReplace: canReplace))
+		return filePath!
+	}
 }

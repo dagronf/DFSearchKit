@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// A memory-based index using NSMutableData as the backing.
 class DFSKDataIndex: DFSKIndex
 {
 	// The data index store
@@ -19,7 +20,11 @@ class DFSKDataIndex: DFSKIndex
 		self.data = data
 	}
 
-	static func create(properties: Properties = Properties()) -> DFSKDataIndex?
+	/// Create an indexer using a new data container for the store
+	///
+	/// - Parameter properties: the properties for index creation
+	/// - Returns: A new index object if successful, nil otherwise
+	static func create(properties: CreateProperties = CreateProperties()) -> DFSKDataIndex?
 	{
 		let data = NSMutableData()
 		if let skIndex = SKIndexCreateWithMutableData(data, nil,
@@ -31,6 +36,12 @@ class DFSKDataIndex: DFSKIndex
 		return nil
 	}
 
+	/// Create an indexer using the data stored in 'data'.
+	///
+	/// **NOTE** Makes a copy of the data first - does not work on a live Data object
+	///
+	/// - Parameter data: The data to load as an index
+	/// - Returns: A new index object if successful, nil otherwise
 	static func load(from data: Data) -> DFSKDataIndex?
 	{
 		if let rawData = (data as NSData).mutableCopy() as? NSMutableData,
@@ -42,6 +53,7 @@ class DFSKDataIndex: DFSKIndex
 		return nil
 	}
 
+	/// Returns the index content as a (copied) Swift Data object
 	func save() -> Data?
 	{
 		flush()

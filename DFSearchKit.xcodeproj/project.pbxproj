@@ -14,6 +14,7 @@
 		23614DC420B97AAA001F187F /* DFSKFileIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DC120B978C0001F187F /* DFSKFileIndex.swift */; };
 		23614DC520B97AE6001F187F /* DFSKIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D90859209E72250096E42A /* DFSKIndex.swift */; };
 		238FAD7520A11B5F00092FCD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FAD7420A11B5F00092FCD /* main.swift */; };
+		23CE76D120BCB3EC007C8BA8 /* StopWords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBA20B95F45001F187F /* StopWords.swift */; };
 		23D9084E209E71F70096E42A /* DFSearchKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D9084D209E71F70096E42A /* DFSearchKitTests.swift */; };
 		23D9085B209E72250096E42A /* DFSKIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D90859209E72250096E42A /* DFSKIndex.swift */; };
 /* End PBXBuildFile section */
@@ -221,6 +222,7 @@
 				23614DC420B97AAA001F187F /* DFSKFileIndex.swift in Sources */,
 				238FAD7520A11B5F00092FCD /* main.swift in Sources */,
 				23614DC520B97AE6001F187F /* DFSKIndex.swift in Sources */,
+				23CE76D120BCB3EC007C8BA8 /* StopWords.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

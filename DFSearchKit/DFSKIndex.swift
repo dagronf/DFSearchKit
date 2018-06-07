@@ -26,6 +26,7 @@ import CoreServices
 
 class DFSKIndex: NSObject
 {
+	/// Container for storing the properties to be used when creating a new index
 	struct CreateProperties
 	{
 		init(indexType: SKIndexType = kSKIndexInverted,
@@ -38,20 +39,25 @@ class DFSKIndex: NSObject
 			self.minTermLength = minTermLength
 		}
 
-		func CFDictionary() -> CFDictionary
+		/// Returns a CFDictionary object to use for the call to SKIndexCreate
+		internal func CFDictionary() -> CFDictionary
 		{
 			let properties: [CFString: Any] =
 				[
 					kSKProximityIndexing: self.proximityIndexing,
 					kSKStopWords: self.stopWords,
 					kSKMinTermLength: self.minTermLength
-			]
+				]
 			return properties as CFDictionary
 		}
 
+		/// The type of the index to be created
 		var indexType: SKIndexType = kSKIndexInverted
+		/// Whether the index should use proximity indexing
 		var proximityIndexing: Bool = false
+		/// The stop words for the index
 		var stopWords: Set<String> = Set<String>()
+		/// The minimum size of word to add to the index
 		var minTermLength: Int = 0
 	}
 
@@ -159,45 +165,6 @@ extension DFSKIndex
 
 extension DFSKIndex
 {
-	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout Array<(URL, SKDocument, SKDocumentID)>)
-	{
-		guard let index = self.index else
-		{
-			return
-		}
-
-		var isLeaf = true
-
-		let iterator = SKIndexDocumentIteratorCreate (index, inParentDocument).takeUnretainedValue()
-		while let skDocument = SKIndexDocumentIteratorCopyNext(iterator)
-		{
-			isLeaf = false
-			self.addLeafURLs(index: index, inParentDocument: skDocument.takeUnretainedValue(), docs: &docs)
-		}
-
-		if isLeaf && inParentDocument != nil && kSKDocumentStateNotIndexed != SKIndexGetDocumentState(index, inParentDocument)
-		{
-			if let temp = SKDocumentCopyURL(inParentDocument)
-			{
-				let burl = temp.takeUnretainedValue()
-				let bid = SKIndexGetDocumentID(index, inParentDocument)
-				docs.append((burl as URL, inParentDocument!, bid))
-			}
-		}
-	}
-
-	private func allDocuments() -> Array<(URL, SKDocument, SKDocumentID)>
-	{
-		guard let index = self.index else
-		{
-			return []
-		}
-
-		var allDocs = Array<(URL, SKDocument, SKDocumentID)>()
-		self.addLeafURLs(index: index, inParentDocument: nil, docs: &allDocs)
-		return allDocs
-	}
-
 	/// Returns all the document URLs loaded into the index
 	///
 	/// - Returns: An array containing all the document URLs
@@ -214,6 +181,10 @@ extension DFSKIndex
 	}
 
 	/// Returns an array containing the terms and counts for a specified URL
+	///
+	/// - Parameter url: The document URL in the index to locate
+	/// - Returns: An array of the terms and corresponding counts located in the document.
+	///            Returns an empty array if the document cannot be located.
 	func termsAndCounts(for url: URL) -> [(term: String, count:Int)]
 	{
 		guard let index = self.index else
@@ -254,6 +225,14 @@ extension DFSKIndex
 
 extension DFSKIndex
 {
+
+	/// Perform a search
+	///
+	/// - Parameters:
+	///   - query: A string containing the term(s) to be searched for
+	///   - limit: The maximum number of results to return
+	///   - timeout: How long to wait for a search to complete before stopping
+	/// - Returns: An array containing match URLs and their corresponding 'score' (how relevant the match)
 	func search(_ query: String, limit: Int = 10, timeout: TimeInterval = 1.0) -> [ (url: URL, score: Float) ]
 	{
 		guard let index = self.index else
@@ -294,6 +273,7 @@ extension DFSKIndex
 
 extension DFSKIndex
 {
+	/// Flush any pending commands to the search index. A flush should ALWAYS be called before performing a search
 	func flush()
 	{
 		if let index = self.index
@@ -302,11 +282,56 @@ extension DFSKIndex
 		}
 	}
 
+	/// Reduce the size of the index where possible.
 	func compact()
 	{
 		if let index = self.index
 		{
 			SKIndexCompact(index)
 		}
+	}
+}
+
+// MARK: Private methods for building document arrays
+
+fileprivate extension DFSKIndex
+{
+	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout Array<(URL, SKDocument, SKDocumentID)>)
+	{
+		guard let index = self.index else
+		{
+			return
+		}
+
+		var isLeaf = true
+
+		let iterator = SKIndexDocumentIteratorCreate (index, inParentDocument).takeUnretainedValue()
+		while let skDocument = SKIndexDocumentIteratorCopyNext(iterator)
+		{
+			isLeaf = false
+			self.addLeafURLs(index: index, inParentDocument: skDocument.takeUnretainedValue(), docs: &docs)
+		}
+
+		if isLeaf && inParentDocument != nil && kSKDocumentStateNotIndexed != SKIndexGetDocumentState(index, inParentDocument)
+		{
+			if let temp = SKDocumentCopyURL(inParentDocument)
+			{
+				let burl = temp.takeUnretainedValue()
+				let bid = SKIndexGetDocumentID(index, inParentDocument)
+				docs.append((burl as URL, inParentDocument!, bid))
+			}
+		}
+	}
+
+	fileprivate func allDocuments() -> Array<(URL, SKDocument, SKDocumentID)>
+	{
+		guard let index = self.index else
+		{
+			return []
+		}
+
+		var allDocs = Array<(URL, SKDocument, SKDocumentID)>()
+		self.addLeafURLs(index: index, inParentDocument: nil, docs: &allDocs)
+		return allDocs
 	}
 }

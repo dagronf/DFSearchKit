@@ -519,6 +519,43 @@ class DFSearchKitTests: XCTestCase
 		XCTAssertEqual(0, theTerm.count)
 	}
 
+	func testProgressiveSearch()
+	{
+		guard let indexer = DFSKDataIndex.create() else
+		{
+			XCTFail()
+			return
+		}
+
+		for count in 0 ..< 25
+		{
+			let urlstr = "doc-url://d\(count).txt"
+			let d1 = url(urlstr)
+			XCTAssertTrue(indexer.add(d1, text: "cat dog fish"))
+		}
+		indexer.flush()
+
+		XCTAssertEqual(25, indexer.documents().count)
+
+		let search = indexer.progressiveSearch(indexer, query: "dog")
+
+		var searchChunk = search.next(10)
+		XCTAssertTrue(searchChunk.moreResults)
+		XCTAssertEqual(10, searchChunk.results.count)
+
+		searchChunk = search.next(10)
+		XCTAssertTrue(searchChunk.moreResults)
+		XCTAssertEqual(10, searchChunk.results.count)
+
+		searchChunk = search.next(10)
+		XCTAssertFalse(searchChunk.moreResults)
+		XCTAssertEqual(5, searchChunk.results.count)
+
+		searchChunk = search.next(10)
+		XCTAssertFalse(searchChunk.moreResults)
+		XCTAssertEqual(0, searchChunk.results.count)
+	}
+
 	func testSimpleSummary()
 	{
 		let testBundle = Bundle(for: type(of: self))

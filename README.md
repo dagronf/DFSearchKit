@@ -46,6 +46,40 @@ if let indexer = DFSKFileIndex.create(with: file.fileURL)
 }
 ```
 
+## Searching
+
+There are two methods for search
+
+### Search all
+The search all is available on the indexer object, and returns all the results it can get.  As such, for large indexes this may take quite a while to return.  It is provided mostly as a convenience function for small indexes.
+
+```
+if let indexer = DFSKDataIndex.create()
+{
+	indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
+	indexer.flush()
+	var result = indexer.search("first")
+	indexer.save()
+	indexer.close()
+}
+```
+
+### Search progressive
+For large indexes, the results may take quite a while to return.  Thus, the progressive index if more useful, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)
+
+```
+	let search = DFSKIndex.ProgressiveSearch(indexer, query: "dog")
+	... load documents ...
+	var hasMoreResults = true
+	repeat
+	{
+		var searchChunk = search.next(10)
+		... do something with searchChunk...
+		hasMoreResults = searchChunk.moreResults
+	}
+	while hasMoreResults
+```
+
 ## Tests
 
 `DFSearchKitTests.swift` contains a small number of tests (so far) that can be used to see how it works

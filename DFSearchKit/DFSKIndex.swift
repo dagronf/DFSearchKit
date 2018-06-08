@@ -62,6 +62,11 @@ class DFSKIndex: NSObject
 	}
 
 	private var index: SKIndex?
+
+	fileprivate func rawIndex() -> SKIndex?
+	{
+		return index
+	}
 	
 	private lazy var dataExtractorLoaded: Bool = {
 		SKLoadDefaultExtractorPlugIns()
@@ -221,11 +226,78 @@ extension DFSKIndex
 	}
 }
 
+// MARK: Progressive search
+
+extension DFSKIndex
+{
+	struct SearchResult
+	{
+		let url: URL
+		let score: Float
+	}
+
+	/// Start a progressive search
+	func progressiveSearch(_ index: DFSKIndex,
+						   query: String,
+						   options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> ProgressiveSearch
+	{
+		return ProgressiveSearch(index, query: query, options: options)
+	}
+
+	class ProgressiveSearch
+	{
+		private let options: SKSearchOptions
+		private let search: SKSearch
+		private let index: DFSKIndex
+		private let query: String
+
+		fileprivate init(_ index: DFSKIndex, query: String, options: SKSearchOptions)
+		{
+			self.query = query
+			self.index = index
+			self.options = options
+			self.search = SKSearchCreate(index.rawIndex(), query as CFString, options).takeRetainedValue()
+		}
+
+		/// Cancels an active search
+		func cancel()
+		{
+			SKSearchCancel(search)
+		}
+
+		/// Get the next chunk of results
+		func next(_ limit: Int = 10, timeout: TimeInterval = 1.0) -> (moreResults: Bool, results: [ SearchResult ])
+		{
+			guard index.rawIndex() != nil else
+			{
+				// If the index has been closed, then no results for you good sir!
+				return (false, [])
+			}
+
+			var scores: [Float] = Array(repeating: 0.0, count: limit)
+			var urls: [Unmanaged<CFURL>?] = Array(repeating: nil, count: limit)
+			var documentIDs: [SKDocumentID] = Array(repeating: 0, count: limit)
+			var foundCount = 0
+
+			let hasMore = SKSearchFindMatches(self.search, limit, &documentIDs, &scores, timeout, &foundCount)
+			SKIndexCopyDocumentURLsForDocumentIDs(index.rawIndex()!, foundCount, &documentIDs, &urls)
+
+			let partialResults: [ SearchResult ] = zip(urls[0 ..< foundCount], scores).compactMap({
+				(cfurl, score) -> (SearchResult)? in
+				guard let url = cfurl?.takeUnretainedValue() as URL?
+					else { return nil }
+				return SearchResult(url: url, score: score)
+			})
+
+			return (hasMore, partialResults)
+		}
+	}
+}
+
 // MARK: Search
 
 extension DFSKIndex
 {
-
 	/// Perform a search
 	///
 	/// - Parameters:
@@ -233,37 +305,22 @@ extension DFSKIndex
 	///   - limit: The maximum number of results to return
 	///   - timeout: How long to wait for a search to complete before stopping
 	/// - Returns: An array containing match URLs and their corresponding 'score' (how relevant the match)
-	func search(_ query: String, limit: Int = 10, timeout: TimeInterval = 1.0) -> [ (url: URL, score: Float) ]
+	func search(_ query: String,
+				limit: Int = 10,
+				timeout: TimeInterval = 1.0,
+				options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> [ SearchResult ]
 	{
-		guard let index = self.index else
+		let search = self.progressiveSearch(self, query: query, options: options)
+
+		var results: [ SearchResult ] = []
+		var hasMoreResults = true
+		repeat
 		{
-			return []
+			let result = search.next(limit, timeout: timeout)
+			results.append(contentsOf: result.results)
+			hasMoreResults = result.moreResults
 		}
-
-		let options = SKSearchOptions( kSKSearchOptionDefault )
-		let search = SKSearchCreate(index, query as CFString, options).takeRetainedValue()
-
-		var scores: [Float] = Array(repeating: 0.0, count: limit)
-		var urls: [Unmanaged<CFURL>?] = Array(repeating: nil, count: limit)
-		var documentIDs: [SKDocumentID] = Array(repeating: 0, count: limit)
-		var foundCount = 0
-
-		var results: [(URL, Float)] = []
-
-		var moreData = true
-		while moreData
-		{
-			moreData = SKSearchFindMatches(search, limit, &documentIDs, &scores, timeout, &foundCount)
-			SKIndexCopyDocumentURLsForDocumentIDs(index, foundCount, &documentIDs, &urls)
-
-			let partialResults = zip(urls[0 ..< foundCount], scores).compactMap({
-				(cfurl, score) -> (URL, Float)? in
-				guard let url = cfurl?.takeUnretainedValue() as URL?
-					else { return nil }
-				return (url, score)
-			})
-			results.append(contentsOf: partialResults)
-		}
+		while hasMoreResults
 
 		return results
 	}

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		233C768D20CB18DA00589CB4 /* DFSKSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233C768C20CB18DA00589CB4 /* DFSKSummary.swift */; };
+		23407FCD20CB243D0031D43A /* the_school_short_story.txt in Resources */ = {isa = PBXBuildFile; fileRef = 23407FCC20CB243D0031D43A /* the_school_short_story.txt */; };
 		23614DBB20B95F45001F187F /* StopWords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBA20B95F45001F187F /* StopWords.swift */; };
 		23614DBD20B95FFB001F187F /* APACHE_LICENSE.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 23614DBC20B95FFB001F187F /* APACHE_LICENSE.pdf */; };
 		23614DC020B978A1001F187F /* DFSKDataIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBE20B978A1001F187F /* DFSKDataIndex.swift */; };
@@ -32,6 +34,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		233C768C20CB18DA00589CB4 /* DFSKSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSKSummary.swift; sourceTree = "<group>"; };
+		23407FCC20CB243D0031D43A /* the_school_short_story.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = the_school_short_story.txt; sourceTree = "<group>"; };
 		23614DBA20B95F45001F187F /* StopWords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopWords.swift; sourceTree = "<group>"; };
 		23614DBC20B95FFB001F187F /* APACHE_LICENSE.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = APACHE_LICENSE.pdf; sourceTree = "<group>"; };
 		23614DBE20B978A1001F187F /* DFSKDataIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSKDataIndex.swift; sourceTree = "<group>"; };
@@ -84,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				23614DBA20B95F45001F187F /* StopWords.swift */,
+				23407FCC20CB243D0031D43A /* the_school_short_story.txt */,
 				23614DBC20B95FFB001F187F /* APACHE_LICENSE.pdf */,
 			);
 			path = Resources;
@@ -116,6 +121,7 @@
 				23D90859209E72250096E42A /* DFSKIndex.swift */,
 				23614DBE20B978A1001F187F /* DFSKDataIndex.swift */,
 				23614DC120B978C0001F187F /* DFSKFileIndex.swift */,
+				233C768C20CB18DA00589CB4 /* DFSKSummary.swift */,
 			);
 			path = DFSearchKit;
 			sourceTree = "<group>";
@@ -209,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23614DBD20B95FFB001F187F /* APACHE_LICENSE.pdf in Resources */,
+				23407FCD20CB243D0031D43A /* the_school_short_story.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +237,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				233C768D20CB18DA00589CB4 /* DFSKSummary.swift in Sources */,
 				23614DC020B978A1001F187F /* DFSKDataIndex.swift in Sources */,
 				23D9085B209E72250096E42A /* DFSKIndex.swift in Sources */,
 				23614DC320B978C0001F187F /* DFSKFileIndex.swift in Sources */,

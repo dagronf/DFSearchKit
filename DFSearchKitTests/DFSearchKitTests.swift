@@ -518,6 +518,23 @@ class DFSearchKitTests: XCTestCase
 		theTerm = termFreq.filter { $0.term == "the" }
 		XCTAssertEqual(0, theTerm.count)
 	}
+
+	func testSimpleSummary()
+	{
+		let testBundle = Bundle(for: type(of: self))
+		let filePath = testBundle.url(forResource: "the_school_short_story", withExtension: "txt")
+		XCTAssertNotNil(filePath)
+
+		let text = try? String.init(contentsOf: filePath!)
+
+		let summary = DFSKSummary(text!)
+
+		let count = summary.sentenceCount()
+		XCTAssertEqual(91, count)
+
+		let res = summary.sentenceSummary(maxSentences: 5)
+		XCTAssertEqual(5, res.count)
+	}
 }
 
 // MARK: Utilities

@@ -36,7 +36,7 @@ A class, inheriting from DFSKIndex that allows the creation and use of an index 
 #### Basic example
 
 ```
-if let indexer = DFSKFileIndex.create(with: file.fileURL) else
+if let indexer = DFSKFileIndex.create(with: file.fileURL)
 {
 	indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
 	indexer.flush()

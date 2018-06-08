@@ -534,6 +534,12 @@ class DFSearchKitTests: XCTestCase
 
 		let res = summary.sentenceSummary(maxSentences: 5)
 		XCTAssertEqual(5, res.count)
+
+		let paraCount = summary.paragraphCount()
+		XCTAssertEqual(25, paraCount)
+
+		let paraRes = summary.paragraphSummary(maxParagraphs: 5)
+		XCTAssertEqual(5, paraRes.count)
 	}
 }
 

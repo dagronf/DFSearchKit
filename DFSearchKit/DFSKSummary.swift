@@ -9,7 +9,7 @@
 import Cocoa
 import CoreServices
 
-class DFSKSummary: NSObject
+class DFSKSummary
 {
 	struct Sentence
 	{
@@ -31,7 +31,6 @@ class DFSKSummary: NSObject
 	init(_ term: String)
 	{
 		self.summary = SKSummaryCreateWithString(term as CFString).takeRetainedValue()
-		super.init()
 	}
 
 	func sentenceCount() -> Int
@@ -74,7 +73,7 @@ class DFSKSummary: NSObject
 	{
 		var result: [Paragraph] = []
 
-		let limit = (maxParagraphs == -1) ? self.sentenceCount() : maxParagraphs
+		let limit = (maxParagraphs == -1) ? self.paragraphCount(): maxParagraphs
 
 		var rankOrder: [CFIndex] = Array(repeating: 0, count: limit)
 		var paragraphOrder: [CFIndex] = Array(repeating: 0, count: limit)

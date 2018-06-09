@@ -80,15 +80,18 @@ For large indexes, the results may take quite a while to return.  Thus, the prog
 	while hasMoreResults
 ```
 
+## Samples
+
+* `SearchToy` is a (very!) basic UI to show integration
+* `dfskindex` is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFSKFileIndex to create a command line tool interface to the index
+
 ## Tests
 
-`DFSearchKitTests.swift` contains a small number of tests (so far) that can be used to see how it works
-
-`dfskindex` is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFSKFileIndex to create a command line tool interface to the index
+`DFSKIndexTests.swift` and `DFSKSummaryTests.swift` contain a small number of tests (so far) that can be used to see how it works
 
 ## Todo
 
-Asynchronous search, lots of other stuff! This is a learning project only. Maybe it will be useful to someone 
+Asynchronous search, lots of other stuff! This is a learning project only. Maybe it will be useful to someone
 
 ## Thanks
 

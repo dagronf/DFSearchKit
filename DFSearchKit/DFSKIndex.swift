@@ -24,27 +24,11 @@
 import Foundation
 import CoreServices
 
-fileprivate extension FileManager
-{
-	func fileExists(url: URL) -> Bool
-	{
-		return self.urlExists(url: url, isDirectory: false)
-	}
-
-	func folderExists(url: URL) -> Bool
-	{
-		return self.urlExists(url: url, isDirectory: true)
-	}
-
-	private func urlExists(url: URL, isDirectory: Bool) -> Bool
-	{
-		var isDir: ObjCBool = true
-		if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
-		{
-			return isDirectory == isDir.boolValue
-		}
-		return false
-	}
+/// Provide the equivalent of @synchronised on objc
+private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows -> T {
+	objc_sync_enter(lock)
+	defer { objc_sync_exit(lock) }
+	return try body()
 }
 
 open class DFSKIndex: NSObject
@@ -165,7 +149,10 @@ extension DFSKIndex
 		{
 			return false
 		}
-		return SKIndexAddDocumentWithText(index, document.takeUnretainedValue(), text as CFString, canReplace)
+
+		return synchronized(self) {
+			SKIndexAddDocumentWithText(index, document.takeUnretainedValue(), text as CFString, canReplace)
+		}
 	}
 
 	/// Add a file as a document to the index
@@ -188,7 +175,9 @@ extension DFSKIndex
 		// Try to detect the mime type if it wasn't specified
 		let mime = mimeType ?? self.detectMimeType(url)
 
-		return SKIndexAddDocument(index, document.takeUnretainedValue(), mime as CFString?, true)
+		return synchronized(self) {
+			SKIndexAddDocument(index, document.takeUnretainedValue(), mime as CFString?, true)
+		}
 	}
 
 	/// Recursively add the files contained within a folder to the search index
@@ -201,7 +190,9 @@ extension DFSKIndex
 	{
 		let fileManager = FileManager.default
 
-		guard fileManager.folderExists(url: folderURL) else
+		var isDir: ObjCBool = false
+		guard fileManager.fileExists(atPath: folderURL.path, isDirectory: &isDir),
+			isDir.boolValue == true else
 		{
 			return []
 		}
@@ -210,7 +201,8 @@ extension DFSKIndex
 		let enumerator = FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: nil)
 		while let fileURL = enumerator?.nextObject() as? URL
 		{
-			if fileManager.fileExists(url: fileURL),
+			if fileManager.fileExists(atPath: fileURL.path, isDirectory: &isDir),
+				isDir.boolValue == false,
 				self.add(url: fileURL)
 			{
 				addedUrls.append(fileURL)
@@ -231,7 +223,10 @@ extension DFSKIndex
 		{
 			return false
 		}
-		return SKIndexRemoveDocument(index, document.takeUnretainedValue())
+
+		return synchronized(self) {
+			SKIndexRemoveDocument(index, document.takeUnretainedValue())
+		}
 	}
 
 	open func remove(urls: [URL])
@@ -300,7 +295,9 @@ extension DFSKIndex
 		if let index = self.index,
 			let document = self.indexedDocument(url)
 		{
-			SKIndexSetDocumentProperties(index, document, properties as CFDictionary)
+			synchronized(self) {
+				SKIndexSetDocumentProperties(index, document, properties as CFDictionary)
+			}
 			return true
 		}
 		return false

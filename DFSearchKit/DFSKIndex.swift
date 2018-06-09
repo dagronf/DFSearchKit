@@ -126,7 +126,6 @@ extension DFSKIndex
 		{
 			return false
 		}
-
 		return SKIndexAddDocumentWithText(index, document.takeUnretainedValue(), text as CFString, canReplace)
 	}
 
@@ -146,7 +145,6 @@ extension DFSKIndex
 		{
 			return false
 		}
-
 		return SKIndexAddDocument(index, document.takeUnretainedValue(), mimeType != nil ? mimeType! as CFString : nil, true)
 	}
 	
@@ -163,6 +161,87 @@ extension DFSKIndex
 			return false
 		}
 		return SKIndexRemoveDocument(index, document.takeUnretainedValue())
+	}
+
+	/// Returns the indexing state for the specified URL.
+	func documentState(_ url: URL) -> SKDocumentIndexState
+	{
+		if let index = self.index,
+			let document = SKDocumentCreateWithURL(url as CFURL)
+		{
+			return SKIndexGetDocumentState(index, document.takeUnretainedValue())
+		}
+		return kSKDocumentStateNotIndexed
+	}
+
+	/// Returns true if the document represented by url has been indexed, false otherwise.
+	func documentIndexed(_ url: URL) -> Bool
+	{
+		if let index = self.index,
+			let document = SKDocumentCreateWithURL(url as CFURL)
+		{
+			return SKIndexGetDocumentState(index, document.takeUnretainedValue()) == kSKDocumentStateIndexed
+		}
+		return false
+	}
+
+	fileprivate func documentIndexed(_ document: SKDocument) -> Bool
+	{
+		if let index = self.index,
+			SKIndexGetDocumentState(index, document) == kSKDocumentStateIndexed
+		{
+			return true
+		}
+		return false
+	}
+
+	/// Returns the document associated with url IF the document has been indexed, nil otherwise
+	fileprivate func indexedDocument(_ url: URL) -> SKDocument?
+	{
+		if let document = SKDocumentCreateWithURL(url as CFURL),
+			self.documentIndexed(document.takeUnretainedValue())
+		{
+			return document.takeUnretainedValue()
+		}
+		return nil
+	}
+}
+
+// MARK: Set/Get additional properties for document
+
+extension DFSKIndex
+{
+	/// Sets additional properties for the document which are retained in the index.
+	///
+	/// Document must have been indexed for setting of properties to take effect.
+	///
+	/// - Parameters:
+	///   - url: The identifying URL for the document
+	///   - properties: The properties to store in the
+	/// - Returns: `true` if the properties were set, `false` otherwise
+	func setDocumentProperties(_ url: URL, properties: [String: Any]) -> Bool
+	{
+		if let index = self.index,
+			let document = self.indexedDocument(url)
+		{
+			SKIndexSetDocumentProperties(index, document, properties as CFDictionary)
+			return true
+		}
+		return false
+	}
+
+	/// Returns additional properties for the document
+	func documentProperties(_ url: URL) -> [String: Any]
+	{
+		guard let index = self.index,
+			let document = SKDocumentCreateWithURL(url as CFURL),
+			SKIndexGetDocumentState(index, document.takeUnretainedValue()) == kSKDocumentStateIndexed else
+		{
+			return [:]
+		}
+
+		let cfprops = SKIndexCopyDocumentProperties(index, document.takeUnretainedValue())
+		return cfprops?.takeUnretainedValue() as! [String: Any]
 	}
 }
 

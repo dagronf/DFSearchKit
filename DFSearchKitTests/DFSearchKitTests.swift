@@ -105,6 +105,51 @@ class DFSearchKitTests: XCTestCase
 		XCTAssertEqual(d1, result[0].url)
 	}
 
+	func testSetPropertiesForDocument()
+	{
+		let file = TempFile()
+		guard let indexer = DFSKFileIndex.create(with: file.fileURL) else
+		{
+			XCTFail()
+			return
+		}
+
+		let d1 = url("doc-url://d1.txt")
+		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine!"))
+
+		// Can't add properties until the document is indexed
+		XCTAssertFalse(indexer.documentIndexed(d1))
+		XCTAssertFalse(indexer.setDocumentProperties(d1, properties: ["Fish": 10]))
+		let badprops = indexer.documentProperties(d1)
+		XCTAssertEqual(0, badprops.count)
+
+		indexer.flush()
+
+		// Document will have been indexed after flush -- can now add properties
+		XCTAssertTrue(indexer.documentIndexed(d1))
+		XCTAssertTrue(indexer.setDocumentProperties(d1, properties: ["Fish": 10, "Cat": "dog"]))
+
+		let props = indexer.documentProperties(d1)
+		XCTAssertEqual(2, props.count)
+		XCTAssertEqual(10, props["Fish"] as! Int)
+		XCTAssertEqual("dog", props["Cat"] as! String)
+
+		// Close and reopen and see that the properties are retained
+		indexer.compact()
+		indexer.close()
+
+		guard let indexer2 = DFSKFileIndex.open(from: file.fileURL, writable: false) else
+		{
+			XCTFail()
+			return
+		}
+
+		let savedProps = indexer2.documentProperties(d1)
+		XCTAssertEqual(2, savedProps.count)
+		XCTAssertEqual(10, savedProps["Fish"] as! Int)
+		XCTAssertEqual("dog", savedProps["Cat"] as! String)
+	}
+
 	func testSimpleRemove()
 	{
 		let dataIndexer = DFSKDataIndex.create()

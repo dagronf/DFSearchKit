@@ -65,7 +65,7 @@ if let indexer = DFSKDataIndex.create()
 ```
 
 ### Search progressive
-For large indexes, the results may take quite a while to return.  Thus, the progressive index if more useful, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)
+For large indexes, the results may take quite a while to return.  Thus, the progressive index is more useful by returning limited sets of results progressively, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)
 
 ```
 	let search = DFSKIndex.ProgressiveSearch(indexer, query: "dog")

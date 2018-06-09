@@ -112,6 +112,22 @@ class DFSKIndex: NSObject
 extension DFSKIndex
 {
 
+	/// Returns the mime type for the url, or nil if the mime type couldn't be ascertained from the extension
+	///
+	/// - Parameter url: the url to detect the mime type for
+	/// - Returns: the mime type of the url if able to detect, nil otherwise
+	func detectMimeType(_ url: URL) -> String?
+	{
+		if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
+																   url.pathExtension as CFString,
+																   nil)?.takeUnretainedValue(),
+			let mimeType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeUnretainedValue()
+		{
+			return mimeType as String
+		}
+		return nil
+	}
+
 	/// Add some text to the index
 	///
 	/// - Parameters:
@@ -133,7 +149,7 @@ extension DFSKIndex
 	///
 	/// - Parameters:
 	///   - url: The file URL for the document (of the form file:///Users/blahblah....doc.txt)
-	///   - mimeType: An optional mimetype.  If nil, attempts to work out the type of file from the content.
+	///   - mimeType: An optional mimetype.  If nil, attempts to work out the type of file from the extension.
 	///   - canReplace: if true, can attempt to replace an existing document with the new one.
 	/// - Returns: true if the command was successful.
 	///				**NOTE** If the document _wasnt_ updated it also returns true!
@@ -145,7 +161,11 @@ extension DFSKIndex
 		{
 			return false
 		}
-		return SKIndexAddDocument(index, document.takeUnretainedValue(), mimeType != nil ? mimeType! as CFString : nil, true)
+
+		// Try to detect the mime type if it wasn't specified
+		let mime = mimeType ?? self.detectMimeType(url)
+
+		return SKIndexAddDocument(index, document.takeUnretainedValue(), mime as CFString?, true)
 	}
 	
 	/// Remove a document from the index

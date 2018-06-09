@@ -61,24 +61,6 @@
             ReferencedContainer = "container:DFSearchKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "create NVivoOnlineHelp.index /Users/dford/Projects/POCs/DFSearchKit/helptool/Content"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "terms blah.index file:///User/dford/Desktop/LICENSE"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "add_file blah.index file:///User/dford/Desktop/LICENSE &quot;plain/text&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "search NVivoOnlineHelp.index &quot;visualization&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

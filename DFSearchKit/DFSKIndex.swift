@@ -47,7 +47,7 @@ class DFSKIndex: NSObject
 					kSKProximityIndexing: self.proximityIndexing,
 					kSKStopWords: self.stopWords,
 					kSKMinTermLength: self.minTermLength
-				]
+			]
 			return properties as CFDictionary
 		}
 
@@ -119,8 +119,8 @@ extension DFSKIndex
 	func detectMimeType(_ url: URL) -> String?
 	{
 		if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
-																   url.pathExtension as CFString,
-																   nil)?.takeUnretainedValue(),
+														   url.pathExtension as CFString,
+														   nil)?.takeUnretainedValue(),
 			let mimeType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeUnretainedValue()
 		{
 			return mimeType as String
@@ -166,6 +166,40 @@ extension DFSKIndex
 		let mime = mimeType ?? self.detectMimeType(url)
 
 		return SKIndexAddDocument(index, document.takeUnretainedValue(), mime as CFString?, true)
+	}
+
+
+	/// Add the files contained within a folder to the search index
+	///
+	/// - Parameters:
+	///   - folderURL: The folder to be indexed.
+	///   - canReplace: If the document already exists within the index, can it be replaced?
+	/// - Returns: The URLs of documents added to the index.  If folderURL isn't a folder, returns empty
+	func addFolder(folderURL: URL, canReplace: Bool = true) -> [URL]
+	{
+		let fileManager = FileManager.default
+
+		var isDirectory: ObjCBool = true
+		if fileManager.fileExists(atPath: folderURL.path, isDirectory: &isDirectory)
+		{
+			return [];
+		}
+
+		var addedUrls: [URL] = []
+		let enumerator = fileManager.enumerator(at: folderURL, includingPropertiesForKeys: nil)
+		while let fileURL = enumerator?.nextObject() as? URL
+		{
+			var isDirectory: ObjCBool = true
+			if fileManager.fileExists(atPath: fileURL.path, isDirectory: &isDirectory)
+			{
+				if isDirectory.boolValue == false,
+					self.add(url: fileURL, canReplace: canReplace)
+				{
+					addedUrls.append(fileURL)
+				}
+			}
+		}
+		return addedUrls
 	}
 	
 	/// Remove a document from the index
@@ -419,7 +453,7 @@ extension DFSKIndex
 			results.append(contentsOf: result.results)
 			hasMoreResults = result.moreResults
 		}
-		while hasMoreResults
+			while hasMoreResults
 
 		return results
 	}
@@ -445,6 +479,25 @@ extension DFSKIndex
 		{
 			SKIndexCompact(index)
 		}
+	}
+
+	/// Remove any documents that have no search terms
+	func prune(progress: ((Int, Int) -> Void)?) -> Int
+	{
+		let urls = self.documents()
+		let totalCount = urls.count
+		var pruneCount = 0
+		for url in urls
+		{
+			let terms = self.termsAndCounts(for: url)
+			if terms.count == 0
+			{
+				_ = self.remove(url: url)
+				pruneCount += 1
+				progress?(totalCount, pruneCount)
+			}
+		}
+		return pruneCount
 	}
 }
 

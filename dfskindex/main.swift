@@ -99,10 +99,40 @@ else if args[1] == "add_file" {
 
 	exit(1)
 }
-else if args[1] == "documents" {
-
+else if args[1] == "add_folder"
+{
 	let indexFile = args[2]
 
+	guard let folderURL = URL(string: args[3]),
+		let index = DFSKFileIndex.open(from: URL(string: indexFile)!, writable: true) else
+	{
+		exit(-1)
+	}
+
+	let added = index.addFolder(folderURL: folderURL)
+	added.forEach { print("Added: \($0)") }
+
+	index.flush()
+	index.compact()
+	index.close()
+}
+else if args[1] == "prune"
+{
+	let indexFile = args[2]
+	guard let index = DFSKFileIndex.open(from: URL(string: indexFile)!, writable: true) else
+	{
+		exit(-1)
+	}
+	let _ = index.prune(progress: { (total, progress) in
+		print("Pruned \(progress) of \(total) documents")
+	})
+	index.compact()
+	index.close()
+	exit(1)
+}
+else if args[1] == "documents"
+{
+	let indexFile = args[2]
 	guard let index = DFSKFileIndex.open(from: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
@@ -150,7 +180,7 @@ else if args[1] == "search" {
 	let result = index.search(query)
 	let sortedResults = result.sorted(by: { $0.score > $1.score })
 	for item in sortedResults {
-		print("\(item.0): \(item.1)")
+		print("\(item.url): \(item.score)")
 	}
 	exit(1)
 }

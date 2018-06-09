@@ -56,14 +56,20 @@ class Document: NSDocument {
 
 extension Document
 {
+	@objc func removeURLs(_ urls: [URL])
+	{
+		self.index?.remove(urls: urls)
+	}
+
 	@IBAction func addText(_ sender: NSButton)
 	{
 		if let url = URL(string: self.urlField.stringValue)
 		{
 			let text = self.docContentView.string
-			_ = self.index!.add(url, text: text)
-
-			self.updateChangeCount(NSDocument.ChangeType.changeDone)
+			if self.index!.add(url, text: text)
+			{
+				self.undoManager?.registerUndo(withTarget: self, selector:#selector(self.removeURLs), object:[url])
+			}
 		}
 	}
 
@@ -103,31 +109,34 @@ extension Document
 
 	private func addURLs(_ urls: [URL])
 	{
-		guard let index = self.index else
-		{
-			return
-		}
+		DispatchQueue.global(qos: .userInitiated).async { [weak self] in
 
-		var addedURLs: [URL] = []
-		urls.forEach {
-			let url = $0
-			var isDir: ObjCBool = false
-			if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
+			guard let index = self?.index else
 			{
-				if isDir.boolValue
+				return
+			}
+
+			var addedURLs: [URL] = []
+			urls.forEach {
+				let url = $0
+				var isDir: ObjCBool = false
+				if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
 				{
-					addedURLs.append(contentsOf: index.addFolderContent(folderURL: url))
-				}
-				else if index.add(url: url)
-				{
-					addedURLs.append(url)
+					if isDir.boolValue
+					{
+						addedURLs.append(contentsOf: index.addFolderContent(folderURL: url))
+					}
+					else if index.add(url: url)
+					{
+						addedURLs.append(url)
+					}
 				}
 			}
-		}
 
-		if addedURLs.count > 0
-		{
-			self.updateChangeCount(NSDocument.ChangeType.changeDone)
+			if addedURLs.count > 0
+			{
+				self?.undoManager?.registerUndo(withTarget: self!, selector:#selector(self?.removeURLs), object:addedURLs)
+			}
 		}
 	}
 }

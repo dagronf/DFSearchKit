@@ -210,7 +210,8 @@ extension DFSKIndex
 		let enumerator = FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: nil)
 		while let fileURL = enumerator?.nextObject() as? URL
 		{
-			if fileManager.fileExists(url: fileURL)
+			if fileManager.fileExists(url: fileURL),
+				self.add(url: fileURL)
 			{
 				addedUrls.append(fileURL)
 			}
@@ -231,6 +232,11 @@ extension DFSKIndex
 			return false
 		}
 		return SKIndexRemoveDocument(index, document.takeUnretainedValue())
+	}
+
+	open func remove(urls: [URL])
+	{
+		urls.forEach { _ = self.remove(url: $0) }
 	}
 
 	/// Returns the indexing state for the specified URL.

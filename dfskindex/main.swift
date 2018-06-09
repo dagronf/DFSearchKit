@@ -109,7 +109,7 @@ else if args[1] == "add_folder"
 		exit(-1)
 	}
 
-	let added = index.addFolder(folderURL: folderURL)
+	let added = index.addFolderContent(folderURL: folderURL)
 	added.forEach { print("Added: \($0)") }
 
 	index.flush()

@@ -24,7 +24,7 @@
 import Foundation
 
 /// A file-based index
-class DFSKFileIndex: DFSKIndex
+open class DFSKFileIndex: DFSKIndex
 {
 	/// The file url where the index is located
 	private(set) var fileURL: URL?

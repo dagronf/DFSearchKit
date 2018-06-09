@@ -24,12 +24,35 @@
 import Foundation
 import CoreServices
 
-class DFSKIndex: NSObject
+fileprivate extension FileManager
+{
+	func fileExists(url: URL) -> Bool
+	{
+		return self.urlExists(url: url, isDirectory: false)
+	}
+
+	func folderExists(url: URL) -> Bool
+	{
+		return self.urlExists(url: url, isDirectory: true)
+	}
+
+	private func urlExists(url: URL, isDirectory: Bool) -> Bool
+	{
+		var isDir: ObjCBool = true
+		if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
+		{
+			return isDirectory == isDir.boolValue
+		}
+		return false
+	}
+}
+
+open class DFSKIndex: NSObject
 {
 	/// Container for storing the properties to be used when creating a new index
-	struct CreateProperties
+	public struct CreateProperties
 	{
-		init(indexType: SKIndexType = kSKIndexInverted,
+		public init(indexType: SKIndexType = kSKIndexInverted,
 			 proximityIndexing: Bool = false,
 			 stopWords: Set<String> = [],
 			 minTermLength: Int = 0) {
@@ -97,7 +120,7 @@ class DFSKIndex: NSObject
 	}
 
 	/// Close the index
-	func close()
+	open func close()
 	{
 		if let index = self.index
 		{
@@ -116,7 +139,7 @@ extension DFSKIndex
 	///
 	/// - Parameter url: the url to detect the mime type for
 	/// - Returns: the mime type of the url if able to detect, nil otherwise
-	func detectMimeType(_ url: URL) -> String?
+	private func detectMimeType(_ url: URL) -> String?
 	{
 		if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
 														   url.pathExtension as CFString,
@@ -135,7 +158,7 @@ extension DFSKIndex
 	///   - text: The text to add
 	///   - canReplace: if true, can attempt to replace an existing document with the new one.
 	/// - Returns: true if the text was successfully added to the index, false otherwise
-	func add(_ url: URL, text: String, canReplace: Bool = true) -> Bool
+	open func add(_ url: URL, text: String, canReplace: Bool = true) -> Bool
 	{
 		guard let index = self.index,
 			let document = SKDocumentCreateWithURL(url as CFURL) else
@@ -153,7 +176,7 @@ extension DFSKIndex
 	///   - canReplace: if true, can attempt to replace an existing document with the new one.
 	/// - Returns: true if the command was successful.
 	///				**NOTE** If the document _wasnt_ updated it also returns true!
-	func add(url: URL, mimeType: String? = nil, canReplace: Bool = true) -> Bool
+	open func add(url: URL, mimeType: String? = nil, canReplace: Bool = true) -> Bool
 	{
 		guard self.dataExtractorLoaded,
 			let index = self.index,
@@ -168,35 +191,28 @@ extension DFSKIndex
 		return SKIndexAddDocument(index, document.takeUnretainedValue(), mime as CFString?, true)
 	}
 
-
-	/// Add the files contained within a folder to the search index
+	/// Recursively add the files contained within a folder to the search index
 	///
 	/// - Parameters:
 	///   - folderURL: The folder to be indexed.
 	///   - canReplace: If the document already exists within the index, can it be replaced?
 	/// - Returns: The URLs of documents added to the index.  If folderURL isn't a folder, returns empty
-	func addFolder(folderURL: URL, canReplace: Bool = true) -> [URL]
+	open func addFolderContent(folderURL: URL, canReplace: Bool = true) -> [URL]
 	{
 		let fileManager = FileManager.default
 
-		var isDirectory: ObjCBool = true
-		if fileManager.fileExists(atPath: folderURL.path, isDirectory: &isDirectory)
+		guard fileManager.folderExists(url: folderURL) else
 		{
-			return [];
+			return []
 		}
 
 		var addedUrls: [URL] = []
-		let enumerator = fileManager.enumerator(at: folderURL, includingPropertiesForKeys: nil)
+		let enumerator = FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: nil)
 		while let fileURL = enumerator?.nextObject() as? URL
 		{
-			var isDirectory: ObjCBool = true
-			if fileManager.fileExists(atPath: fileURL.path, isDirectory: &isDirectory)
+			if fileManager.fileExists(url: fileURL)
 			{
-				if isDirectory.boolValue == false,
-					self.add(url: fileURL, canReplace: canReplace)
-				{
-					addedUrls.append(fileURL)
-				}
+				addedUrls.append(fileURL)
 			}
 		}
 		return addedUrls
@@ -207,7 +223,7 @@ extension DFSKIndex
 	/// - Parameter url: The identifying URL for the document
 	/// - Returns: true if the document was successfully removed, false otherwise.
 	/// 		   **NOTE** if the document didn't exist, this returns true as well
-	func remove(url: URL) -> Bool
+	open func remove(url: URL) -> Bool
 	{
 		guard let index = self.index,
 			let document = SKDocumentCreateWithURL(url as CFURL) else
@@ -218,7 +234,7 @@ extension DFSKIndex
 	}
 
 	/// Returns the indexing state for the specified URL.
-	func documentState(_ url: URL) -> SKDocumentIndexState
+	open func documentState(_ url: URL) -> SKDocumentIndexState
 	{
 		if let index = self.index,
 			let document = SKDocumentCreateWithURL(url as CFURL)
@@ -229,7 +245,7 @@ extension DFSKIndex
 	}
 
 	/// Returns true if the document represented by url has been indexed, false otherwise.
-	func documentIndexed(_ url: URL) -> Bool
+	open func documentIndexed(_ url: URL) -> Bool
 	{
 		if let index = self.index,
 			let document = SKDocumentCreateWithURL(url as CFURL)
@@ -273,7 +289,7 @@ extension DFSKIndex
 	///   - url: The identifying URL for the document
 	///   - properties: The properties to store in the
 	/// - Returns: `true` if the properties were set, `false` otherwise
-	func setDocumentProperties(_ url: URL, properties: [String: Any]) -> Bool
+	open func setDocumentProperties(_ url: URL, properties: [String: Any]) -> Bool
 	{
 		if let index = self.index,
 			let document = self.indexedDocument(url)
@@ -285,7 +301,7 @@ extension DFSKIndex
 	}
 
 	/// Returns additional properties for the document
-	func documentProperties(_ url: URL) -> [String: Any]
+	open func documentProperties(_ url: URL) -> [String: Any]
 	{
 		guard let index = self.index,
 			let document = SKDocumentCreateWithURL(url as CFURL),
@@ -306,7 +322,7 @@ extension DFSKIndex
 	/// Returns all the document URLs loaded into the index
 	///
 	/// - Returns: An array containing all the document URLs
-	func documents() -> [URL]
+	open func documents() -> [URL]
 	{
 		guard let index = self.index else
 		{
@@ -323,7 +339,7 @@ extension DFSKIndex
 	/// - Parameter url: The document URL in the index to locate
 	/// - Returns: An array of the terms and corresponding counts located in the document.
 	///            Returns an empty array if the document cannot be located.
-	func termsAndCounts(for url: URL) -> [(term: String, count:Int)]
+	open func termsAndCounts(for url: URL) -> [(term: String, count:Int)]
 	{
 		guard let index = self.index else
 		{
@@ -363,21 +379,21 @@ extension DFSKIndex
 
 extension DFSKIndex
 {
-	struct SearchResult
+	public struct SearchResult
 	{
-		let url: URL
-		let score: Float
+		public let url: URL
+		public let score: Float
 	}
 
 	/// Start a progressive search
-	func progressiveSearch(_ index: DFSKIndex,
+	open func progressiveSearch(_ index: DFSKIndex,
 						   query: String,
 						   options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> ProgressiveSearch
 	{
 		return ProgressiveSearch(index, query: query, options: options)
 	}
 
-	class ProgressiveSearch
+	open class ProgressiveSearch
 	{
 		private let options: SKSearchOptions
 		private let search: SKSearch
@@ -393,13 +409,13 @@ extension DFSKIndex
 		}
 
 		/// Cancels an active search
-		func cancel()
+		open func cancel()
 		{
 			SKSearchCancel(search)
 		}
 
 		/// Get the next chunk of results
-		func next(_ limit: Int = 10, timeout: TimeInterval = 1.0) -> (moreResults: Bool, results: [ SearchResult ])
+		open func next(_ limit: Int = 10, timeout: TimeInterval = 1.0) -> (moreResults: Bool, results: [ SearchResult ])
 		{
 			guard index.rawIndex() != nil else
 			{
@@ -438,7 +454,7 @@ extension DFSKIndex
 	///   - limit: The maximum number of results to return
 	///   - timeout: How long to wait for a search to complete before stopping
 	/// - Returns: An array containing match URLs and their corresponding 'score' (how relevant the match)
-	func search(_ query: String,
+	open func search(_ query: String,
 				limit: Int = 10,
 				timeout: TimeInterval = 1.0,
 				options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> [ SearchResult ]
@@ -464,7 +480,7 @@ extension DFSKIndex
 extension DFSKIndex
 {
 	/// Flush any pending commands to the search index. A flush should ALWAYS be called before performing a search
-	func flush()
+	open func flush()
 	{
 		if let index = self.index
 		{
@@ -473,7 +489,7 @@ extension DFSKIndex
 	}
 
 	/// Reduce the size of the index where possible.
-	func compact()
+	open func compact()
 	{
 		if let index = self.index
 		{
@@ -482,7 +498,7 @@ extension DFSKIndex
 	}
 
 	/// Remove any documents that have no search terms
-	func prune(progress: ((Int, Int) -> Void)?) -> Int
+	open func prune(progress: ((Int, Int) -> Void)?) -> Int
 	{
 		let urls = self.documents()
 		let totalCount = urls.count

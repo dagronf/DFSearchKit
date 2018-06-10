@@ -28,20 +28,30 @@ class Document: NSDocument {
 	@IBOutlet weak var urlField: NSTextField!
 	@IBOutlet var docContentView: NSTextView!
 	
+	@IBOutlet weak var filesTable: NSTableView!
+
 	@IBOutlet weak var queryField: NSTextField!
 	@IBOutlet var queryResultView: NSTextView!
 	
 	private var indexer: SearchToyIndexer?
+
+	@objc dynamic fileprivate var operationCount: Int = 0
+	@objc dynamic fileprivate var files: [URL] = []
 	
 	override init() {
 		super.init()
 		self.indexer = SearchToyIndexer.create()
+		self.indexer?.delegate = self
 	}
 	
 	override var windowNibName: NSNib.Name? {
 		// Returns the nib file name of the document
 		// If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this property and override -makeWindowControllers instead.
 		return NSNib.Name("Document")
+	}
+
+	override func windowControllerDidLoadNib(_ windowController: NSWindowController) {
+		self.updateFiles()
 	}
 }
 
@@ -83,16 +93,27 @@ extension Document
 	
 	@objc func addTextOperation(_ textOperation: SearchToyIndexer.TextOperation)
 	{
-		let op = self.indexer?.addText(textOperation.url, text: textOperation.text)
-		self.undoManager?.registerUndo(withTarget: self, selector:#selector(self.removeTextOperation), object:op)
-		self.undoManager?.setActionName("Add Text")
+		self.indexer?.addText(textOperation.url, text: textOperation.text, complete: { [weak self] textOperation in
+			if let blockSelf = self {
+				DispatchQueue.main.async {
+					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.removeTextOperation), object:textOperation)
+					blockSelf.undoManager?.setActionName("Add Text")
+				}
+			}
+		})
+		//self.updateChangeCount(NSDocument.ChangeType.changeDone)
 	}
 	
 	@objc func removeTextOperation(_ textOperation: SearchToyIndexer.TextOperation)
 	{
-		let op = self.indexer?.removeText(textOperation)
-		self.undoManager?.registerUndo(withTarget: self, selector:#selector(self.addTextOperation), object:op)
-		self.undoManager?.setActionName("Remove Text")
+		self.indexer?.removeText(textOperation, complete: { [weak self] textOperation in
+			if let blockSelf = self {
+				DispatchQueue.main.async {
+					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.addTextOperation), object:textOperation)
+					blockSelf.undoManager?.setActionName("Remove Text")
+				}
+			}
+		})
 	}
 }
 
@@ -111,24 +132,32 @@ extension Document
 		panel.beginSheetModal(for: window!) { (result) in
 			if result == NSApplication.ModalResponse.OK
 			{
-				self.addURLs(panel.urls)
+				self.addURLs(SearchToyIndexer.FileOperation(panel.urls))
 			}
 		}
 	}
 	
-	@objc func addURLs(_ urls: [URL])
+	@objc func addURLs(_ operation: SearchToyIndexer.FileOperation)
 	{
-		self.indexer?.addURLs(urls, urlLoaded: { newUrls in
-			self.undoManager?.registerUndo(withTarget: self, selector:#selector(self.removeURLs), object:newUrls)
-			self.undoManager?.setActionName("Add Documents")
+		self.indexer?.addURLs(operation, complete: { [weak self] fileOperation in
+			if let blockSelf = self {
+				DispatchQueue.main.async {
+					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.removeURLs), object:fileOperation)
+					blockSelf.undoManager?.setActionName("Add \(fileOperation.urls.count) Documents")
+				}
+			}
 		})
 	}
 	
-	@objc func removeURLs(_ urls: [URL])
-	{
-		self.indexer?.removeURLs(urls)
-		self.undoManager?.registerUndo(withTarget: self, selector:#selector(self.addURLs), object:urls)
-		self.undoManager?.setActionName("Add Documents")
+	@objc func removeURLs(_ operation: SearchToyIndexer.FileOperation) {
+		self.indexer?.removeURLs(operation, complete: { [weak self] fileOperation in
+			if let blockSelf = self {
+				DispatchQueue.main.async {
+					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.addURLs), object:fileOperation)
+					blockSelf.undoManager?.setActionName("Remove \(fileOperation.urls.count) Documents")
+				}
+			}
+		})
 	}
 }
 
@@ -138,16 +167,14 @@ extension Document
 {
 	@IBAction func searchText(_ sender: NSButton)
 	{
-		guard let index = self.indexer else
-		{
+		guard let index = self.indexer else {
 			return
 		}
 		
 		index.flush()
 		
 		let searchText = self.queryField.stringValue
-		if searchText.count > 0
-		{
+		if searchText.count > 0 {
 			let result = index.search(searchText)
 			
 			var str: String = ""
@@ -166,6 +193,31 @@ extension Document
 			}
 			self.queryResultView.string = str
 		}
+
+		updateFiles()
+	}
+}
+
+extension Document: SearchToyIndexerProtocol
+{
+	func queueDidEmpty(_ indexer: SearchToyIndexer)
+	{
+		DispatchQueue.main.async { [weak self] in
+			self?.updateFiles()
+		}
+	}
+
+	func queueDidChange(_ count: Int)
+	{
+		DispatchQueue.main.async { [weak self] in
+			self?.operationCount = count
+		}
+	}
+
+	func updateFiles()
+	{
+		self.indexer?.flush()
+		self.files = (self.indexer?.documents())!
 	}
 }
 

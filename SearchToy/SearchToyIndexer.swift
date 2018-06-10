@@ -47,6 +47,12 @@ fileprivate extension FileManager
 	}
 }
 
+protocol SearchToyIndexerProtocol
+{
+	func queueDidEmpty(_ indexer: SearchToyIndexer)
+	func queueDidChange(_ count: Int)
+}
+
 /// Background indexer using operation queues
 class SearchToyIndexer: NSObject {
 	
@@ -61,79 +67,120 @@ class SearchToyIndexer: NSObject {
 			super.init()
 		}
 	}
-	
+
+	class FileOperation: NSObject
+	{
+		let urls: [URL]
+		init(_ urls: [URL]) {
+			self.urls = urls
+			super.init()
+		}
+	}
+
 	private var index: DFSKDataIndex
-	
+
+	var delegate: SearchToyIndexerProtocol? = nil
+
 	/// Queue for handling async modifications to the index
 	let modifyQueue = OperationQueue()
 	
-	static func create() -> SearchToyIndexer
-	{
+	static func create() -> SearchToyIndexer {
 		let indexer = SearchToyIndexer(DFSKDataIndex.create()!)
 		return indexer
 	}
 	
 	init(_ index: DFSKDataIndex) {
 		self.index = index
-		self.modifyQueue.maxConcurrentOperationCount = 6
-		
 		super.init()
+
+		self.modifyQueue.maxConcurrentOperationCount = 6
+		self.modifyQueue.addObserver(self, forKeyPath: "operations", options: .new, context: nil)
 	}
-	
-	static func load(_ data: Data) -> SearchToyIndexer?
-	{
-		if let index = DFSKDataIndex.load(from: data)
-		{
+
+	deinit {
+		self.modifyQueue.removeObserver(self, forKeyPath: "operations")
+	}
+
+	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+		if keyPath == "operations" {
+			if self.modifyQueue.operations.count == 0 {
+				self.delegate?.queueDidEmpty(self)
+			}
+			self.delegate?.queueDidChange(self.modifyQueue.operationCount)
+		}
+	}
+
+	static func load(_ data: Data) -> SearchToyIndexer? {
+		if let index = DFSKDataIndex.load(from: data) {
 			return SearchToyIndexer.init(index)
 		}
 		return nil
 	}
 	
-	func save() -> Data
-	{
+	func save() -> Data	{
 		self.index.compact()
 		return self.index.save()!
 	}
 	
 	/// Add text async
-	func addText(_ url: URL, text: String) -> TextOperation
+	func addText(_ url: URL, text: String, complete: @escaping (TextOperation) -> Void)
 	{
 		let b = BlockOperation { [weak self] in
 			_ = self?.index.add(url, text: text)
 		}
+
 		self.modifyQueue.addOperation(b)
-		return TextOperation(url: url, text: text)
+
+		let textOp = TextOperation(url: url, text: text)
+		let completeBlock = BlockOperation {
+			complete(textOp)
+		}
+
+		self.modifyQueue.addOperation(completeBlock)
 	}
 	
 	/// Remove documents async
-	func removeURLs(_ urls: [URL])
-	{
-		urls.forEach { url in
+	func removeURLs(_ operation: FileOperation, complete: @escaping (FileOperation) -> Void) {
+		var removeUrls: [BlockOperation] = []
+
+		operation.urls.forEach { url in
 			let b = BlockOperation { [weak self] in
 				_ = self?.index.remove(url: url)
 			}
-			self.modifyQueue.addOperation(b)
+			removeUrls.append(b)
 		}
+
+		let completeBlock = BlockOperation {
+			complete(FileOperation(operation.urls))
+		}
+
+		self.modifyQueue.addOperations(removeUrls, waitUntilFinished: false)
+		self.modifyQueue.addOperation(completeBlock)
 	}
 	
 	/// Remove text async
-	func removeText(_ operation: TextOperation) -> TextOperation
+	func removeText(_ operation: TextOperation, complete: @escaping (TextOperation) -> Void)
 	{
 		let url = operation.url
-		let b = BlockOperation { [weak self] in
+		let removeBlock = BlockOperation { [weak self] in
 			_ = self?.index.remove(url: url)
 		}
-		self.modifyQueue.addOperation(b)
-		return operation
+
+		let completeBlock = BlockOperation {
+			complete(operation)
+		}
+
+		self.modifyQueue.addOperation(removeBlock)
+		self.modifyQueue.addOperation(completeBlock)
 	}
 	
 	/// Add documents async
-	func addURLs(_ urls: [URL], urlLoaded: @escaping ([URL]) -> Void)
+	func addURLs(_ operation: FileOperation, complete: @escaping (FileOperation) -> Void)
 	{
 		DispatchQueue.global(qos: .userInitiated).async { [weak self] in
 			var newUrls: [URL] = []
 			var blocks: [BlockOperation] = []
-			urls.forEach {
+			operation.urls.forEach {
 				let url = $0
 				var isDir: ObjCBool = false
 				if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
@@ -160,9 +207,13 @@ class SearchToyIndexer: NSObject {
 					}
 				}
 			}
-			
-			urlLoaded(newUrls)
+
+			let b = BlockOperation {
+				complete(FileOperation(newUrls))
+			}
+
 			self?.modifyQueue.addOperations(blocks, waitUntilFinished: false)
+			self?.modifyQueue.addOperation(b)
 		}
 	}
 	

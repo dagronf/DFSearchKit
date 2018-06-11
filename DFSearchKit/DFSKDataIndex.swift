@@ -46,7 +46,7 @@ open class DFSKDataIndex: DFSKIndex
 													  properties.indexType,
 													  properties.CFDictionary())
 		{
-			return DFSKDataIndex.init(data: data, index: skIndex.takeUnretainedValue())
+			return DFSKDataIndex(data: data, index: skIndex.takeUnretainedValue())
 		}
 		return nil
 	}
@@ -62,7 +62,7 @@ open class DFSKDataIndex: DFSKIndex
 		if let rawData = (data as NSData).mutableCopy() as? NSMutableData,
 			let skIndex = SKIndexOpenWithMutableData(rawData, nil)
 		{
-			return DFSKDataIndex.init(data: rawData, index: skIndex.takeUnretainedValue())
+			return DFSKDataIndex(data: rawData, index: skIndex.takeUnretainedValue())
 		}
 
 		return nil

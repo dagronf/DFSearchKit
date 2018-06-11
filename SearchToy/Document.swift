@@ -23,6 +23,8 @@
 
 import Cocoa
 
+import DFSKSearchKit
+
 class Document: NSDocument {
 	
 	@IBOutlet weak var urlField: NSTextField!
@@ -32,18 +34,21 @@ class Document: NSDocument {
 
 	@IBOutlet weak var queryField: NSTextField!
 	@IBOutlet var queryResultView: NSTextView!
-	
-	private var indexer: SearchToyIndexer?
+
+	private var index: DFSKDataIndex = DFSKDataIndex.create()!
+	private var indexer: DFSKIndexAsyncController?
 
 	@objc dynamic fileprivate var operationCount: Int = 0
 	@objc dynamic fileprivate var files: [URL] = []
-	
+
 	override init() {
 		super.init()
-		self.indexer = SearchToyIndexer.create()
-		self.indexer?.delegate = self
+
+		// Create a blank index for empty documents
+		self.indexer = DFSKIndexAsyncController.init(index: index, delegate: self)
+
 	}
-	
+
 	override var windowNibName: NSNib.Name? {
 		// Returns the nib file name of the document
 		// If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this property and override -makeWindowControllers instead.
@@ -61,20 +66,13 @@ extension Document
 {
 	override func data(ofType typeName: String) throws -> Data
 	{
-		if let index = self.indexer
-		{
-			return index.save()
-		}
-		throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
+		return self.index.save()!
 	}
 	
 	override func read(from data: Data, ofType typeName: String) throws
 	{
-		self.indexer = SearchToyIndexer.load(data)
-		if self.indexer == nil
-		{
-			throw NSError(domain: NSOSStatusErrorDomain, code: readErr, userInfo: nil)
-		}
+		self.index = DFSKDataIndex.load(from: data)!
+		self.indexer = DFSKIndexAsyncController.init(index: index, delegate: self)
 	}
 }
 
@@ -87,16 +85,16 @@ extension Document
 		if let url = URL(string: self.urlField.stringValue)
 		{
 			let text = self.docContentView.string
-			self.addTextOperation(SearchToyIndexer.TextOperation(url: url, text: text))
+			self.addTextOperation(DFSKIndexAsyncController.TextTask(url: url, text: text))
 		}
 	}
 	
-	@objc func addTextOperation(_ textOperation: SearchToyIndexer.TextOperation)
+	@objc func addTextOperation(_ textTask: DFSKIndexAsyncController.TextTask)
 	{
-		self.indexer?.addText(textOperation.url, text: textOperation.text, complete: { [weak self] textOperation in
+		self.indexer?.addText(async: textTask.url, text: textTask.text, complete: { [weak self] textTask in
 			if let blockSelf = self {
 				DispatchQueue.main.async {
-					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.removeTextOperation), object:textOperation)
+					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.removeTextOperation), object:textTask)
 					blockSelf.undoManager?.setActionName("Add Text")
 				}
 			}
@@ -104,12 +102,12 @@ extension Document
 		//self.updateChangeCount(NSDocument.ChangeType.changeDone)
 	}
 	
-	@objc func removeTextOperation(_ textOperation: SearchToyIndexer.TextOperation)
+	@objc func removeTextOperation(_ textTask: DFSKIndexAsyncController.TextTask)
 	{
-		self.indexer?.removeText(textOperation, complete: { [weak self] textOperation in
+		self.indexer?.removeText(async: textTask, complete: { [weak self] textTask in
 			if let blockSelf = self {
 				DispatchQueue.main.async {
-					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.addTextOperation), object:textOperation)
+					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.addTextOperation), object:textTask)
 					blockSelf.undoManager?.setActionName("Remove Text")
 				}
 			}
@@ -132,29 +130,29 @@ extension Document
 		panel.beginSheetModal(for: window!) { (result) in
 			if result == NSApplication.ModalResponse.OK
 			{
-				self.addURLs(SearchToyIndexer.FileOperation(panel.urls))
+				self.addURLs(DFSKIndexAsyncController.FileTask(panel.urls))
 			}
 		}
 	}
 	
-	@objc func addURLs(_ operation: SearchToyIndexer.FileOperation)
+	@objc func addURLs(_ fileTask: DFSKIndexAsyncController.FileTask)
 	{
-		self.indexer?.addURLs(operation, complete: { [weak self] fileOperation in
+		self.indexer?.addURLs(async: fileTask, complete: { [weak self] fileTask in
 			if let blockSelf = self {
 				DispatchQueue.main.async {
-					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.removeURLs), object:fileOperation)
-					blockSelf.undoManager?.setActionName("Add \(fileOperation.urls.count) Documents")
+					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.removeURLs), object:fileTask)
+					blockSelf.undoManager?.setActionName("Add \(fileTask.urls.count) Documents")
 				}
 			}
 		})
 	}
 	
-	@objc func removeURLs(_ operation: SearchToyIndexer.FileOperation) {
-		self.indexer?.removeURLs(operation, complete: { [weak self] fileOperation in
+	@objc func removeURLs(_ fileTask: DFSKIndexAsyncController.FileTask) {
+		self.indexer?.removeURLs(async: fileTask, complete: { [weak self] fileTask in
 			if let blockSelf = self {
 				DispatchQueue.main.async {
-					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.addURLs), object:fileOperation)
-					blockSelf.undoManager?.setActionName("Remove \(fileOperation.urls.count) Documents")
+					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.addURLs), object:fileTask)
+					blockSelf.undoManager?.setActionName("Remove \(fileTask.urls.count) Documents")
 				}
 			}
 		})
@@ -165,23 +163,35 @@ extension Document
 
 extension Document
 {
+
+	func searchNext(_ searchTask: DFSKIndexAsyncController.SearchTask)
+	{
+		searchTask.next(10) { [weak self] (searchTask, results) in
+
+			if results.moreResultsAvailable
+			{
+				self?.searchNext(searchTask)
+			}
+		}
+	}
+
 	@IBAction func searchText(_ sender: NSButton)
 	{
-		guard let index = self.indexer else {
-			return
-		}
-		
-		index.flush()
-		
 		let searchText = self.queryField.stringValue
+
+		self.index.flush()
+
+//		let search = self.indexer?.search(async: searchText)
+//		self.searchNext(search!)
+
 		if searchText.count > 0 {
 			let result = index.search(searchText)
-			
+
 			var str: String = ""
 			result.forEach {
 				str += "\($0.url) - (\($0.score))\n"
 			}
-			
+
 			self.queryResultView.string = str
 		}
 		else
@@ -198,16 +208,16 @@ extension Document
 	}
 }
 
-extension Document: SearchToyIndexerProtocol
+extension Document: DFSKIndexAsyncControllerProtocol
 {
-	func queueDidEmpty(_ indexer: SearchToyIndexer)
+	func queueDidEmpty(_ indexer: DFSKIndexAsyncController)
 	{
 		DispatchQueue.main.async { [weak self] in
 			self?.updateFiles()
 		}
 	}
 
-	func queueDidChange(_ count: Int)
+	func queueDidChange(_ indexer: DFSKIndexAsyncController, count: Int)
 	{
 		DispatchQueue.main.async { [weak self] in
 			self?.operationCount = count
@@ -216,8 +226,8 @@ extension Document: SearchToyIndexerProtocol
 
 	func updateFiles()
 	{
-		self.indexer?.flush()
-		self.files = (self.indexer?.documents())!
+		self.index.flush()
+		self.files = self.index.documents()
 	}
 }
 

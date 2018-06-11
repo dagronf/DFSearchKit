@@ -45,7 +45,7 @@ open class DFSKFileIndex: DFSKIndex
 	{
 		if let temp = SKIndexOpenWithURL(url as CFURL, nil, writable)
 		{
-			return DFSKFileIndex.init(url: url, index: temp.takeUnretainedValue())
+			return DFSKFileIndex(url: url, index: temp.takeUnretainedValue())
 		}
 
 		return nil
@@ -64,7 +64,7 @@ open class DFSKFileIndex: DFSKIndex
 											   properties.indexType,
 											   properties.CFDictionary())
 		{
-			return DFSKFileIndex.init(url: url, index: skIndex.takeUnretainedValue())
+			return DFSKFileIndex(url: url, index: skIndex.takeUnretainedValue())
 		}
 		else
 		{

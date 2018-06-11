@@ -21,11 +21,12 @@
 //  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import Foundation
 import CoreServices
+import Foundation
 
 /// Provide the equivalent of @synchronised on objc
-private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows -> T {
+private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows -> T
+{
 	objc_sync_enter(lock)
 	defer { objc_sync_exit(lock) }
 	return try body()
@@ -37,9 +38,10 @@ open class DFSKIndex: NSObject
 	public struct CreateProperties
 	{
 		public init(indexType: SKIndexType = kSKIndexInverted,
-			 proximityIndexing: Bool = false,
-			 stopWords: Set<String> = [],
-			 minTermLength: Int = 0) {
+					proximityIndexing: Bool = false,
+					stopWords: Set<String> = [],
+					minTermLength: Int = 0)
+		{
 			self.indexType = indexType
 			self.proximityIndexing = proximityIndexing
 			self.stopWords = stopWords
@@ -54,7 +56,7 @@ open class DFSKIndex: NSObject
 					kSKProximityIndexing: self.proximityIndexing,
 					kSKStopWords: self.stopWords,
 					kSKMinTermLength: self.minTermLength
-			]
+				]
 			return properties as CFDictionary
 		}
 
@@ -72,9 +74,9 @@ open class DFSKIndex: NSObject
 
 	fileprivate func rawIndex() -> SKIndex?
 	{
-		return index
+		return self.index
 	}
-	
+
 	private lazy var dataExtractorLoaded: Bool = {
 		SKLoadDefaultExtractorPlugIns()
 		return true
@@ -85,7 +87,7 @@ open class DFSKIndex: NSObject
 		var stopWords: Set<String> = []
 		if let index = self.index,
 			let properties = SKIndexGetAnalysisProperties(self.index),
-			let sp = properties.takeUnretainedValue() as? [String:Any]
+			let sp = properties.takeUnretainedValue() as? [String: Any]
 		{
 			stopWords = sp[kSKStopWords as String] as! Set<String>
 		}
@@ -118,7 +120,6 @@ open class DFSKIndex: NSObject
 
 extension DFSKIndex
 {
-
 	/// Returns the mime type for the url, or nil if the mime type couldn't be ascertained from the extension
 	///
 	/// - Parameter url: the url to detect the mime type for
@@ -150,7 +151,8 @@ extension DFSKIndex
 			return false
 		}
 
-		return synchronized(self) {
+		return synchronized(self)
+		{
 			SKIndexAddDocumentWithText(index, document.takeUnretainedValue(), text as CFString, canReplace)
 		}
 	}
@@ -162,7 +164,7 @@ extension DFSKIndex
 	///   - mimeType: An optional mimetype.  If nil, attempts to work out the type of file from the extension.
 	///   - canReplace: if true, can attempt to replace an existing document with the new one.
 	/// - Returns: true if the command was successful.
-	///				**NOTE** If the document _wasnt_ updated it also returns true!
+	/// 				**NOTE** If the document _wasnt_ updated it also returns true!
 	open func add(url: URL, mimeType: String? = nil, canReplace: Bool = true) -> Bool
 	{
 		guard self.dataExtractorLoaded,
@@ -175,7 +177,8 @@ extension DFSKIndex
 		// Try to detect the mime type if it wasn't specified
 		let mime = mimeType ?? self.detectMimeType(url)
 
-		return synchronized(self) {
+		return synchronized(self)
+		{
 			SKIndexAddDocument(index, document.takeUnretainedValue(), mime as CFString?, true)
 		}
 	}
@@ -210,7 +213,7 @@ extension DFSKIndex
 		}
 		return addedUrls
 	}
-	
+
 	/// Remove a document from the index
 	///
 	/// - Parameter url: The identifying URL for the document
@@ -224,7 +227,8 @@ extension DFSKIndex
 			return false
 		}
 
-		return synchronized(self) {
+		return synchronized(self)
+		{
 			SKIndexRemoveDocument(index, document.takeUnretainedValue())
 		}
 	}
@@ -295,7 +299,8 @@ extension DFSKIndex
 		if let index = self.index,
 			let document = self.indexedDocument(url)
 		{
-			synchronized(self) {
+			synchronized(self)
+			{
 				SKIndexSetDocumentProperties(index, document, properties as CFDictionary)
 			}
 			return true
@@ -342,7 +347,7 @@ extension DFSKIndex
 	/// - Parameter url: The document URL in the index to locate
 	/// - Returns: An array of the terms and corresponding counts located in the document.
 	///            Returns an empty array if the document cannot be located.
-	open func termsAndCounts(for url: URL) -> [(term: String, count:Int)]
+	open func termsAndCounts(for url: URL) -> [(term: String, count: Int)]
 	{
 		guard let index = self.index else
 		{
@@ -352,11 +357,11 @@ extension DFSKIndex
 		var result = Array<(String, Int)>()
 
 		let document = SKDocumentCreateWithURL(url as CFURL).takeUnretainedValue()
-		let documentID = SKIndexGetDocumentID(index, document);
+		let documentID = SKIndexGetDocumentID(index, document)
 
 		guard let termVals = SKIndexCopyTermIDArrayForDocumentID(index, documentID),
 			let terms = termVals.takeUnretainedValue() as? Array<CFIndex>
-			else
+		else
 		{
 			return []
 		}
@@ -369,7 +374,7 @@ extension DFSKIndex
 				if !self.stopWords.contains(termString)
 				{
 					let count = SKIndexGetDocumentTermFrequency(index, documentID, term) as Int
-					result.append( (termString, count) )
+					result.append((termString, count))
 				}
 			}
 		}
@@ -390,14 +395,20 @@ extension DFSKIndex
 
 	/// Start a progressive search
 	open func progressiveSearch(_ index: DFSKIndex,
-						   query: String,
-						   options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> ProgressiveSearch
+								query: String,
+								options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> ProgressiveSearch
 	{
 		return ProgressiveSearch(index, query: query, options: options)
 	}
 
 	open class ProgressiveSearch
 	{
+		public struct Results
+		{
+			public let moreResultsAvailable: Bool
+			public let results: [SearchResult]
+		}
+
 		private let options: SKSearchOptions
 		private let search: SKSearch
 		private let index: DFSKIndex
@@ -414,16 +425,16 @@ extension DFSKIndex
 		/// Cancels an active search
 		open func cancel()
 		{
-			SKSearchCancel(search)
+			SKSearchCancel(self.search)
 		}
 
 		/// Get the next chunk of results
-		open func next(_ limit: Int = 10, timeout: TimeInterval = 1.0) -> (moreResults: Bool, results: [ SearchResult ])
+		open func next(_ limit: Int = 10, timeout: TimeInterval = 1.0) -> (ProgressiveSearch.Results)
 		{
-			guard index.rawIndex() != nil else
+			guard self.index.rawIndex() != nil else
 			{
 				// If the index has been closed, then no results for you good sir!
-				return (false, [])
+				return Results(moreResultsAvailable: false, results: [])
 			}
 
 			var scores: [Float] = Array(repeating: 0.0, count: limit)
@@ -434,14 +445,14 @@ extension DFSKIndex
 			let hasMore = SKSearchFindMatches(self.search, limit, &documentIDs, &scores, timeout, &foundCount)
 			SKIndexCopyDocumentURLsForDocumentIDs(index.rawIndex()!, foundCount, &documentIDs, &urls)
 
-			let partialResults: [ SearchResult ] = zip(urls[0 ..< foundCount], scores).compactMap({
-				(cfurl, score) -> (SearchResult)? in
+			let partialResults: [SearchResult] = zip(urls[0 ..< foundCount], scores).compactMap({
+				(cfurl, score) -> SearchResult? in
 				guard let url = cfurl?.takeUnretainedValue() as URL?
-					else { return nil }
+				else { return nil }
 				return SearchResult(url: url, score: score)
 			})
 
-			return (hasMore, partialResults)
+			return Results(moreResultsAvailable: hasMore, results: partialResults)
 		}
 	}
 }
@@ -458,21 +469,21 @@ extension DFSKIndex
 	///   - timeout: How long to wait for a search to complete before stopping
 	/// - Returns: An array containing match URLs and their corresponding 'score' (how relevant the match)
 	open func search(_ query: String,
-				limit: Int = 10,
-				timeout: TimeInterval = 1.0,
-				options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> [ SearchResult ]
+					 limit: Int = 10,
+					 timeout: TimeInterval = 1.0,
+					 options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> [SearchResult]
 	{
 		let search = self.progressiveSearch(self, query: query, options: options)
 
-		var results: [ SearchResult ] = []
-		var hasMoreResults = true
+		var results: [SearchResult] = []
+		var moreResultsAvailable = true
 		repeat
 		{
 			let result = search.next(limit, timeout: timeout)
 			results.append(contentsOf: result.results)
-			hasMoreResults = result.moreResults
+			moreResultsAvailable = result.moreResultsAvailable
 		}
-			while hasMoreResults
+		while moreResultsAvailable
 
 		return results
 	}
@@ -533,7 +544,7 @@ fileprivate extension DFSKIndex
 
 		var isLeaf = true
 
-		let iterator = SKIndexDocumentIteratorCreate (index, inParentDocument).takeUnretainedValue()
+		let iterator = SKIndexDocumentIteratorCreate(index, inParentDocument).takeUnretainedValue()
 		while let skDocument = SKIndexDocumentIteratorCopyNext(iterator)
 		{
 			isLeaf = false

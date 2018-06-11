@@ -22,7 +22,7 @@
 //
 
 import XCTest
-@testable import DFSearchKit
+@testable import DFSKSearchKit
 
 class DFSKIndexTests: XCTestCase
 {
@@ -581,19 +581,19 @@ class DFSKIndexTests: XCTestCase
 		let search = indexer.progressiveSearch(indexer, query: "dog")
 
 		var searchChunk = search.next(10)
-		XCTAssertTrue(searchChunk.moreResults)
+		XCTAssertTrue(searchChunk.moreResultsAvailable)
 		XCTAssertEqual(10, searchChunk.results.count)
 
 		searchChunk = search.next(10)
-		XCTAssertTrue(searchChunk.moreResults)
+		XCTAssertTrue(searchChunk.moreResultsAvailable)
 		XCTAssertEqual(10, searchChunk.results.count)
 
 		searchChunk = search.next(10)
-		XCTAssertFalse(searchChunk.moreResults)
+		XCTAssertFalse(searchChunk.moreResultsAvailable)
 		XCTAssertEqual(5, searchChunk.results.count)
 
 		searchChunk = search.next(10)
-		XCTAssertFalse(searchChunk.moreResults)
+		XCTAssertFalse(searchChunk.moreResultsAvailable)
 		XCTAssertEqual(0, searchChunk.results.count)
 	}
 }

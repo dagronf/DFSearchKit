@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2306AAE220CBC8AF00070A6B /* DFSKSearchKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2340800320CB87310031D43A /* DFSKSearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2306AAE420CBCA8300070A6B /* SearchToyIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2306AAE320CBCA8300070A6B /* SearchToyIndexer.swift */; };
 		233C768D20CB18DA00589CB4 /* DFSKSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233C768C20CB18DA00589CB4 /* DFSKSummary.swift */; };
 		23407FCD20CB243D0031D43A /* the_school_short_story.txt in Resources */ = {isa = PBXBuildFile; fileRef = 23407FCC20CB243D0031D43A /* the_school_short_story.txt */; };
 		23407FCF20CB68100031D43A /* DSFKSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23407FCE20CB68100031D43A /* DSFKSummaryTests.swift */; };
@@ -38,6 +37,9 @@
 		23CE76D120BCB3EC007C8BA8 /* StopWords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBA20B95F45001F187F /* StopWords.swift */; };
 		23D9084E209E71F70096E42A /* DFSKIndexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D9084D209E71F70096E42A /* DFSKIndexTests.swift */; };
 		23D9085B209E72250096E42A /* DFSKIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D90859209E72250096E42A /* DFSKIndex.swift */; };
+		23E5A02F20CE05A900D1B2B5 /* DFSKIndexAsyncController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFSKIndexAsyncController.swift */; };
+		23E5A03120CE078000D1B2B5 /* DFSKIndexAsyncController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFSKIndexAsyncController.swift */; };
+		23E5A03220CE08D100D1B2B5 /* DFSKIndexAsyncController.swift in Headers */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFSKIndexAsyncController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -63,7 +65,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2306AAE320CBCA8300070A6B /* SearchToyIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToyIndexer.swift; sourceTree = "<group>"; };
 		233C768C20CB18DA00589CB4 /* DFSKSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSKSummary.swift; sourceTree = "<group>"; };
 		23407FCC20CB243D0031D43A /* the_school_short_story.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = the_school_short_story.txt; sourceTree = "<group>"; };
 		23407FCE20CB68100031D43A /* DSFKSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSFKSummaryTests.swift; sourceTree = "<group>"; };
@@ -91,6 +92,7 @@
 		23D90859209E72250096E42A /* DFSKIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSKIndex.swift; sourceTree = "<group>"; };
 		23D9085C209E9A4D0096E42A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		23D9085D209E9B730096E42A /* SKSearchKit_Play.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSearchKit_Play.swift; sourceTree = "<group>"; };
+		23E5A02E20CE05A900D1B2B5 /* DFSKIndexAsyncController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSKIndexAsyncController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,7 +140,6 @@
 		2340801420CB88350031D43A /* SearchToy */ = {
 			isa = PBXGroup;
 			children = (
-				2306AAE320CBCA8300070A6B /* SearchToyIndexer.swift */,
 				2340801520CB88350031D43A /* AppDelegate.swift */,
 				2340801720CB88350031D43A /* Document.swift */,
 				2340801920CB88350031D43A /* Document.xib */,
@@ -216,6 +217,7 @@
 				23614DBE20B978A1001F187F /* DFSKDataIndex.swift */,
 				23614DC120B978C0001F187F /* DFSKFileIndex.swift */,
 				233C768C20CB18DA00589CB4 /* DFSKSummary.swift */,
+				23E5A02E20CE05A900D1B2B5 /* DFSKIndexAsyncController.swift */,
 			);
 			path = DFSearchKit;
 			sourceTree = "<group>";
@@ -240,6 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2340800720CB87310031D43A /* DFSKSearchKit.h in Headers */,
+				23E5A03220CE08D100D1B2B5 /* DFSKIndexAsyncController.swift in Headers */,
 				2340802820CB88620031D43A /* DFSKIndex.swift in Headers */,
 				2340802920CB88620031D43A /* DFSKDataIndex.swift in Headers */,
 				2340802A20CB88620031D43A /* DFSKFileIndex.swift in Headers */,
@@ -401,6 +404,7 @@
 			files = (
 				2340800D20CB873A0031D43A /* DFSKFileIndex.swift in Sources */,
 				2340800C20CB873A0031D43A /* DFSKDataIndex.swift in Sources */,
+				23E5A03120CE078000D1B2B5 /* DFSKIndexAsyncController.swift in Sources */,
 				2340800E20CB873A0031D43A /* DFSKSummary.swift in Sources */,
 				2340800B20CB873A0031D43A /* DFSKIndex.swift in Sources */,
 			);
@@ -410,7 +414,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2306AAE420CBCA8300070A6B /* SearchToyIndexer.swift in Sources */,
 				2340801820CB88350031D43A /* Document.swift in Sources */,
 				2340801620CB88350031D43A /* AppDelegate.swift in Sources */,
 			);
@@ -436,6 +439,7 @@
 				23407FCF20CB68100031D43A /* DSFKSummaryTests.swift in Sources */,
 				23407FD120CB686F0031D43A /* DFSKUtils.swift in Sources */,
 				23D9085B209E72250096E42A /* DFSKIndex.swift in Sources */,
+				23E5A02F20CE05A900D1B2B5 /* DFSKIndexAsyncController.swift in Sources */,
 				23614DC320B978C0001F187F /* DFSKFileIndex.swift in Sources */,
 				23614DBB20B95F45001F187F /* StopWords.swift in Sources */,
 				23D9084E209E71F70096E42A /* DFSKIndexTests.swift in Sources */,

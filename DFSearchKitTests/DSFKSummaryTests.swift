@@ -22,6 +22,7 @@
 //
 
 import XCTest
+import DFSKSearchKit
 
 class DSFKSummaryTests: XCTestCase {
 

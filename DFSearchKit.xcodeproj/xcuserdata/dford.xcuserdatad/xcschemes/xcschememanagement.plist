@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
+		<key>DFSKSearchKitTests-objc.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>DFSearchKit.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -27,6 +32,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>2340800220CB87310031D43A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>238FAD7120A11B5F00092FCD</key>
 		<dict>
 			<key>primary</key>

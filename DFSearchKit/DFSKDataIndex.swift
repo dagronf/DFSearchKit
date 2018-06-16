@@ -24,7 +24,7 @@
 import Foundation
 
 /// A memory-based index using NSMutableData as the backing.
-open class DFSKDataIndex: DFSKIndex
+@objc public class DFSKDataIndex: DFSKIndex
 {
 	// The data index store
 	private var data = NSMutableData()
@@ -39,7 +39,7 @@ open class DFSKDataIndex: DFSKIndex
 	///
 	/// - Parameter properties: the properties for index creation
 	/// - Returns: A new index object if successful, nil otherwise
-	open static func create(properties: CreateProperties = CreateProperties()) -> DFSKDataIndex?
+	@objc public static func create(properties: CreateProperties = CreateProperties()) -> DFSKDataIndex?
 	{
 		let data = NSMutableData()
 		if let skIndex = SKIndexCreateWithMutableData(data, nil,
@@ -57,7 +57,7 @@ open class DFSKDataIndex: DFSKIndex
 	///
 	/// - Parameter data: The data to load as an index
 	/// - Returns: A new index object if successful, nil otherwise
-	open static func load(from data: Data) -> DFSKDataIndex?
+	@objc public static func load(from data: Data) -> DFSKDataIndex?
 	{
 		if let rawData = (data as NSData).mutableCopy() as? NSMutableData,
 			let skIndex = SKIndexOpenWithMutableData(rawData, nil)
@@ -69,7 +69,7 @@ open class DFSKDataIndex: DFSKIndex
 	}
 
 	/// Returns the index content as a (copied) Swift Data object
-	open func save() -> Data?
+	@objc public func save() -> Data?
 	{
 		flush()
 		return self.data.copy() as? Data

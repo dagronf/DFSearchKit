@@ -24,36 +24,53 @@
 import Foundation
 import CoreServices
 
-class DFSKSummary
+@objc public class DFSKSummary: NSObject
 {
-	struct Sentence
+	@objc(DFSKSummarySentence)
+	public class Sentence: NSObject
 	{
-		var text: String
-		var rank: Int
-		var sentenceOrder: Int
-		var paragraphOrder: Int
+		@objc public init(text: String, rank: Int, sentenceOrder: Int, paragraphOrder: Int)
+		{
+			self.text = text
+			self.rank = rank
+			self.sentenceOrder = sentenceOrder
+			self.paragraphOrder = paragraphOrder
+		}
+
+		@objc public let text: String
+		@objc public let rank: Int
+		@objc public let sentenceOrder: Int
+		@objc public let paragraphOrder: Int
 	}
 
-	struct Paragraph
+	@objc(DFSKSummaryParagraph)
+	public class Paragraph: NSObject
 	{
-		var text: String
-		var rank: Int
-		var paragraphOrder: Int
+		@objc public init(text: String, rank: Int, paragraphOrder: Int)
+		{
+			self.text = text
+			self.rank = rank
+			self.paragraphOrder = paragraphOrder
+		}
+
+		@objc public let text: String
+		@objc public let rank: Int
+		@objc public let paragraphOrder: Int
 	}
 
 	private let summary: SKSummary
 
-	init(_ term: String)
+	@objc public init(_ term: String)
 	{
 		self.summary = SKSummaryCreateWithString(term as CFString).takeRetainedValue()
 	}
 
-	func sentenceCount() -> Int
+	@objc public func sentenceCount() -> Int
 	{
 		return SKSummaryGetSentenceCount(summary)
 	}
 
-	func sentenceSummary(maxSentences: Int = -1) -> [Sentence]
+	@objc public func sentenceSummary(maxSentences: Int = -1) -> [Sentence]
 	{
 		var result: [Sentence] = []
 
@@ -79,12 +96,12 @@ class DFSKSummary
 		return result
 	}
 
-	func paragraphCount() -> Int
+	@objc public func paragraphCount() -> Int
 	{
 		return SKSummaryGetParagraphCount(summary)
 	}
 
-	func paragraphSummary(maxParagraphs: Int = -1) -> [Paragraph]
+	@objc public func paragraphSummary(maxParagraphs: Int = -1) -> [Paragraph]
 	{
 		var result: [Paragraph] = []
 

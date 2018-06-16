@@ -516,7 +516,7 @@ class DFSKIndexTests: XCTestCase
 		XCTAssertEqual(1, indexer.search("fish").count)
 
 		// Terms and counts
-		let termFreq = indexer.termsAndCounts(for: d1)
+		let termFreq = indexer.terms(for: d1)
 		XCTAssertEqual(3, termFreq.count)
 
 		var term = termFreq.filter({ $0.term == "cat" })
@@ -544,7 +544,7 @@ class DFSKIndexTests: XCTestCase
 		indexer.flush()
 
 		// Grab the frequencies for the pdf document
-		let termFreq = indexer.termsAndCounts(for: filePath)
+		let termFreq = indexer.terms(for: filePath)
 
 		// Check that some of the terms exist
 		var theTerm = termFreq.filter { $0.term == "licensor" }
@@ -578,7 +578,7 @@ class DFSKIndexTests: XCTestCase
 
 		XCTAssertEqual(25, indexer.documents().count)
 
-		let search = indexer.progressiveSearch(indexer, query: "dog")
+		let search = indexer.progressiveSearch(query: "dog")
 
 		var searchChunk = search.next(10)
 		XCTAssertTrue(searchChunk.moreResultsAvailable)

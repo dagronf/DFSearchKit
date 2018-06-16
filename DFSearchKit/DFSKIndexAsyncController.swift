@@ -9,7 +9,7 @@
 import Foundation
 
 /// Protocol for notifying when the operation queue changes state
-public protocol DFSKIndexAsyncControllerProtocol
+@objc public protocol DFSKIndexAsyncControllerProtocol
 {
 	/// The queue is now empty
 	func queueDidEmpty(_ indexer: DFSKIndexAsyncController)
@@ -18,7 +18,7 @@ public protocol DFSKIndexAsyncControllerProtocol
 }
 
 /// A controller for a DFSKIndex object that supports asynchronous calls to the index
-public class DFSKIndexAsyncController: NSObject
+@objc public class DFSKIndexAsyncController: NSObject
 {
 	public let index: DFSKIndex
 	let delegate: DFSKIndexAsyncControllerProtocol
@@ -55,10 +55,11 @@ public class DFSKIndexAsyncController: NSObject
 
 // MARK: Async task objects
 
-public extension DFSKIndexAsyncController
+@objc public extension DFSKIndexAsyncController
 {
 	/// Class to help with undo/redo
-	class TextTask: NSObject
+	@objc(DFSKIndexAsyncControllerTextTask)
+	public class TextTask: NSObject
 	{
 		public let url: URL
 		public let text: String
@@ -70,7 +71,8 @@ public extension DFSKIndexAsyncController
 		}
 	}
 
-	class FileTask: NSObject
+	@objc(DFSKIndexAsyncControllerFileTask)
+	public class FileTask: NSObject
 	{
 		public let urls: [URL]
 		public init(_ urls: [URL])
@@ -80,20 +82,15 @@ public extension DFSKIndexAsyncController
 		}
 	}
 
-	class SearchTask: NSObject
+	@objc(DFSKIndexAsyncControllerSearchTask)
+	public class SearchTask: NSObject
 	{
-		public struct Results
-		{
-			public let moreResultsAvailable: Bool
-			public let results: [DFSKIndex.SearchResult]
-		}
-
 		public let query: String
 		let search: DFSKIndex.ProgressiveSearch
 		public init(_ index: DFSKIndex, query: String)
 		{
 			self.query = query
-			self.search = index.progressiveSearch(index, query: query)
+			self.search = index.progressiveSearch(query: query)
 			super.init()
 		}
 
@@ -103,12 +100,12 @@ public extension DFSKIndexAsyncController
 		}
 
 		public func next(_ maxResults: Int,
-						 complete: @escaping (SearchTask, Results) -> Void)
+						 complete: @escaping (SearchTask, DFSKIndex.ProgressiveSearch.Results) -> Void)
 		{
 			DispatchQueue.global(qos: .userInitiated).async
 			{
 				let results = self.search.next(maxResults, timeout: 0.3)
-				let searchResults = SearchTask.Results(moreResultsAvailable: results.moreResultsAvailable, results: results.results)
+				let searchResults = DFSKIndex.ProgressiveSearch.Results(moreResultsAvailable: results.moreResultsAvailable, results: results.results)
 				DispatchQueue.main.async
 				{
 					complete(self, searchResults)

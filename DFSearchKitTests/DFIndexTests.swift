@@ -691,4 +691,48 @@ class DFIndexAsyncTests: XCTestCase
 		result = indexer.search("grappled")
 		XCTAssertEqual(0, result.count)
 	}
+
+	func testAsyncCancel()
+	{
+		guard let indexer = DFIndexData.create() else
+		{
+			XCTFail()
+			return
+		}
+
+		let spyDelegate = SpyDelegate()
+		let asyncController = DFIndexControllerAsync(index: indexer, delegate: spyDelegate)
+
+		var tasks: [DFIndexControllerAsync.TextTask] = []
+		for count in 0 ..< 2500
+		{
+			let urlstr = "doc-url://d\(count).txt"
+			let d1 = DFUtils.url(urlstr)
+			tasks.append(DFIndexControllerAsync.TextTask(url: d1, text: "cat dog fish"))
+		}
+
+		let completeExpectation = self.expectation(description: "completeExpectation")
+		let cancelExpectation = self.expectation(description: "cancelExpectation")
+
+		asyncController.addText(async: tasks) { _ in
+			/// We should always receive the complete notification, even if we're cancelled
+			completeExpectation.fulfill()
+		}
+
+		asyncController.cancelCurrent {
+			/// We have been cancelled
+			cancelExpectation.fulfill()
+		}
+
+		waitForExpectations(timeout: 10) { error in
+			if let error = error {
+				XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+			}
+		}
+
+		indexer.flush()
+
+		/// We shouldn't have 2500 of these as we cancelled (this is a dodgy test)
+		XCTAssertNotEqual(2500, indexer.search("dog").count)
+	}
 }

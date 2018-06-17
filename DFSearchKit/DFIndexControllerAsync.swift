@@ -23,14 +23,11 @@ import Foundation
 	let index: DFIndex
 	let delegate: DFIndexControllerAsyncProtocol?
 
-	/// If the queue has been completed and we're waiting on it, the callback to respond with
-	var queueCompletedCallback: (() -> Void)?
-
 	/// Queue for handling async modifications to the index
 	fileprivate let modifyQueue = OperationQueue()
 
 	/// Is the controller currently processing requests
-	@objc public dynamic var queueComplete: Bool = false
+	@objc public dynamic var queueComplete: Bool = true
 	@objc public dynamic var queueSize: Int = 0
 
 	public init(index: DFIndex, delegate: DFIndexControllerAsyncProtocol?)
@@ -66,18 +63,15 @@ import Foundation
 				{
 					delegate.queueDidEmpty(self)
 				}
-				if let callback = self.queueCompletedCallback
-				{
-					callback()
-					self.queueCompletedCallback = nil
-				}
 			}
 
 			self.delegate?.queueDidChange(self, count: self.modifyQueue.operationCount)
 		}
 	}
 
-	/// Cancel all the outstanding requests if they haven't already been started
+	/// Cancel all the outstanding requests if they haven't already been started.
+	///
+	/// Note that all tasks waiting on completion that are cancelled will not be called back
 	///
 	/// - Parameter complete: called when the cancel operation is complete
 	@objc public func cancelCurrent(_ complete: @escaping () -> Void)
@@ -91,16 +85,17 @@ import Foundation
 	/// - Parameter complete: called when all the operations are complete
 	@objc public func waitUntilQueueIsComplete(_ complete: @escaping () -> Void)
 	{
-		// Can't call this more than once at the same time
-		assert(self.queueCompletedCallback == nil)
-
 		if self.queueComplete
 		{
 			complete()
 		}
 		else
 		{
-			self.queueCompletedCallback = complete
+			DispatchQueue.global(qos: .userInitiated).async
+			{ [weak self] in
+				self?.modifyQueue.waitUntilAllOperationsAreFinished()
+				complete()
+			}
 		}
 	}
 }
@@ -171,6 +166,18 @@ import Foundation
 
 extension DFIndexControllerAsync
 {
+	/// Create a flush operation
+	private func flushOperation() -> BlockOperation
+	{
+		let flushOperation = BlockOperation()
+		flushOperation.addExecutionBlock { [weak self, weak flushOperation] in
+			if flushOperation?.isCancelled == false
+			{
+				_ = self?.index.flush()
+			}
+		}
+		return flushOperation
+	}
 
 	/// Add text elements to the index asynchronously
 	///
@@ -183,30 +190,31 @@ extension DFIndexControllerAsync
 		var addOperations: [BlockOperation] = []
 		for task in textTasks
 		{
-			let addBlock = BlockOperation
-			{ [weak self] in
-				_ = self?.index.add(task.url, text: task.text)
+			let addBlock = BlockOperation()
+			addBlock.addExecutionBlock { [weak self, weak addBlock] in
+				if addBlock?.isCancelled == false
+				{
+					_ = self?.index.add(task.url, text: task.text)
+				}
 			}
 			addOperations.append(addBlock)
 		}
 
 		// Create our 'we've finished' operation
-		let completeOperation = BlockOperation
+		let completeOperation = BlockOperation()
+		completeOperation.completionBlock =
 		{
 			complete(textTasks)
 		}
 
 		if flushWhenComplete
 		{
-			let flushBlock = BlockOperation
-			{ [weak self] in
-				_ = self?.index.flush()
-			}
+			let flushOperation = self.flushOperation()
 
 			// The flush operation has to occur when all the add operations are complete
-			addOperations.forEach { flushBlock.addDependency($0); }
-			completeOperation.addDependency(flushBlock)
-			addOperations.append(flushBlock)
+			addOperations.forEach { flushOperation.addDependency($0); }
+			completeOperation.addDependency(flushOperation)
+			addOperations.append(flushOperation)
 		}
 		else
 		{
@@ -239,9 +247,12 @@ extension DFIndexControllerAsync
 					let urls = self?.folderUrls(url)
 					for url in urls!
 					{
-						let addOperation = BlockOperation
-						{ [weak self] in
-							_ = self?.index.add(url: url)
+						let addOperation = BlockOperation()
+						addOperation.addExecutionBlock { [weak self, weak addOperation] in
+							if addOperation?.isCancelled == false
+							{
+								_ = self?.index.add(url: url)
+							}
 						}
 						addOperations.append(addOperation)
 						newUrls.append(url)
@@ -249,9 +260,12 @@ extension DFIndexControllerAsync
 				}
 				else if FileManager.default.fileExists(url: url)
 				{
-					let addOperation = BlockOperation
-					{ [weak self] in
-						_ = self?.index.add(url: url)
+					let addOperation = BlockOperation()
+					addOperation.addExecutionBlock { [weak self, weak addOperation] in
+						if addOperation?.isCancelled == false
+						{
+							_ = self?.index.add(url: url)
+						}
 					}
 					addOperations.append(addOperation)
 					newUrls.append(url)
@@ -259,22 +273,19 @@ extension DFIndexControllerAsync
 			}
 
 			// Create our 'we've finished' operation
-			let completeOperation = BlockOperation
+			let completeOperation = BlockOperation()
+			completeOperation.completionBlock =
 			{
 				complete(FileTask(newUrls))
 			}
 
-			if flushWhenComplete
+			if flushWhenComplete,
+				let flushOperation = self?.flushOperation()
 			{
-				let flushBlock = BlockOperation
-				{ [weak self] in
-					_ = self?.index.flush()
-				}
-
 				// The flush operation has to occur when all the add operations are complete
-				addOperations.forEach { flushBlock.addDependency($0); }
-				completeOperation.addDependency(flushBlock)
-				addOperations.append(flushBlock)
+				addOperations.forEach { flushOperation.addDependency($0); }
+				completeOperation.addDependency(flushOperation)
+				addOperations.append(flushOperation)
 			}
 			else
 			{
@@ -324,24 +335,26 @@ extension DFIndexControllerAsync
 		for task in tasks
 		{
 			let url = task.url
-			let removeBlock = BlockOperation
-			{ [weak self] in
-				_ = self?.index.remove(url: url)
+			let removeOperation = BlockOperation()
+			removeOperation.addExecutionBlock { [weak self, weak removeOperation] in
+				if removeOperation?.isCancelled == false
+				{
+					_ = self?.index.remove(url: url)
+				}
 			}
-			removeOperations.append(removeBlock)
+			removeOperations.append(removeOperation)
 		}
 
-		let completeOperation = BlockOperation
+		// Create our 'we've finished' operation
+		let completeOperation = BlockOperation()
+		completeOperation.completionBlock =
 		{
 			complete(tasks)
 		}
 
 		if flushWhenComplete
 		{
-			let flushOperation = BlockOperation
-			{ [weak self] in
-				_ = self?.index.flush()
-			}
+			let flushOperation = self.flushOperation()
 
 			// The flush operation has to occur when all the add operations are complete
 			removeOperations.forEach { flushOperation.addDependency($0); }
@@ -365,29 +378,28 @@ extension DFIndexControllerAsync
 
 		operation.urls.forEach
 		{ url in
-			let b = BlockOperation
+			let removeOperation = BlockOperation
 			{ [weak self] in
 				_ = self?.index.remove(url: url)
 			}
-			removeOperations.append(b)
+			removeOperations.append(removeOperation)
 		}
 
-		let completeOperation = BlockOperation
+		// Create our 'we've finished' operation
+		let completeOperation = BlockOperation()
+		completeOperation.completionBlock =
 		{
 			complete(FileTask(operation.urls))
 		}
 
 		if flushWhenComplete
 		{
-			let flushBlock = BlockOperation
-			{ [weak self] in
-				_ = self?.index.flush()
-			}
+			let flushOperation = self.flushOperation()
 
 			// The flush operation has to occur when all the add operations are complete
-			removeOperations.forEach { flushBlock.addDependency($0); }
-			completeOperation.addDependency(flushBlock)
-			removeOperations.append(flushBlock)
+			removeOperations.forEach { flushOperation.addDependency($0); }
+			completeOperation.addDependency(flushOperation)
+			removeOperations.append(flushOperation)
 		}
 		else
 		{

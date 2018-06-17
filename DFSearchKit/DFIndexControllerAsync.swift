@@ -92,9 +92,9 @@ import Foundation
 		else
 		{
 			DispatchQueue.global(qos: .userInitiated).async
-			{ [weak self] in
-				self?.modifyQueue.waitUntilAllOperationsAreFinished()
-				complete()
+				{ [weak self] in
+					self?.modifyQueue.waitUntilAllOperationsAreFinished()
+					complete()
 			}
 		}
 	}
@@ -150,13 +150,13 @@ import Foundation
 						 complete: @escaping (SearchTask, DFIndex.ProgressiveSearch.Results) -> Void)
 		{
 			DispatchQueue.global(qos: .userInitiated).async
-			{
-				let results = self.search.next(maxResults, timeout: 0.3)
-				let searchResults = DFIndex.ProgressiveSearch.Results(moreResultsAvailable: results.moreResultsAvailable, results: results.results)
-				DispatchQueue.main.async
 				{
-					complete(self, searchResults)
-				}
+					let results = self.search.next(maxResults, timeout: 0.3)
+					let searchResults = DFIndex.ProgressiveSearch.Results(moreResultsAvailable: results.moreResultsAvailable, results: results.results)
+					DispatchQueue.main.async
+						{
+							complete(self, searchResults)
+					}
 			}
 		}
 	}
@@ -185,7 +185,7 @@ extension DFIndexControllerAsync
 	///   - textTasks: the texts to add
 	///   - flushWhenComplete: If true, flushes the index once all of the URLs are added
 	///   - complete: Callback block when the add has completed
-	public func addText(async textTasks: [TextTask], flushWhenComplete: Bool = false, complete: @escaping ([TextTask]) -> Void)
+	@objc public func addText(async textTasks: [TextTask], flushWhenComplete: Bool = false, complete: @escaping ([TextTask]) -> Void)
 	{
 		var addOperations: [BlockOperation] = []
 		for task in textTasks
@@ -203,8 +203,8 @@ extension DFIndexControllerAsync
 		// Create our 'we've finished' operation
 		let completeOperation = BlockOperation()
 		completeOperation.completionBlock =
-		{
-			complete(textTasks)
+			{
+				complete(textTasks)
 		}
 
 		if flushWhenComplete
@@ -232,68 +232,68 @@ extension DFIndexControllerAsync
 	///   - fileTask: The file operation to complete
 	///   - flushWhenComplete: If true, flushes the index once all of the URLs are added
 	///   - complete: Callback block when the add has completed
-	public func addURLs(async fileTask: FileTask, flushWhenComplete: Bool = false, complete: @escaping (FileTask) -> Void)
+	@objc public func addURLs(async fileTask: FileTask, flushWhenComplete: Bool = false, complete: @escaping (FileTask) -> Void)
 	{
 		DispatchQueue.global(qos: .userInitiated).async
-		{ [weak self] in
-			var newUrls: [URL] = []
-			var addOperations: [BlockOperation] = []
+			{ [weak self] in
+				var newUrls: [URL] = []
+				var addOperations: [BlockOperation] = []
 
-			fileTask.urls.forEach
-			{
-				let url = $0
-				if FileManager.default.folderExists(url: url)
-				{
-					let urls = self?.folderUrls(url)
-					for url in urls!
+				fileTask.urls.forEach
 					{
-						let addOperation = BlockOperation()
-						addOperation.addExecutionBlock { [weak self, weak addOperation] in
-							if addOperation?.isCancelled == false
+						let url = $0
+						if FileManager.default.folderExists(url: url)
+						{
+							let urls = self?.folderUrls(url)
+							for url in urls!
 							{
-								_ = self?.index.add(url: url)
+								let addOperation = BlockOperation()
+								addOperation.addExecutionBlock { [weak self, weak addOperation] in
+									if addOperation?.isCancelled == false
+									{
+										_ = self?.index.add(url: url)
+									}
+								}
+								addOperations.append(addOperation)
+								newUrls.append(url)
 							}
 						}
-						addOperations.append(addOperation)
-						newUrls.append(url)
-					}
-				}
-				else if FileManager.default.fileExists(url: url)
-				{
-					let addOperation = BlockOperation()
-					addOperation.addExecutionBlock { [weak self, weak addOperation] in
-						if addOperation?.isCancelled == false
+						else if FileManager.default.fileExists(url: url)
 						{
-							_ = self?.index.add(url: url)
+							let addOperation = BlockOperation()
+							addOperation.addExecutionBlock { [weak self, weak addOperation] in
+								if addOperation?.isCancelled == false
+								{
+									_ = self?.index.add(url: url)
+								}
+							}
+							addOperations.append(addOperation)
+							newUrls.append(url)
 						}
-					}
-					addOperations.append(addOperation)
-					newUrls.append(url)
 				}
-			}
 
-			// Create our 'we've finished' operation
-			let completeOperation = BlockOperation()
-			completeOperation.completionBlock =
-			{
-				complete(FileTask(newUrls))
-			}
+				// Create our 'we've finished' operation
+				let completeOperation = BlockOperation()
+				completeOperation.completionBlock =
+					{
+						complete(FileTask(newUrls))
+				}
 
-			if flushWhenComplete,
-				let flushOperation = self?.flushOperation()
-			{
-				// The flush operation has to occur when all the add operations are complete
-				addOperations.forEach { flushOperation.addDependency($0); }
-				completeOperation.addDependency(flushOperation)
-				addOperations.append(flushOperation)
-			}
-			else
-			{
-				// Make our completion dependent on all the 'add' blocks
-				addOperations.forEach { completeOperation.addDependency($0); }
-			}
-			addOperations.append(completeOperation)
-			self?.modifyQueue.addOperations(addOperations, waitUntilFinished: false)
+				if flushWhenComplete,
+					let flushOperation = self?.flushOperation()
+				{
+					// The flush operation has to occur when all the add operations are complete
+					addOperations.forEach { flushOperation.addDependency($0); }
+					completeOperation.addDependency(flushOperation)
+					addOperations.append(flushOperation)
+				}
+				else
+				{
+					// Make our completion dependent on all the 'add' blocks
+					addOperations.forEach { completeOperation.addDependency($0); }
+				}
+				addOperations.append(completeOperation)
+				self?.modifyQueue.addOperations(addOperations, waitUntilFinished: false)
 		}
 	}
 
@@ -328,8 +328,19 @@ extension DFIndexControllerAsync
 
 extension DFIndexControllerAsync
 {
+
+	/// Remove all documents with zero terms from the index
+	///
+	/// - Parameter complete: called when the task is complete
+	@objc public func prune(complete: @escaping (FileTask) -> Void)
+	{
+		let emptyURLs = self.index.documents(termState: .empty)
+		let fileTask = FileTask(emptyURLs)
+		self.removeURLs(async: fileTask, complete: complete)
+	}
+
 	/// Remove text async
-	public func removeText(async tasks: [TextTask], flushWhenComplete: Bool = false, complete: @escaping ([TextTask]) -> Void)
+	@objc public func removeText(async tasks: [TextTask], flushWhenComplete: Bool = false, complete: @escaping ([TextTask]) -> Void)
 	{
 		var removeOperations: [BlockOperation] = []
 		for task in tasks
@@ -372,12 +383,11 @@ extension DFIndexControllerAsync
 	}
 
 	/// Remove documents async
-	public func removeURLs(async operation: FileTask, flushWhenComplete: Bool = false, complete: @escaping (FileTask) -> Void)
+	@objc public func removeURLs(async operation: FileTask, flushWhenComplete: Bool = false, complete: @escaping (FileTask) -> Void)
 	{
 		var removeOperations: [BlockOperation] = []
 
-		operation.urls.forEach
-		{ url in
+		operation.urls.forEach { url in
 			let removeOperation = BlockOperation
 			{ [weak self] in
 				_ = self?.index.remove(url: url)
@@ -417,15 +427,15 @@ extension DFIndexControllerAsync
 public extension DFIndexControllerAsync
 {
 	/// Create a search task
-	public func search(async query: String) -> SearchTask
+	@objc public func search(async query: String) -> SearchTask
 	{
 		return SearchTask(self.index, query: query)
 	}
 
 	/// Get the next results on a search task, returning the results on the main thread
-	public func next(_ search: SearchTask,
-					 maxResults: Int,
-					 complete: @escaping (SearchTask, DFIndex.ProgressiveSearch.Results) -> Void)
+	@objc public func next(_ search: SearchTask,
+						   maxResults: Int,
+						   complete: @escaping (SearchTask, DFIndex.ProgressiveSearch.Results) -> Void)
 	{
 		DispatchQueue.global(qos: .userInitiated).async
 		{
@@ -433,7 +443,7 @@ public extension DFIndexControllerAsync
 			let searchResults = DFIndex.ProgressiveSearch.Results(moreResultsAvailable: results.moreResultsAvailable, results: results.results)
 			DispatchQueue.main.async
 			{
-				complete(search, searchResults)
+					complete(search, searchResults)
 			}
 		}
 	}

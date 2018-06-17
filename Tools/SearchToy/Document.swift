@@ -96,10 +96,10 @@ extension Document
 				DispatchQueue.main.async {
 					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.removeTextOperation), object:textTasks)
 					blockSelf.undoManager?.setActionName("Add Text")
+					blockSelf.updateFiles()
 				}
 			}
 		})
-		//self.updateChangeCount(NSDocument.ChangeType.changeDone)
 	}
 	
 	@objc func removeTextOperation(_ textTasks: [DFIndexControllerAsync.TextTask])
@@ -109,6 +109,7 @@ extension Document
 				DispatchQueue.main.async {
 					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.addTextOperation), object:textTasks)
 					blockSelf.undoManager?.setActionName("Remove Text")
+					blockSelf.updateFiles()
 				}
 			}
 		})
@@ -137,22 +138,24 @@ extension Document
 	
 	@objc func addURLs(_ fileTask: DFIndexControllerAsync.FileTask)
 	{
-		self.indexer?.addURLs(async: fileTask, complete: { [weak self] fileTask in
+		self.indexer?.addURLs(async: fileTask, flushWhenComplete: true, complete: { [weak self] fileTask in
 			if let blockSelf = self {
 				DispatchQueue.main.async {
 					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.removeURLs), object:fileTask)
 					blockSelf.undoManager?.setActionName("Add \(fileTask.urls.count) Documents")
+					blockSelf.updateFiles()
 				}
 			}
 		})
 	}
 	
 	@objc func removeURLs(_ fileTask: DFIndexControllerAsync.FileTask) {
-		self.indexer?.removeURLs(async: fileTask, complete: { [weak self] fileTask in
+		self.indexer?.removeURLs(async: fileTask, flushWhenComplete: true, complete: { [weak self] fileTask in
 			if let blockSelf = self {
 				DispatchQueue.main.async {
 					blockSelf.undoManager?.registerUndo(withTarget: blockSelf, selector:#selector(blockSelf.addURLs), object:fileTask)
 					blockSelf.undoManager?.setActionName("Remove \(fileTask.urls.count) Documents")
+					blockSelf.updateFiles()
 				}
 			}
 		})
@@ -181,9 +184,6 @@ extension Document
 
 		self.index.flush()
 
-//		let search = self.indexer?.search(async: searchText)
-//		self.searchNext(search!)
-
 		if searchText.count > 0 {
 			let result = index.search(searchText)
 
@@ -203,8 +203,6 @@ extension Document
 			}
 			self.queryResultView.string = str
 		}
-
-		updateFiles()
 	}
 }
 
@@ -212,9 +210,6 @@ extension Document: DFIndexControllerAsyncProtocol
 {
 	func queueDidEmpty(_ indexer: DFIndexControllerAsync)
 	{
-		DispatchQueue.main.async { [weak self] in
-			self?.updateFiles()
-		}
 	}
 
 	func queueDidChange(_ indexer: DFIndexControllerAsync, count: Int)
@@ -226,8 +221,7 @@ extension Document: DFIndexControllerAsyncProtocol
 
 	func updateFiles()
 	{
-		self.index.flush()
-		self.files = self.index.documents()
+		self.files = self.index.documents(termState: .notEmpty)
 	}
 }
 

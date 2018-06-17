@@ -219,7 +219,7 @@
 	[index flush];
 
 	// Should be two documents in the index
-	XCTAssertEqual(2, [[index documents] count]);
+	XCTAssertEqual(2, [[index documentsWithTermState:DFIndexTermStateAll] count]);
 
 	// Apache document has 453 terms
 	NSArray<DFIndexTermCount*>* terms = [index termsFor: apacheURL];

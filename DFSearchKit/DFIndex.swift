@@ -223,21 +223,25 @@ extension DFIndex
 	/// 		   **NOTE** if the document didn't exist, this returns true as well
 	@objc public func remove(url: URL) -> Bool
 	{
-		guard let index = self.index,
-			let document = SKDocumentCreateWithURL(url as CFURL) else
-		{
-			return false
-		}
-
-		return synchronized(self)
-		{
-			SKIndexRemoveDocument(index, document.takeUnretainedValue())
-		}
+		let document = SKDocumentCreateWithURL(url as CFURL).takeUnretainedValue()
+		return self.remove(document: document)
 	}
 
 	@objc public func remove(urls: [URL])
 	{
 		urls.forEach { _ = self.remove(url: $0) }
+	}
+
+	fileprivate func remove(document: SKDocument) -> Bool
+	{
+		if let index = self.index
+		{
+			return synchronized(self)
+			{
+				return SKIndexRemoveDocument(index, document)
+			}
+		}
+		return false
 	}
 
 	/// Returns the indexing state for the specified URL.
@@ -345,19 +349,39 @@ extension DFIndex
 		@objc public let count: Int
 	}
 
+	@objc(DFIndexTermState)
+	public enum TermState: Int
+	{
+		case all = 0
+		case empty = 1
+		case notEmpty = 2
+	}
+
 	/// Returns all the document URLs loaded into the index
 	///
+	/// - Parameter termState: Only return documents matching the specified document state
 	/// - Returns: An array containing all the document URLs
-	@objc public func documents() -> [URL]
+	@objc public func documents(termState: TermState = .all) -> [URL]
 	{
-		guard let index = self.index else
-		{
-			return []
-		}
+		return self.fullDocuments(termState: termState).map { $0.0 }
+	}
 
-		var allDocs = Array<(URL, SKDocument, SKDocumentID)>()
-		self.addLeafURLs(index: index, inParentDocument: nil, docs: &allDocs)
-		return allDocs.map { $0.0 }
+	/// Returns the number of terms for the specified document
+	@objc public func termCount(for url: URL) -> Int
+	{
+		if let index = self.index,
+			let document = SKDocumentCreateWithURL(url as CFURL)
+		{
+			let documentID = SKIndexGetDocumentID(index, document.takeUnretainedValue())
+			return SKIndexGetDocumentTermCount(index, documentID)
+		}
+		return 0
+	}
+
+	/// Is the specified document empty (ie. it has no terms)
+	@objc public func isEmpty(for url: URL) -> Bool
+	{
+		return self.termCount(for: url) > 0
 	}
 
 	/// Returns an array containing the terms and counts for a specified URL
@@ -545,20 +569,16 @@ extension DFIndex
 	}
 
 	/// Remove any documents that have no search terms
-	open func prune(progress: ((Int, Int) -> Void)?) -> Int
+	@objc public func prune(progress: ((Int, Int) -> Void)?) -> Int
 	{
-		let urls = self.documents()
-		let totalCount = urls.count
+		let allDocs = self.fullDocuments(termState: .empty)
+		let totalCount = allDocs.count
 		var pruneCount = 0
-		for url in urls
+		for docID in allDocs
 		{
-			let terms = self.terms(for: url)
-			if terms.count == 0
-			{
-				_ = self.remove(url: url)
-				pruneCount += 1
-				progress?(totalCount, pruneCount)
-			}
+			_ = self.remove(document: docID.1)
+			pruneCount += 1
+			progress?(totalCount, pruneCount)
 		}
 		return pruneCount
 	}
@@ -566,9 +586,25 @@ extension DFIndex
 
 // MARK: Private methods for building document arrays
 
-fileprivate extension DFIndex
+private extension DFIndex
 {
-	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout Array<(URL, SKDocument, SKDocumentID)>)
+	typealias DocumentID = (URL, SKDocument, SKDocumentID)
+
+	/// Returns the number of terms for the specified document
+	private func termCount(for document: SKDocumentID) -> Int
+	{
+		assert(self.index != nil)
+		return SKIndexGetDocumentTermCount(self.index!, document)
+	}
+
+	/// Is the specified document empty (ie. it has no terms)
+	private func isEmpty(for document: SKDocumentID) -> Bool
+	{
+		assert(self.index != nil)
+		return self.termCount(for: document) == 0
+	}
+
+	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout Array<DocumentID>)
 	{
 		guard let index = self.index else
 		{
@@ -595,15 +631,27 @@ fileprivate extension DFIndex
 		}
 	}
 
-	fileprivate func allDocuments() -> Array<(URL, SKDocument, SKDocumentID)>
+	private func fullDocuments(termState: TermState = .all) -> [DocumentID]
 	{
 		guard let index = self.index else
 		{
 			return []
 		}
 
-		var allDocs = Array<(URL, SKDocument, SKDocumentID)>()
+		var allDocs = Array<DocumentID>()
 		self.addLeafURLs(index: index, inParentDocument: nil, docs: &allDocs)
+
+		switch termState
+		{
+		case .notEmpty:
+			allDocs = allDocs.filter { !self.isEmpty(for: $0.2) }
+			break
+		case .empty:
+			allDocs = allDocs.filter { self.isEmpty(for: $0.2) }
+			break
+		default:
+			break
+		}
 		return allDocs
 	}
 }

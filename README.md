@@ -1,50 +1,92 @@
 # DFSearchKit
-A basic wrapper around SKSearchKit in Swift
+A framework implementing a search index using SKSearchKit for both Swift and Objective-C
 
 ## Why?
-I was interesting in learning about SKSearchKit, and there was a lack of (simple) working examples to play with.
+I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift
 
 ## Usage
 
-The base library is split into three classes
+The base library is split into three classes and an async controller
 
-### DFIndex
+### Core
+
+#### DFIndex
 
 Core indexing library, wrapper around SKIndex and related methods.  Generally, you won't need to use this class directly unless you want to interface to your own SKIndex object.
 
-### DFIndexData
+#### DFIndexData
 
-A class, inheriting from DFIndex that uses an in-memory search index.
-
-#### Basic example
+A class inheriting from DFIndex that implements an in-memory index.
 
 ```
-if let indexer = DFDataIndex.create()
+if let indexer = DFIndexData.create()
 {
-	indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
-	indexer.add(url: URL(string: "file://tmp/mypdf.pdf", mimeType: "application/pdf"))
+	let documentURL = URL(string: ("doc-url://d1.txt")!
+	indexer.add(documentURL, text: "This is my first document")
+	
+	let fileURL = <the url for some file on disk>
+	indexer.add(fileURL, mimeType: "application/pdf")
+
 	indexer.flush()
 	let searchresult = indexer.search("first")
 	...
 }
 ```
 
-### DFIndexFile
+`DFIndexData` provides methods to get the raw index data for storing, and to load from data
 
-A class, inheriting from DFIndex that allows the creation and use of an index on disk
+`let indexer = DFIndexData.load(from: myData)`
 
-#### Basic example
+`let newIndexData = indexer.save()`
+
+
+#### DFIndexFile
+
+A class inheriting from DFIndex that allows the creation and use of an index on disk
+
+* Create a new index file on disk and add some items to id
 
 ```
-if let indexer = DFFileIndex.create(with: file.fileURL)
+if let indexer = DFIndexFile.create(with: file.fileURL)
 {
-	indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
+   let documentURL = URL(string: ("doc-url://d1.txt")!
+	indexer.add(documentURL, text: "This is my first document"))
+	
+	let fileURL = <the url for some file on disk>
+	indexer.add(fileURL, mimeType: "application/pdf")
+	
 	indexer.flush()
 	var result = indexer.search("first")
 	indexer.save()
 	indexer.close()
 }
 ```
+
+### Async controller
+
+`DFIndexControllerAsync` is a simple controller that takes an index object, and provides a safe method for handling async requests.
+
+For example, to add a number of files asynchronously
+
+```
+	let indexer = DFIndexData.create()
+	let asyncController = DFIndexControllerAsync(index: indexer, delegate: nil)
+
+	let addTask = DFIndexControllerAsync.FileTask(<file urls to add>)
+	asyncController.addURLs(async: addTask, complete: { task in
+		<block that is executed when the files have been added to the index>
+	})
+	
+	...
+	
+	let removeTask = DFIndexControllerAsync.FileTask(<file urls to remove>)
+	asyncController.removeURLs(async: removeTask, complete: { task in
+		<block that is executed when the files have been removed from the index>
+	})
+		
+```
+Internally the async controller uses an operation queue for handling requests.
+
 
 ## Searching
 
@@ -54,7 +96,7 @@ There are two methods for search
 The search all is available on the indexer object, and returns all the results it can get.  As such, for large indexes this may take quite a while to return.  It is provided mostly as a convenience function for small indexes.
 
 ```
-if let indexer = DFDataIndex.create()
+if let indexer = DFIndexData.create()
 {
 	indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
 	indexer.flush()
@@ -68,7 +110,7 @@ if let indexer = DFDataIndex.create()
 For large indexes, the results may take quite a while to return.  Thus, the progressive index is more useful by returning limited sets of results progressively, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)
 
 ```
-	let search = DFIndex.ProgressiveSearch(indexer, query: "dog")
+	let search = indexer.progressiveSearch(query: "dog")
 	... load documents ...
 	var hasMoreResults = true
 	repeat
@@ -83,11 +125,11 @@ For large indexes, the results may take quite a while to return.  Thus, the prog
 ## Samples
 
 * `SearchToy` is a (very!) basic UI to show integration
-* `DFindex` is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFFileIndex to create a command line tool interface to the index
+* `dfindex` is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFFileIndex to create a command line tool interface to the index
 
 ## Tests
 
-`DFIndexTests.swift` and `DFSummaryTests.swift` contain a small number of tests (so far) that can be used to see how it works
+`DFIndexTests.swift`, `DFSummaryTests.swift` and `DFSearchKitTests_objc.m` contain a small number of tests (so far) that can be used to see how it works in both Swift and Objective-C
 
 ## Todo
 

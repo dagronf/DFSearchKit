@@ -36,10 +36,10 @@
 		239424A220D5FA0B00211170 /* DFIndexData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBE20B978A1001F187F /* DFIndexData.swift */; };
 		239424A320D5FA0B00211170 /* DFIndexFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DC120B978C0001F187F /* DFIndexFile.swift */; };
 		239424A420D5FA0B00211170 /* DFSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233C768C20CB18DA00589CB4 /* DFSummary.swift */; };
-		239424A520D5FA0B00211170 /* DFIndexAsyncController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFIndexAsyncController.swift */; };
+		239424A520D5FA0B00211170 /* DFIndexControllerAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFIndexControllerAsync.swift */; };
 		23CE76D120BCB3EC007C8BA8 /* StopWords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBA20B95F45001F187F /* StopWords.swift */; };
-		23E5A03120CE078000D1B2B5 /* DFIndexAsyncController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFIndexAsyncController.swift */; };
-		23E5A03220CE08D100D1B2B5 /* DFIndexAsyncController.swift in Headers */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFIndexAsyncController.swift */; };
+		23E5A03120CE078000D1B2B5 /* DFIndexControllerAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFIndexControllerAsync.swift */; };
+		23E5A03220CE08D100D1B2B5 /* DFIndexControllerAsync.swift in Headers */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFIndexControllerAsync.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,7 +109,7 @@
 		23D9084F209E71F70096E42A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		23D90859209E72250096E42A /* DFIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DFIndex.swift; path = ../DFSearchKit/DFIndex.swift; sourceTree = "<group>"; };
 		23D9085C209E9A4D0096E42A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		23E5A02E20CE05A900D1B2B5 /* DFIndexAsyncController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DFIndexAsyncController.swift; path = ../DFSearchKit/DFIndexAsyncController.swift; sourceTree = "<group>"; };
+		23E5A02E20CE05A900D1B2B5 /* DFIndexControllerAsync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFIndexControllerAsync.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,7 +171,7 @@
 				23614DBE20B978A1001F187F /* DFIndexData.swift */,
 				23614DC120B978C0001F187F /* DFIndexFile.swift */,
 				233C768C20CB18DA00589CB4 /* DFSummary.swift */,
-				23E5A02E20CE05A900D1B2B5 /* DFIndexAsyncController.swift */,
+				23E5A02E20CE05A900D1B2B5 /* DFIndexControllerAsync.swift */,
 				2340800520CB87310031D43A /* DFSearchKit.h */,
 				2340800620CB87310031D43A /* Info.plist */,
 			);
@@ -260,7 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2340800720CB87310031D43A /* DFSearchKit.h in Headers */,
-				23E5A03220CE08D100D1B2B5 /* DFIndexAsyncController.swift in Headers */,
+				23E5A03220CE08D100D1B2B5 /* DFIndexControllerAsync.swift in Headers */,
 				2340802820CB88620031D43A /* DFIndex.swift in Headers */,
 				2340802920CB88620031D43A /* DFIndexData.swift in Headers */,
 				2340802A20CB88620031D43A /* DFIndexFile.swift in Headers */,
@@ -424,7 +424,7 @@
 			files = (
 				2340800D20CB873A0031D43A /* DFIndexFile.swift in Sources */,
 				2340800C20CB873A0031D43A /* DFIndexData.swift in Sources */,
-				23E5A03120CE078000D1B2B5 /* DFIndexAsyncController.swift in Sources */,
+				23E5A03120CE078000D1B2B5 /* DFIndexControllerAsync.swift in Sources */,
 				2340800E20CB873A0031D43A /* DFSummary.swift in Sources */,
 				2340800B20CB873A0031D43A /* DFIndex.swift in Sources */,
 			);
@@ -459,7 +459,7 @@
 				239424A220D5FA0B00211170 /* DFIndexData.swift in Sources */,
 				238FAD7520A11B5F00092FCD /* main.swift in Sources */,
 				239424A320D5FA0B00211170 /* DFIndexFile.swift in Sources */,
-				239424A520D5FA0B00211170 /* DFIndexAsyncController.swift in Sources */,
+				239424A520D5FA0B00211170 /* DFIndexControllerAsync.swift in Sources */,
 				23CE76D120BCB3EC007C8BA8 /* StopWords.swift in Sources */,
 				239424A120D5FA0400211170 /* DFIndex.swift in Sources */,
 			);
@@ -518,7 +518,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.darrenford.DFSearchKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -544,7 +544,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.darrenford.DFSearchKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -563,7 +563,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.darrenford.SearchToy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -581,7 +581,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.darrenford.SearchToy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -626,6 +626,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};
@@ -635,6 +636,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};

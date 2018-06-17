@@ -26,6 +26,16 @@ import XCTest
 
 class DFIndexTests: XCTestCase
 {
+	func addApacheLicenseFile(indexer: DFIndex, canReplace: Bool) -> URL
+	{
+		let testBundle = Bundle(for: type(of: self))
+		let filePath = testBundle.url(forResource: "APACHE_LICENSE", withExtension: "pdf")
+		XCTAssertNotNil(filePath)
+
+		XCTAssertTrue(indexer.add(url: filePath!, mimeType: "application/pdf", canReplace: canReplace))
+		return filePath!
+	}
+
 	override func setUp()
 	{
 		super.setUp()
@@ -598,17 +608,87 @@ class DFIndexTests: XCTestCase
 	}
 }
 
-// MARK: Utilities
 
-extension DFIndexTests
+
+class SpyDelegate: DFIndexControllerAsyncProtocol
 {
-	func addApacheLicenseFile(indexer: DFIndex, canReplace: Bool) -> URL
+	func queueDidEmpty(_ indexer: DFIndexControllerAsync)
 	{
-		let testBundle = Bundle(for: type(of: self))
-		let filePath = testBundle.url(forResource: "APACHE_LICENSE", withExtension: "pdf")
-		XCTAssertNotNil(filePath)
+	}
 
-		XCTAssertTrue(indexer.add(url: filePath!, mimeType: "application/pdf", canReplace: canReplace))
-		return filePath!
+	func queueDidChange(_ indexer: DFIndexControllerAsync, count: Int)
+	{
+	}
+}
+
+
+class DFIndexAsyncTests: XCTestCase
+{
+	func testAsync()
+	{
+		guard let indexer = DFIndexData.create() else
+		{
+			XCTFail()
+			return
+		}
+
+		let testBundle = Bundle(for: type(of: self))
+		let filePath = testBundle.url(forResource: "APACHE_LICENSE", withExtension: "pdf")!
+		let txtPath = testBundle.url(forResource: "the_school_short_story", withExtension: "txt")!
+
+		let spyDelegate = SpyDelegate()
+		let asyncController = DFIndexControllerAsync(index: indexer, delegate: spyDelegate)
+
+		// MARK: Add async
+
+		let fileTask = DFIndexControllerAsync.FileTask([filePath, txtPath])
+
+		let addExpectation = self.expectation(description: "AsyncAdd")
+		asyncController.addURLs(async: fileTask, flushWhenComplete: true, complete: { task in
+			if task.urls == [filePath, txtPath]
+			{
+				addExpectation.fulfill()
+			}
+		})
+
+		waitForExpectations(timeout: 1) { error in
+			if let error = error {
+				XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+			}
+		}
+
+		var result = indexer.search("apache")
+		XCTAssertEqual(1, result.count)
+		XCTAssertEqual(filePath, result[0].url)
+
+		result = indexer.search("grappled")
+		XCTAssertEqual(1, result.count)
+		XCTAssertEqual(txtPath, result[0].url)
+
+		// MARK: Remove async
+
+		let removeExpectation = self.expectation(description: "AsyncRemove")
+		let removeTask = DFIndexControllerAsync.FileTask([txtPath])
+		asyncController.removeURLs(async: removeTask, complete: { task in
+			if task.urls == [txtPath]
+			{
+				removeExpectation.fulfill()
+			}
+		})
+
+		waitForExpectations(timeout: 1) { error in
+			if let error = error {
+				XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+			}
+		}
+
+		indexer.flush()
+
+		result = indexer.search("apache")
+		XCTAssertEqual(1, result.count)
+		XCTAssertEqual(filePath, result[0].url)
+
+		result = indexer.search("grappled")
+		XCTAssertEqual(0, result.count)
 	}
 }

@@ -40,9 +40,9 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 	public class CreateProperties: NSObject
 	{
 		@objc public init(indexType: SKIndexType = kSKIndexInverted,
-					proximityIndexing: Bool = false,
-					stopWords: Set<String> = [],
-					minTermLength: Int = 0)
+						  proximityIndexing: Bool = false,
+						  stopWords: Set<String> = [],
+						  minTermLength: Int = 0)
 		{
 			self.indexType = indexType
 			self.proximityIndexing = proximityIndexing
@@ -58,7 +58,7 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 					kSKProximityIndexing: self.proximityIndexing,
 					kSKStopWords: self.stopWords,
 					kSKMinTermLength: self.minTermLength
-				]
+			]
 			return properties as CFDictionary
 		}
 
@@ -72,12 +72,7 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 		var minTermLength: Int = 0
 	}
 
-	private var index: SKIndex?
-
-	fileprivate func rawIndex() -> SKIndex?
-	{
-		return self.index
-	}
+	fileprivate var index: SKIndex?
 
 	private lazy var dataExtractorLoaded: Bool = {
 		SKLoadDefaultExtractorPlugIns()
@@ -232,18 +227,6 @@ extension DFIndex
 		urls.forEach { _ = self.remove(url: $0) }
 	}
 
-	fileprivate func remove(document: SKDocument) -> Bool
-	{
-		if let index = self.index
-		{
-			return synchronized(self)
-			{
-				return SKIndexRemoveDocument(index, document)
-			}
-		}
-		return false
-	}
-
 	/// Returns the indexing state for the specified URL.
 	@objc public func documentState(_ url: URL) -> SKDocumentIndexState
 	{
@@ -267,27 +250,6 @@ extension DFIndex
 			return SKIndexGetDocumentState(index, document.takeUnretainedValue()) == kSKDocumentStateIndexed
 		}
 		return false
-	}
-
-	fileprivate func documentIndexed(_ document: SKDocument) -> Bool
-	{
-		if let index = self.index,
-			SKIndexGetDocumentState(index, document) == kSKDocumentStateIndexed
-		{
-			return true
-		}
-		return false
-	}
-
-	/// Returns the document associated with url IF the document has been indexed, nil otherwise
-	fileprivate func indexedDocument(for url: URL) -> SKDocument?
-	{
-		if let document = SKDocumentCreateWithURL(url as CFURL),
-			self.documentIndexed(document.takeUnretainedValue())
-		{
-			return document.takeUnretainedValue()
-		}
-		return nil
 	}
 }
 
@@ -403,7 +365,7 @@ extension DFIndex
 
 		guard let termVals = SKIndexCopyTermIDArrayForDocumentID(index, documentID),
 			let terms = termVals.takeUnretainedValue() as? Array<CFIndex>
-		else
+			else
 		{
 			return []
 		}
@@ -444,7 +406,7 @@ extension DFIndex
 
 	/// Start a progressive search
 	@objc public func progressiveSearch(query: String,
-								options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> ProgressiveSearch
+										options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> ProgressiveSearch
 	{
 		return ProgressiveSearch(self, query: query, options: options)
 	}
@@ -476,7 +438,7 @@ extension DFIndex
 			self.query = query
 			self.index = index
 			self.options = options
-			self.search = SKSearchCreate(index.rawIndex(), query as CFString, options).takeRetainedValue()
+			self.search = SKSearchCreate(index.index, query as CFString, options).takeRetainedValue()
 		}
 
 		/// Cancels an active search
@@ -488,7 +450,7 @@ extension DFIndex
 		/// Get the next chunk of results
 		@objc public func next(_ limit: Int = 10, timeout: TimeInterval = 1.0) -> (ProgressiveSearch.Results)
 		{
-			guard self.index.rawIndex() != nil else
+			guard self.index.index != nil else
 			{
 				// If the index has been closed, then no results for you good sir!
 				return Results(moreResultsAvailable: false, results: [])
@@ -500,12 +462,12 @@ extension DFIndex
 			var foundCount = 0
 
 			let hasMore = SKSearchFindMatches(self.search, limit, &documentIDs, &scores, timeout, &foundCount)
-			SKIndexCopyDocumentURLsForDocumentIDs(index.rawIndex()!, foundCount, &documentIDs, &urls)
+			SKIndexCopyDocumentURLsForDocumentIDs(self.index.index, foundCount, &documentIDs, &urls)
 
 			let partialResults: [SearchResult] = zip(urls[0 ..< foundCount], scores).compactMap({
 				(cfurl, score) -> SearchResult? in
 				guard let url = cfurl?.takeUnretainedValue() as URL?
-				else { return nil }
+					else { return nil }
 				return SearchResult(url: url, score: score)
 			})
 
@@ -526,9 +488,9 @@ extension DFIndex
 	///   - timeout: How long to wait for a search to complete before stopping
 	/// - Returns: An array containing match URLs and their corresponding 'score' (how relevant the match)
 	@objc public func search(_ query: String,
-					 limit: Int = 10,
-					 timeout: TimeInterval = 1.0,
-					 options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> [SearchResult]
+							 limit: Int = 10,
+							 timeout: TimeInterval = 1.0,
+							 options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> [SearchResult]
 	{
 		let search = self.progressiveSearch(query: query, options: options)
 
@@ -540,7 +502,7 @@ extension DFIndex
 			results.append(contentsOf: result.results)
 			moreResultsAvailable = result.moreResultsAvailable
 		}
-		while moreResultsAvailable
+			while moreResultsAvailable
 
 		return results
 	}
@@ -584,11 +546,23 @@ extension DFIndex
 	}
 }
 
-// MARK: Private methods for building document arrays
+// MARK: Private methods
 
 private extension DFIndex
 {
 	typealias DocumentID = (URL, SKDocument, SKDocumentID)
+
+	private func remove(document: SKDocument) -> Bool
+	{
+		if let index = self.index
+		{
+			return synchronized(self)
+			{
+				return SKIndexRemoveDocument(index, document)
+			}
+		}
+		return false
+	}
 
 	/// Returns the number of terms for the specified document
 	private func termCount(for document: SKDocumentID) -> Int
@@ -602,6 +576,27 @@ private extension DFIndex
 	{
 		assert(self.index != nil)
 		return self.termCount(for: document) == 0
+	}
+
+	private func documentIndexed(_ document: SKDocument) -> Bool
+	{
+		if let index = self.index,
+			SKIndexGetDocumentState(index, document) == kSKDocumentStateIndexed
+		{
+			return true
+		}
+		return false
+	}
+
+	/// Returns the document associated with url IF the document has been indexed, nil otherwise
+	private func indexedDocument(for url: URL) -> SKDocument?
+	{
+		if let document = SKDocumentCreateWithURL(url as CFURL),
+			self.documentIndexed(document.takeUnretainedValue())
+		{
+			return document.takeUnretainedValue()
+		}
+		return nil
 	}
 
 	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout Array<DocumentID>)
@@ -619,7 +614,7 @@ private extension DFIndex
 			isLeaf = false
 			self.addLeafURLs(index: index, inParentDocument: skDocument.takeUnretainedValue(), docs: &docs)
 		}
-
+		
 		if isLeaf && inParentDocument != nil && kSKDocumentStateNotIndexed != SKIndexGetDocumentState(index, inParentDocument)
 		{
 			if let temp = SKDocumentCopyURL(inParentDocument)

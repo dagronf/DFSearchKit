@@ -71,6 +71,16 @@
 
 	NSDictionary* docProps = [index documentProperties:d1];
 	XCTAssertEqualObjects(d1Props, docProps);
+
+	NSData* saved = [index save];
+	[index close];
+	index = nil;
+
+	DFSKDataIndex* loaded = [DFSKDataIndex loadFrom:saved];
+	XCTAssertNotNil(loaded);
+
+	NSDictionary* savedProps = [loaded documentProperties:d1];
+	XCTAssertEqualObjects(d1Props, savedProps);
 }
 
 - (void)testLoad

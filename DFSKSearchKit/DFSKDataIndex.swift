@@ -29,7 +29,7 @@ import Foundation
 	// The data index store
 	private var data = NSMutableData()
 
-	public init(data: NSMutableData, index: SKIndex)
+	private init(data: NSMutableData, index: SKIndex)
 	{
 		super.init(index: index)
 		self.data = data

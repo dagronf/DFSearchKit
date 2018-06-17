@@ -157,11 +157,11 @@ else if args[1] == "terms" {
 		exit(-1)
 	}
 
-	let docs = index.termsAndCounts(for: URL(string: url)!)
+	let docs = index.terms(for: URL(string: url)!)
 	let sortedDocs = docs.sorted(by: { $0.count > $1.count })
 
 	for item in sortedDocs {
-		print("\(item.0): \(item.1)")
+		print("\(item.term): \(item.count)")
 	}
 
 	index.close()

@@ -29,7 +29,7 @@ import Foundation
 	/// The file url where the index is located
 	@objc public private(set) var fileURL: URL?
 
-	init(url: URL, index: SKIndex)
+	private init(url: URL, index: SKIndex)
 	{
 		super.init(index: index)
 		self.fileURL = url

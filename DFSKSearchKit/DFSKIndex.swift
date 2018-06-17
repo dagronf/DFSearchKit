@@ -32,6 +32,7 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 	return try body()
 }
 
+/// Indexer using SKIndex as the core
 @objc public class DFSKIndex: NSObject
 {
 	/// Container for storing the properties to be used when creating a new index

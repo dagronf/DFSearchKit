@@ -4,22 +4,27 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>DFSKSearchKit.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>0</integer>
-		</dict>
 		<key>DFSKSearchKitTests-objc.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>4</integer>
+		</dict>
+		<key>DFSearchKit.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>DFSearchKitTests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
 		</dict>
 		<key>SearchToy.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
-		<key>dfskindex.xcscheme</key>
+		<key>dfindex.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
@@ -28,6 +33,16 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>2340800220CB87310031D43A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2340801220CB88350031D43A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2369FC5C20D6085E00EFD944</key>
 		<dict>
 			<key>primary</key>
 			<true/>

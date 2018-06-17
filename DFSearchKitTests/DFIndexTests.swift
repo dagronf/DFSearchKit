@@ -1,6 +1,6 @@
 //
-//  DFSKIndexTests.swift
-//  DFSKIndexTests
+//  DFIndexTests.swift
+//  DFIndexTests
 //
 //  Created by Darren Ford on 6/5/18.
 //  Copyright © 2018 Darren Ford. All rights reserved.
@@ -22,9 +22,9 @@
 //
 
 import XCTest
-@testable import DFSKSearchKit
+@testable import DFSearchKit
 
-class DFSKIndexTests: XCTestCase
+class DFIndexTests: XCTestCase
 {
 	override func setUp()
 	{
@@ -40,22 +40,22 @@ class DFSKIndexTests: XCTestCase
 
 	func testSimpleAdd()
 	{
-		let indexer = DFSKDataIndex.create()
+		let indexer = DFIndexData.create()
 		XCTAssertNotNil(indexer)
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer!.add(d1, text: "Today I am feeling fine!"))
 	}
 
 	func testSimpleAddWithNoReplace()
 	{
-		guard let indexer = DFSKDataIndex.create() else
+		guard let indexer = DFIndexData.create() else
 		{
 			XCTFail()
 			return
 		}
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine!"))
 		indexer.flush()
 		XCTAssertEqual(1, indexer.search("fine").count)
@@ -73,13 +73,13 @@ class DFSKIndexTests: XCTestCase
 
 	func testSimpleSearch()
 	{
-		guard let indexer = DFSKDataIndex.create() else
+		guard let indexer = DFIndexData.create() else
 		{
 			XCTFail()
 			return
 		}
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine!"))
 
 		indexer.flush()
@@ -91,14 +91,14 @@ class DFSKIndexTests: XCTestCase
 
 	func testSetPropertiesForDocument()
 	{
-		let file = DFSKUtils.TempFile()
-		guard let indexer = DFSKFileIndex.create(with: file.fileURL) else
+		let file = DFUtils.TempFile()
+		guard let indexer = DFIndexFile.create(with: file.fileURL) else
 		{
 			XCTFail()
 			return
 		}
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine!"))
 
 		// Can't add properties until the document is indexed
@@ -122,7 +122,7 @@ class DFSKIndexTests: XCTestCase
 		indexer.compact()
 		indexer.close()
 
-		guard let indexer2 = DFSKFileIndex.open(from: file.fileURL, writable: false) else
+		guard let indexer2 = DFIndexFile.open(from: file.fileURL, writable: false) else
 		{
 			XCTFail()
 			return
@@ -136,16 +136,16 @@ class DFSKIndexTests: XCTestCase
 
 	func testSimpleRemove()
 	{
-		let dataIndexer = DFSKDataIndex.create()
+		let dataIndexer = DFIndexData.create()
 		guard let indexer = dataIndexer else
 		{
 			XCTFail()
 			return
 		}
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine!"))
-		let d2 = DFSKUtils.url("doc-url://d2.txt")
+		let d2 = DFUtils.url("doc-url://d2.txt")
 		XCTAssertTrue(indexer.add(d2, text: "Blue and I dont feel fine"))
 
 		indexer.flush()
@@ -172,16 +172,16 @@ class DFSKIndexTests: XCTestCase
 
 	func testTwoSearch()
 	{
-		guard let indexer = DFSKDataIndex.create() else
+		guard let indexer = DFIndexData.create() else
 		{
 			XCTFail()
 			return
 		}
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine, thankyou!"))
 		
-		let d2 = DFSKUtils.url("doc-url://d2.txt")
+		let d2 = DFUtils.url("doc-url://d2.txt")
 		XCTAssertTrue(indexer.add(d2, text: "Today I am feeling blue!"))
 		indexer.flush()
 
@@ -199,16 +199,16 @@ class DFSKIndexTests: XCTestCase
 
 	func testProximitySearch()
 	{
-		let props = DFSKIndex.CreateProperties(proximityIndexing: true)
-		guard let indexer = DFSKDataIndex.create(properties: props) else
+		let props = DFIndex.CreateProperties(proximityIndexing: true)
+		guard let indexer = DFIndexData.create(properties: props) else
 		{
 			XCTFail()
 			return
 		}
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine, thankyou!"))
-		let d2 = DFSKUtils.url("doc-url://d2.txt")
+		let d2 = DFUtils.url("doc-url://d2.txt")
 		XCTAssertTrue(indexer.add(d2, text: "Today I am feeling blue!"))
 		indexer.flush()
 
@@ -223,15 +223,15 @@ class DFSKIndexTests: XCTestCase
 
 	func testSimpleSaveLoad()
 	{
-		guard let indexer = DFSKDataIndex.create() else
+		guard let indexer = DFIndexData.create() else
 		{
 			XCTFail()
 			return
 		}
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine, time for lunch!"))
-		let d2 = DFSKUtils.url("doc-url://d2.txt")
+		let d2 = DFUtils.url("doc-url://d2.txt")
 		XCTAssertTrue(indexer.add(d2, text: "Caterpillars ate my lunch"))
 
 		indexer.flush()
@@ -251,7 +251,7 @@ class DFSKIndexTests: XCTestCase
 		indexer.close()
 
 		// Load from the data
-		let saveIndex2 = DFSKDataIndex.load(from: saveData!)
+		let saveIndex2 = DFIndexData.load(from: saveData!)
 		guard let index2 = saveIndex2 else
 		{
 			XCTFail()
@@ -268,16 +268,16 @@ class DFSKIndexTests: XCTestCase
 
 	func testSimpleStopWords()
 	{
-		let props = DFSKIndex.CreateProperties(stopWords: ["Caterpillars"])
-		guard let indexer = DFSKDataIndex.create(properties: props) else
+		let props = DFIndex.CreateProperties(stopWords: ["Caterpillars"])
+		guard let indexer = DFIndexData.create(properties: props) else
 		{
 			XCTFail()
 			return
 		}
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine, time for lunch!"))
-		let d2 = DFSKUtils.url("doc-url://d2.txt")
+		let d2 = DFUtils.url("doc-url://d2.txt")
 		XCTAssertTrue(indexer.add(d2, text: "Caterpillars ate my lunch"))
 
 		indexer.flush()
@@ -299,21 +299,21 @@ class DFSKIndexTests: XCTestCase
 			XCTFail()
 			return
 		}
-		XCTAssertNil(DFSKDataIndex.load(from: data))
+		XCTAssertNil(DFIndexData.load(from: data))
 	}
 
 	func testSimpleCreateWithFile()
 	{
-		let file = DFSKUtils.TempFile()
-		guard let indexer = DFSKFileIndex.create(with: file.fileURL) else
+		let file = DFUtils.TempFile()
+		guard let indexer = DFIndexFile.create(with: file.fileURL) else
 		{
 			XCTFail()
 			return
 		}
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine, thankyou!"))
-		let d2 = DFSKUtils.url("doc-url://d2.txt")
+		let d2 = DFUtils.url("doc-url://d2.txt")
 		XCTAssertTrue(indexer.add(d2, text: "Today I am feeling blue!"))
 		indexer.flush()
 
@@ -332,38 +332,38 @@ class DFSKIndexTests: XCTestCase
 	/// Attempt to load from a non-existent file
 	func testSimpleLoadWithFileFailure()
 	{
-		let file = DFSKUtils.TempFile()
-		XCTAssertNil(DFSKFileIndex.open(from: file.fileURL, writable: true))
+		let file = DFUtils.TempFile()
+		XCTAssertNil(DFIndexFile.open(from: file.fileURL, writable: true))
 	}
 
 	/// Attempt to create an index on a file that already exists
 	func testAttemptCreateOnSameFile()
 	{
-		let file = DFSKUtils.TempFile()
-		guard DFSKFileIndex.create(with: file.fileURL) != nil else
+		let file = DFUtils.TempFile()
+		guard DFIndexFile.create(with: file.fileURL) != nil else
 		{
 			XCTFail()
 			return
 		}
 
-		XCTAssertNil(DFSKFileIndex.create(with: file.fileURL))
+		XCTAssertNil(DFIndexFile.create(with: file.fileURL))
 	}
 
 	/// Create file index, save and close.  Verify we can open and read
 	func testSimpleLoadWithFile()
 	{
 		// Create a file
-		let file = DFSKUtils.TempFile()
-		guard let indexer = DFSKFileIndex.create(with: file.fileURL) else
+		let file = DFUtils.TempFile()
+		guard let indexer = DFIndexFile.create(with: file.fileURL) else
 		{
 			XCTFail()
 			return
 		}
 
 		// Add documents
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine, thankyou!"))
-		let d2 = DFSKUtils.url("doc-url://d2.txt")
+		let d2 = DFUtils.url("doc-url://d2.txt")
 		XCTAssertTrue(indexer.add(d2, text: "Today I am feeling blue!"))
 
 		indexer.flush()
@@ -375,11 +375,11 @@ class DFSKIndexTests: XCTestCase
 		indexer.close();
 
 		// Check to see we can't add after we close
-		let d3 = DFSKUtils.url("doc-url://d3.txt")
+		let d3 = DFUtils.url("doc-url://d3.txt")
 		XCTAssertFalse(indexer.add(d3, text: "Noodles and blue caterpillars!"))
 
 		// Open again
-		guard let openIndexer = DFSKFileIndex.open(from: file.fileURL, writable: true) else
+		guard let openIndexer = DFIndexFile.open(from: file.fileURL, writable: true) else
 		{
 			XCTFail()
 			return
@@ -398,7 +398,7 @@ class DFSKIndexTests: XCTestCase
 		XCTAssertEqual(result[0].url, d2)
 
 		// Try adding a document, see if it survives a save
-		let d4 = DFSKUtils.url("doc-url://d4.txt")
+		let d4 = DFUtils.url("doc-url://d4.txt")
 		XCTAssertTrue(openIndexer.add(d4, text: "Noodles and blue caterpillars!"))
 
 		// Save and close
@@ -406,7 +406,7 @@ class DFSKIndexTests: XCTestCase
 		openIndexer.close()
 
 		// Open again, check that our changes have saved correctly
-		guard let openIndexer2 = DFSKFileIndex.open(from: file.fileURL, writable: true) else
+		guard let openIndexer2 = DFIndexFile.open(from: file.fileURL, writable: true) else
 		{
 			XCTFail()
 			return
@@ -423,13 +423,13 @@ class DFSKIndexTests: XCTestCase
 		openIndexer2.close()
 
 		// Attempt open in read-only mode, attempt to write
-		guard let openIndexer3 = DFSKFileIndex.open(from: file.fileURL, writable: false) else
+		guard let openIndexer3 = DFIndexFile.open(from: file.fileURL, writable: false) else
 		{
 			XCTFail()
 			return
 		}
 
-		let d5 = DFSKUtils.url("doc-url://d5.txt")
+		let d5 = DFUtils.url("doc-url://d5.txt")
 		XCTAssertTrue(openIndexer3.add(d5, text: "Chocolate caterpillars!"))
 		openIndexer3.flush()
 
@@ -443,8 +443,8 @@ class DFSKIndexTests: XCTestCase
 
 	func testLoadDocumentFromFile()
 	{
-		let props = DFSKIndex.CreateProperties.init(stopWords: gStopWords)
-		guard let indexer = DFSKDataIndex.create(properties: props) else
+		let props = DFIndex.CreateProperties.init(stopWords: gStopWords)
+		guard let indexer = DFIndexData.create(properties: props) else
 		{
 			XCTFail()
 			return
@@ -452,7 +452,7 @@ class DFSKIndexTests: XCTestCase
 
 		// Write the text to a temporary file and add.
 		// Note the mimetype cannot be inferred as the file has no extension
-		let tempFile = DFSKUtils.TempFile()
+		let tempFile = DFUtils.TempFile()
 		let text = NSString.init(string: "Caterpillar and gourds!")
 		XCTAssertNoThrow(try? text.write(to: tempFile.fileURL as URL, atomically: true, encoding: String.Encoding.utf8.rawValue))
 		XCTAssertTrue(indexer.add(url: tempFile.fileURL, mimeType: "text/plain"))
@@ -497,14 +497,14 @@ class DFSKIndexTests: XCTestCase
 
 	func testTermFrequenciesSimple()
 	{
-		let props = DFSKIndex.CreateProperties.init(stopWords: [ "the" ])
-		guard let indexer = DFSKDataIndex.create(properties: props) else
+		let props = DFIndex.CreateProperties.init(stopWords: [ "the" ])
+		guard let indexer = DFIndexData.create(properties: props) else
 		{
 			XCTFail()
 			return
 		}
 
-		let d1 = DFSKUtils.url("doc-url://d1.txt")
+		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "cat dog dog the fish fish fish"))
 
 		indexer.flush()
@@ -532,8 +532,8 @@ class DFSKIndexTests: XCTestCase
 
 	func testTermFrequenciesComplex()
 	{
-		let props = DFSKIndex.CreateProperties.init(stopWords: gStopWords)
-		guard let indexer = DFSKDataIndex.create(properties: props) else
+		let props = DFIndex.CreateProperties.init(stopWords: gStopWords)
+		guard let indexer = DFIndexData.create(properties: props) else
 		{
 			XCTFail()
 			return
@@ -562,7 +562,7 @@ class DFSKIndexTests: XCTestCase
 
 	func testProgressiveSearch()
 	{
-		guard let indexer = DFSKDataIndex.create() else
+		guard let indexer = DFIndexData.create() else
 		{
 			XCTFail()
 			return
@@ -571,7 +571,7 @@ class DFSKIndexTests: XCTestCase
 		for count in 0 ..< 25
 		{
 			let urlstr = "doc-url://d\(count).txt"
-			let d1 = DFSKUtils.url(urlstr)
+			let d1 = DFUtils.url(urlstr)
 			XCTAssertTrue(indexer.add(d1, text: "cat dog fish"))
 		}
 		indexer.flush()
@@ -600,9 +600,9 @@ class DFSKIndexTests: XCTestCase
 
 // MARK: Utilities
 
-extension DFSKIndexTests
+extension DFIndexTests
 {
-	func addApacheLicenseFile(indexer: DFSKIndex, canReplace: Bool) -> URL
+	func addApacheLicenseFile(indexer: DFIndex, canReplace: Bool) -> URL
 	{
 		let testBundle = Bundle(for: type(of: self))
 		let filePath = testBundle.url(forResource: "APACHE_LICENSE", withExtension: "pdf")

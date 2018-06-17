@@ -9,7 +9,7 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>dfskindex</string>
+				<string>DFindex</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string></string>

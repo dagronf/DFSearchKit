@@ -1,5 +1,5 @@
 //
-//  DFSKFileIndex.swift
+//  DFIndexFile.swift
 //  DFSearchKit
 //
 //  Created by Darren Ford on 26/5/18.
@@ -24,7 +24,7 @@
 import Foundation
 
 /// A file-based index
-@objc public class DFSKFileIndex: DFSKIndex
+@objc public class DFIndexFile: DFIndex
 {
 	/// The file url where the index is located
 	@objc public private(set) var fileURL: URL?
@@ -41,11 +41,11 @@ import Foundation
 	///   - url: The file url to open
 	///   - writable: should the index be modifiable?
 	/// - Returns: A new index object if successful, nil otherwise
-	@objc static func open(from url: URL, writable: Bool) -> DFSKFileIndex?
+	@objc static func open(from url: URL, writable: Bool) -> DFIndexFile?
 	{
 		if let temp = SKIndexOpenWithURL(url as CFURL, nil, writable)
 		{
-			return DFSKFileIndex(url: url, index: temp.takeUnretainedValue())
+			return DFIndexFile(url: url, index: temp.takeUnretainedValue())
 		}
 
 		return nil
@@ -55,8 +55,8 @@ import Foundation
 	///
 	/// - Parameter url: the file URL to store the index at.  url must be a non-existent file
 	/// - Parameter properties: the properties for index creation
-	/// - Returns: A new index object if successful, nil otherwise
-	@objc static func create(with url: URL, properties: CreateProperties = CreateProperties()) -> DFSKFileIndex?
+	/// - Returns: A new index object if successful, nil otherwise. Returns nil if the file already exists at url
+	@objc static func create(with url: URL, properties: CreateProperties = CreateProperties()) -> DFIndexFile?
 	{
 		if !FileManager.default.fileExists(atPath: url.absoluteString),
 			let skIndex = SKIndexCreateWithURL(url as CFURL,
@@ -64,7 +64,7 @@ import Foundation
 											   properties.indexType,
 											   properties.CFDictionary())
 		{
-			return DFSKFileIndex(url: url, index: skIndex.takeUnretainedValue())
+			return DFIndexFile(url: url, index: skIndex.takeUnretainedValue())
 		}
 		else
 		{

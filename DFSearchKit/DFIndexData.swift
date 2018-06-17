@@ -1,5 +1,5 @@
 //
-//  DFSKDataIndex.swift
+//  DFIndexData.swift
 //  DFSearchKit
 //
 //  Created by Darren Ford on 26/5/18.
@@ -24,7 +24,7 @@
 import Foundation
 
 /// A memory-based index using NSMutableData as the backing.
-@objc public class DFSKDataIndex: DFSKIndex
+@objc public class DFIndexData: DFIndex
 {
 	// The data index store
 	private var data = NSMutableData()
@@ -39,14 +39,14 @@ import Foundation
 	///
 	/// - Parameter properties: the properties for index creation
 	/// - Returns: A new index object if successful, nil otherwise
-	@objc public static func create(properties: CreateProperties = CreateProperties()) -> DFSKDataIndex?
+	@objc public static func create(properties: CreateProperties = CreateProperties()) -> DFIndexData?
 	{
 		let data = NSMutableData()
 		if let skIndex = SKIndexCreateWithMutableData(data, nil,
 													  properties.indexType,
 													  properties.CFDictionary())
 		{
-			return DFSKDataIndex(data: data, index: skIndex.takeUnretainedValue())
+			return DFIndexData(data: data, index: skIndex.takeUnretainedValue())
 		}
 		return nil
 	}
@@ -57,12 +57,12 @@ import Foundation
 	///
 	/// - Parameter data: The data to load as an index
 	/// - Returns: A new index object if successful, nil otherwise
-	@objc public static func load(from data: Data) -> DFSKDataIndex?
+	@objc public static func load(from data: Data) -> DFIndexData?
 	{
 		if let rawData = (data as NSData).mutableCopy() as? NSMutableData,
 			let skIndex = SKIndexOpenWithMutableData(rawData, nil)
 		{
-			return DFSKDataIndex(data: rawData, index: skIndex.takeUnretainedValue())
+			return DFIndexData(data: rawData, index: skIndex.takeUnretainedValue())
 		}
 
 		return nil

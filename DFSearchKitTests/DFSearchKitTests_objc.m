@@ -1,6 +1,6 @@
 //
-//  DFSKSearchKitTests_objc.m
-//  DFSKSearchKitTests-objc
+//  DFSearchKitTests_objc.m
+//  DFSearchKitTests-objc
 //
 //  Created by Darren Ford on 17/6/18.
 //  Copyright © 2018 Darren Ford. All rights reserved.
@@ -8,13 +8,13 @@
 
 #import <XCTest/XCTest.h>
 
-@import DFSKSearchKit;
+@import DFSearchKit;
 
-@interface DFSKSearchKitTests_objc : XCTestCase
+@interface DFSearchKitTests_objc : XCTestCase
 
 @end
 
-@implementation DFSKSearchKitTests_objc
+@implementation DFSearchKitTests_objc
 
 - (void)setUp {
     [super setUp];
@@ -26,38 +26,38 @@
     [super tearDown];
 }
 
-- (DFSKDataIndex*)createWithDefaults
+- (DFIndexData*)createWithDefaults
 {
-	DFSKIndexCreateProperties* properties = [[DFSKIndexCreateProperties alloc] initWithIndexType:kSKIndexInverted
+	DFIndexCreateProperties* properties = [[DFIndexCreateProperties alloc] initWithIndexType:kSKIndexInverted
 																			   proximityIndexing:NO
 																					   stopWords:[NSSet set]
 																				   minTermLength:0];
 
-	return [DFSKDataIndex createWithProperties:properties];
+	return [DFIndexData createWithProperties:properties];
 }
 
 - (void)testBasicDataIndex
 {
-	DFSKDataIndex* index = [self createWithDefaults];
+	DFIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	NSURL* d1 = [NSURL URLWithString:@"doc://temp.txt"];
 	XCTAssertTrue([index add:d1 text:@"This is a test!" canReplace:NO]);
 	[index flush];
 
-	NSArray<DFSKIndexSearchResult*>* results = [index search:@"test" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
+	NSArray<DFIndexSearchResult*>* results = [index search:@"test" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
 	XCTAssertEqual(1, [results count]);
 	if ([results count] != 1)
 	{
 		return;
 	}
-	DFSKIndexSearchResult* result = results[0];
+	DFIndexSearchResult* result = results[0];
 	XCTAssertEqualObjects(d1, [result url]);
 }
 
 - (void)testBasicDocumentProperties
 {
-	DFSKDataIndex* index = [self createWithDefaults];
+	DFIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	NSURL* d1 = [NSURL URLWithString:@"doc://temp.txt"];
@@ -76,7 +76,7 @@
 	[index close];
 	index = nil;
 
-	DFSKDataIndex* loaded = [DFSKDataIndex loadFrom:saved];
+	DFIndexData* loaded = [DFIndexData loadFrom:saved];
 	XCTAssertNotNil(loaded);
 
 	NSDictionary* savedProps = [loaded documentProperties:d1];
@@ -85,27 +85,27 @@
 
 - (void)testLoad
 {
-	DFSKDataIndex* index = [self createWithDefaults];
+	DFIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	NSURL* d1 = [NSURL URLWithString:@"doc://temp.txt"];
 	XCTAssertTrue([index add:d1 text:@"This is a test!" canReplace:NO]);
 	[index flush];
 
-	NSArray<DFSKIndexSearchResult*>* results = [index search:@"test" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
+	NSArray<DFIndexSearchResult*>* results = [index search:@"test" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
 	XCTAssertEqual(1, [results count]);
 	if ([results count] != 1)
 	{
 		return;
 	}
-	DFSKIndexSearchResult* result = results[0];
+	DFIndexSearchResult* result = results[0];
 	XCTAssertEqualObjects(d1, [result url]);
 
 	NSData* saved = [index save];
 	XCTAssertNotNil(saved);
 	index = nil;
 
-	DFSKDataIndex* loaded = [DFSKDataIndex loadFrom:saved];
+	DFIndexData* loaded = [DFIndexData loadFrom:saved];
 	results = [loaded search:@"test" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
 	XCTAssertEqual(1, [results count]);
 	if ([results count] != 1)
@@ -118,7 +118,7 @@
 
 - (void)testLoadFileURLIntoIndex
 {
-	DFSKDataIndex* index = [self createWithDefaults];
+	DFIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	// File on disk resource
@@ -136,13 +136,13 @@
 	[index flush];
 
 	// Simple search
-	NSArray<DFSKIndexSearchResult*>* results = [index search:@"apache" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
+	NSArray<DFIndexSearchResult*>* results = [index search:@"apache" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
 	XCTAssertEqual(1, [results count]);
 	if ([results count] != 1)
 	{
 		return;
 	}
-	DFSKIndexSearchResult* result = results[0];
+	DFIndexSearchResult* result = results[0];
 	XCTAssertEqualObjects(apacheURL, [result url]);
 
 	results = [index search:@"the" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
@@ -158,7 +158,7 @@
 
 - (void)testProgressiveSearch
 {
-	DFSKDataIndex* index = [self createWithDefaults];
+	DFIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	// File on disk resource
@@ -175,8 +175,8 @@
 
 	// Progressively search for 'the' -- it should have two results
 
-	DFSKIndexProgressiveSearch* search = [index progressiveSearchWithQuery:@"the" options:kSKSearchOptionDefault];
-	DFSKIndexProgressiveSearchResults* progRes = [search next:1 timeout:1.0];
+	DFIndexProgressiveSearch* search = [index progressiveSearchWithQuery:@"the" options:kSKSearchOptionDefault];
+	DFIndexProgressiveSearchResults* progRes = [search next:1 timeout:1.0];
 	XCTAssertTrue([progRes moreResultsAvailable]);
 	XCTAssertEqual(1, [[progRes results] count]);
 
@@ -190,10 +190,10 @@
 	[index close];
 	index = nil;
 
-	DFSKDataIndex* i3 = [DFSKDataIndex loadFrom:newSaved];
+	DFIndexData* i3 = [DFIndexData loadFrom:newSaved];
 	XCTAssertNotNil(i3);
 
-	NSArray<DFSKIndexSearchResult*>* results = [i3 search:@"the" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
+	NSArray<DFIndexSearchResult*>* results = [i3 search:@"the" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
 	XCTAssertEqual(2, [results count]);
 	if ([results count] != 2)
 	{
@@ -203,7 +203,7 @@
 
 - (void)testTermsAndCounts
 {
-	DFSKDataIndex* index = [self createWithDefaults];
+	DFIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	// File on disk resource
@@ -222,7 +222,7 @@
 	XCTAssertEqual(2, [[index documents] count]);
 
 	// Apache document has 453 terms
-	NSArray<DFSKIndexTermCount*>* terms = [index termsFor: apacheURL];
+	NSArray<DFIndexTermCount*>* terms = [index termsFor: apacheURL];
 	XCTAssertEqual(453, [terms count]);
 }
 

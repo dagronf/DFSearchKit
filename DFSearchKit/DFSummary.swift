@@ -1,5 +1,5 @@
 //
-//  DFSKSummary.swift
+//  DFSummary.swift
 //  DFSearchKitTests
 //
 //  Created by Darren Ford on 9/6/18.
@@ -24,9 +24,9 @@
 import Foundation
 import CoreServices
 
-@objc public class DFSKSummary: NSObject
+@objc public class DFSummary: NSObject
 {
-	@objc(DFSKSummarySentence)
+	@objc(DFSummarySentence)
 	public class Sentence: NSObject
 	{
 		@objc public init(text: String, rank: Int, sentenceOrder: Int, paragraphOrder: Int)
@@ -43,7 +43,7 @@ import CoreServices
 		@objc public let paragraphOrder: Int
 	}
 
-	@objc(DFSKSummaryParagraph)
+	@objc(DFSummaryParagraph)
 	public class Paragraph: NSObject
 	{
 		@objc public init(text: String, rank: Int, paragraphOrder: Int)

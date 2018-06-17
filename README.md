@@ -8,18 +8,18 @@ I was interesting in learning about SKSearchKit, and there was a lack of (simple
 
 The base library is split into three classes
 
-### DFSKIndex
+### DFIndex
 
 Core indexing library, wrapper around SKIndex and related methods.  Generally, you won't need to use this class directly unless you want to interface to your own SKIndex object.
 
-### DFSKDataIndex
+### DFIndexData
 
-A class, inheriting from DFSKIndex that uses an in-memory search index.
+A class, inheriting from DFIndex that uses an in-memory search index.
 
 #### Basic example
 
 ```
-if let indexer = DFSKDataIndex.create()
+if let indexer = DFDataIndex.create()
 {
 	indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
 	indexer.add(url: URL(string: "file://tmp/mypdf.pdf", mimeType: "application/pdf"))
@@ -29,14 +29,14 @@ if let indexer = DFSKDataIndex.create()
 }
 ```
 
-### DFSKFileIndex
+### DFIndexFile
 
-A class, inheriting from DFSKIndex that allows the creation and use of an index on disk
+A class, inheriting from DFIndex that allows the creation and use of an index on disk
 
 #### Basic example
 
 ```
-if let indexer = DFSKFileIndex.create(with: file.fileURL)
+if let indexer = DFFileIndex.create(with: file.fileURL)
 {
 	indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
 	indexer.flush()
@@ -54,7 +54,7 @@ There are two methods for search
 The search all is available on the indexer object, and returns all the results it can get.  As such, for large indexes this may take quite a while to return.  It is provided mostly as a convenience function for small indexes.
 
 ```
-if let indexer = DFSKDataIndex.create()
+if let indexer = DFDataIndex.create()
 {
 	indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
 	indexer.flush()
@@ -68,7 +68,7 @@ if let indexer = DFSKDataIndex.create()
 For large indexes, the results may take quite a while to return.  Thus, the progressive index is more useful by returning limited sets of results progressively, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)
 
 ```
-	let search = DFSKIndex.ProgressiveSearch(indexer, query: "dog")
+	let search = DFIndex.ProgressiveSearch(indexer, query: "dog")
 	... load documents ...
 	var hasMoreResults = true
 	repeat
@@ -83,11 +83,11 @@ For large indexes, the results may take quite a while to return.  Thus, the prog
 ## Samples
 
 * `SearchToy` is a (very!) basic UI to show integration
-* `dfskindex` is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFSKFileIndex to create a command line tool interface to the index
+* `DFindex` is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFFileIndex to create a command line tool interface to the index
 
 ## Tests
 
-`DFSKIndexTests.swift` and `DFSKSummaryTests.swift` contain a small number of tests (so far) that can be used to see how it works
+`DFIndexTests.swift` and `DFSummaryTests.swift` contain a small number of tests (so far) that can be used to see how it works
 
 ## Todo
 

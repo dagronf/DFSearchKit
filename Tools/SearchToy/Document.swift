@@ -23,7 +23,7 @@
 
 import Cocoa
 
-import DFSKSearchKit
+import DFSearchKit
 
 class Document: NSDocument {
 	
@@ -35,8 +35,8 @@ class Document: NSDocument {
 	@IBOutlet weak var queryField: NSTextField!
 	@IBOutlet var queryResultView: NSTextView!
 
-	private var index: DFSKDataIndex = DFSKDataIndex.create()!
-	private var indexer: DFSKIndexAsyncController?
+	private var index: DFIndexData = DFIndexData.create()!
+	private var indexer: DFIndexAsyncController?
 
 	@objc dynamic fileprivate var operationCount: Int = 0
 	@objc dynamic fileprivate var files: [URL] = []
@@ -45,7 +45,7 @@ class Document: NSDocument {
 		super.init()
 
 		// Create a blank index for empty documents
-		self.indexer = DFSKIndexAsyncController.init(index: index, delegate: self)
+		self.indexer = DFIndexAsyncController.init(index: index, delegate: self)
 
 	}
 
@@ -71,8 +71,8 @@ extension Document
 	
 	override func read(from data: Data, ofType typeName: String) throws
 	{
-		self.index = DFSKDataIndex.load(from: data)!
-		self.indexer = DFSKIndexAsyncController.init(index: index, delegate: self)
+		self.index = DFIndexData.load(from: data)!
+		self.indexer = DFIndexAsyncController.init(index: index, delegate: self)
 	}
 }
 
@@ -85,11 +85,11 @@ extension Document
 		if let url = URL(string: self.urlField.stringValue)
 		{
 			let text = self.docContentView.string
-			self.addTextOperation(DFSKIndexAsyncController.TextTask(url: url, text: text))
+			self.addTextOperation(DFIndexAsyncController.TextTask(url: url, text: text))
 		}
 	}
 	
-	@objc func addTextOperation(_ textTask: DFSKIndexAsyncController.TextTask)
+	@objc func addTextOperation(_ textTask: DFIndexAsyncController.TextTask)
 	{
 		self.indexer?.addText(async: textTask.url, text: textTask.text, complete: { [weak self] textTask in
 			if let blockSelf = self {
@@ -102,7 +102,7 @@ extension Document
 		//self.updateChangeCount(NSDocument.ChangeType.changeDone)
 	}
 	
-	@objc func removeTextOperation(_ textTask: DFSKIndexAsyncController.TextTask)
+	@objc func removeTextOperation(_ textTask: DFIndexAsyncController.TextTask)
 	{
 		self.indexer?.removeText(async: textTask, complete: { [weak self] textTask in
 			if let blockSelf = self {
@@ -130,12 +130,12 @@ extension Document
 		panel.beginSheetModal(for: window!) { (result) in
 			if result == NSApplication.ModalResponse.OK
 			{
-				self.addURLs(DFSKIndexAsyncController.FileTask(panel.urls))
+				self.addURLs(DFIndexAsyncController.FileTask(panel.urls))
 			}
 		}
 	}
 	
-	@objc func addURLs(_ fileTask: DFSKIndexAsyncController.FileTask)
+	@objc func addURLs(_ fileTask: DFIndexAsyncController.FileTask)
 	{
 		self.indexer?.addURLs(async: fileTask, complete: { [weak self] fileTask in
 			if let blockSelf = self {
@@ -147,7 +147,7 @@ extension Document
 		})
 	}
 	
-	@objc func removeURLs(_ fileTask: DFSKIndexAsyncController.FileTask) {
+	@objc func removeURLs(_ fileTask: DFIndexAsyncController.FileTask) {
 		self.indexer?.removeURLs(async: fileTask, complete: { [weak self] fileTask in
 			if let blockSelf = self {
 				DispatchQueue.main.async {
@@ -164,7 +164,7 @@ extension Document
 extension Document
 {
 
-	func searchNext(_ searchTask: DFSKIndexAsyncController.SearchTask)
+	func searchNext(_ searchTask: DFIndexAsyncController.SearchTask)
 	{
 		searchTask.next(10) { [weak self] (searchTask, results) in
 
@@ -208,16 +208,16 @@ extension Document
 	}
 }
 
-extension Document: DFSKIndexAsyncControllerProtocol
+extension Document: DFIndexAsyncControllerProtocol
 {
-	func queueDidEmpty(_ indexer: DFSKIndexAsyncController)
+	func queueDidEmpty(_ indexer: DFIndexAsyncController)
 	{
 		DispatchQueue.main.async { [weak self] in
 			self?.updateFiles()
 		}
 	}
 
-	func queueDidChange(_ indexer: DFSKIndexAsyncController, count: Int)
+	func queueDidChange(_ indexer: DFIndexAsyncController, count: Int)
 	{
 		DispatchQueue.main.async { [weak self] in
 			self?.operationCount = count

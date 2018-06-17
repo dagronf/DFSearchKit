@@ -1,5 +1,5 @@
 //
-//  DFSKIndex.swift
+//  DFIndex.swift
 //  DFSearchKit
 //
 //  Created by Darren Ford on 6/5/18.
@@ -33,10 +33,10 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 }
 
 /// Indexer using SKIndex as the core
-@objc public class DFSKIndex: NSObject
+@objc public class DFIndex: NSObject
 {
 	/// Container for storing the properties to be used when creating a new index
-	@objc(DFSKIndexCreateProperties)
+	@objc(DFIndexCreateProperties)
 	public class CreateProperties: NSObject
 	{
 		@objc public init(indexType: SKIndexType = kSKIndexInverted,
@@ -120,7 +120,7 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 
 // MARK: Add and remove documents and text
 
-extension DFSKIndex
+extension DFIndex
 {
 	/// Returns the mime type for the url, or nil if the mime type couldn't be ascertained from the extension
 	///
@@ -252,7 +252,7 @@ extension DFSKIndex
 	}
 }
 
-extension DFSKIndex
+extension DFIndex
 {
 	/// Returns true if the document represented by url has been indexed, false otherwise.
 	@objc public func documentIndexed(_ url: URL) -> Bool
@@ -289,7 +289,7 @@ extension DFSKIndex
 
 // MARK: Set/Get additional properties for document
 
-extension DFSKIndex
+extension DFIndex
 {
 	/// Sets additional properties for the document which are retained in the index.
 	///
@@ -330,9 +330,9 @@ extension DFSKIndex
 
 // MARK: Terms and documents
 
-extension DFSKIndex
+extension DFIndex
 {
-	@objc(DFSKIndexTermCount)
+	@objc(DFIndexTermCount)
 	public class TermCount: NSObject
 	{
 		@objc public init(term: String, count: Int)
@@ -403,9 +403,9 @@ extension DFSKIndex
 
 // MARK: Progressive search
 
-extension DFSKIndex
+extension DFIndex
 {
-	@objc(DFSKIndexSearchResult)
+	@objc(DFIndexSearchResult)
 	public class SearchResult: NSObject
 	{
 		public init(url: URL, score: Float) {
@@ -425,10 +425,10 @@ extension DFSKIndex
 		return ProgressiveSearch(self, query: query, options: options)
 	}
 
-	@objc(DFSKIndexProgressiveSearch)
+	@objc(DFIndexProgressiveSearch)
 	public class ProgressiveSearch: NSObject
 	{
-		@objc(DFSKIndexProgressiveSearchResults)
+		@objc(DFIndexProgressiveSearchResults)
 		public class Results: NSObject
 		{
 			@objc public init(moreResultsAvailable: Bool, results: [SearchResult])
@@ -444,10 +444,10 @@ extension DFSKIndex
 
 		private let options: SKSearchOptions
 		private let search: SKSearch
-		private let index: DFSKIndex
+		private let index: DFIndex
 		private let query: String
 
-		fileprivate init(_ index: DFSKIndex, query: String, options: SKSearchOptions)
+		fileprivate init(_ index: DFIndex, query: String, options: SKSearchOptions)
 		{
 			self.query = query
 			self.index = index
@@ -492,7 +492,7 @@ extension DFSKIndex
 
 // MARK: Search
 
-extension DFSKIndex
+extension DFIndex
 {
 	/// Perform a search
 	///
@@ -524,7 +524,7 @@ extension DFSKIndex
 
 // MARK: Utilities
 
-extension DFSKIndex
+extension DFIndex
 {
 	/// Flush any pending commands to the search index. A flush should ALWAYS be called before performing a search
 	@objc public func flush()
@@ -566,7 +566,7 @@ extension DFSKIndex
 
 // MARK: Private methods for building document arrays
 
-fileprivate extension DFSKIndex
+fileprivate extension DFIndex
 {
 	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout Array<(URL, SKDocument, SKDocumentID)>)
 	{

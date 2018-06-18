@@ -117,22 +117,6 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 
 extension DFIndex
 {
-	/// Returns the mime type for the url, or nil if the mime type couldn't be ascertained from the extension
-	///
-	/// - Parameter url: the url to detect the mime type for
-	/// - Returns: the mime type of the url if able to detect, nil otherwise
-	private func detectMimeType(_ url: URL) -> String?
-	{
-		if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
-														   url.pathExtension as CFString,
-														   nil)?.takeUnretainedValue(),
-			let mimeType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeUnretainedValue()
-		{
-			return mimeType as String
-		}
-		return nil
-	}
-
 	/// Add some text to the index
 	///
 	/// - Parameters:
@@ -552,6 +536,23 @@ private extension DFIndex
 {
 	typealias DocumentID = (URL, SKDocument, SKDocumentID)
 
+	/// Returns the mime type for the url, or nil if the mime type couldn't be ascertained from the extension
+	///
+	/// - Parameter url: the url to detect the mime type for
+	/// - Returns: the mime type of the url if able to detect, nil otherwise
+	private func detectMimeType(_ url: URL) -> String?
+	{
+		if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
+														   url.pathExtension as CFString,
+														   nil)?.takeUnretainedValue(),
+			let mimeType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeUnretainedValue()
+		{
+			return mimeType as String
+		}
+		return nil
+	}
+
+	/// Remove the specified document from the index
 	private func remove(document: SKDocument) -> Bool
 	{
 		if let index = self.index
@@ -578,6 +579,7 @@ private extension DFIndex
 		return self.termCount(for: document) == 0
 	}
 
+	/// Is the specfied document indexed?
 	private func documentIndexed(_ document: SKDocument) -> Bool
 	{
 		if let index = self.index,
@@ -599,6 +601,7 @@ private extension DFIndex
 		return nil
 	}
 
+	/// Recurse through the children of a document and return an array containing all the documentids
 	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout Array<DocumentID>)
 	{
 		guard let index = self.index else
@@ -626,6 +629,11 @@ private extension DFIndex
 		}
 	}
 
+
+	/// Return an array of all the documents contained within the index
+	///
+	/// - Parameter termState: the termstate of documents to be returned (eg. all, empty only, non-empty only)
+	/// - Returns: An array containing all the documents matching the termstate
 	private func fullDocuments(termState: TermState = .all) -> [DocumentID]
 	{
 		guard let index = self.index else

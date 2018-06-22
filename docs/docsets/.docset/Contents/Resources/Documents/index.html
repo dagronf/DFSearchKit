@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a title="  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html"> Docs</a> (62% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html"> Reference</a>
+        <img id="carat" src="img/carat.png" />
+          Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/DFIndex.html">DFIndex</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndex/CreateProperties.html">– CreateProperties</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndex/TermCount.html">– TermCount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndex/TermState.html">– TermState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndex/SearchResult.html">– SearchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndex/ProgressiveSearch.html">– ProgressiveSearch</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndexControllerAsync.html">DFIndexControllerAsync</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndexControllerAsync/TextTask.html">– TextTask</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndexControllerAsync/FileTask.html">– FileTask</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndexControllerAsync/SearchTask.html">– SearchTask</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndexData.html">DFIndexData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFIndexFile.html">DFIndexFile</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFSummary.html">DFSummary</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFSummary/Sentence.html">– Sentence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DFSummary/Paragraph.html">– Paragraph</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/DFIndexType.html">DFIndexType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/DFIndexControllerAsyncProtocol.html">DFIndexControllerAsyncProtocol</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <h1 id='dfsearchkit' class='heading'>DFSearchKit</h1>
+
+<p>A framework implementing a search index using SKSearchKit for both Swift and Objective-C</p>
+<h2 id='why' class='heading'>Why?</h2>
+
+<p>I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>The base library is split into three classes and an async controller</p>
+<h3 id='core' class='heading'>Core</h3>
+<h4 id='dfindex' class='heading'>DFIndex</h4>
+
+<p>Core indexing library, wrapper around SKIndex and related methods.  Generally, you won&rsquo;t need to use this class directly unless you want to interface to your own SKIndex object.</p>
+<h4 id='dfindexdata' class='heading'>DFIndexData</h4>
+
+<p>A class inheriting from DFIndex that implements an in-memory index.</p>
+<pre class="highlight plaintext"><code>if let indexer = DFIndexData.create()
+{
+    let documentURL = URL(string: ("doc-url://d1.txt")!
+    indexer.add(documentURL, text: "This is my first document")
+
+    let fileURL = &lt;the url for some file on disk&gt;
+    indexer.add(fileURL, mimeType: "application/pdf")
+
+    indexer.flush()
+    let searchresult = indexer.search("first")
+    ...
+}
+</code></pre>
+
+<p><code><a href="Classes/DFIndexData.html">DFIndexData</a></code> provides methods to get the raw index data for storing, and to load from data</p>
+
+<p><code>let indexer = DFIndexData.load(from: myData)</code></p>
+
+<p><code>let newIndexData = indexer.save()</code></p>
+<h4 id='dfindexfile' class='heading'>DFIndexFile</h4>
+
+<p>A class inheriting from DFIndex that allows the creation and use of an index on disk</p>
+
+<ul>
+<li>Create a new index file on disk and add some items to id</li>
+</ul>
+<pre class="highlight plaintext"><code>if let indexer = DFIndexFile.create(with: file.fileURL)
+{
+   let documentURL = URL(string: ("doc-url://d1.txt")!
+    indexer.add(documentURL, text: "This is my first document"))
+
+    let fileURL = &lt;the url for some file on disk&gt;
+    indexer.add(fileURL, mimeType: "application/pdf")
+
+    indexer.flush()
+    var result = indexer.search("first")
+    indexer.save()
+    indexer.close()
+}
+</code></pre>
+<h3 id='async-controller' class='heading'>Async controller</h3>
+
+<p><code><a href="Classes/DFIndexControllerAsync.html">DFIndexControllerAsync</a></code> is a simple controller that takes an index object, and provides a safe method for handling async requests.</p>
+
+<p>For example, to add a number of files asynchronously</p>
+<pre class="highlight plaintext"><code>    let indexer = DFIndexData.create()
+    let asyncController = DFIndexControllerAsync(index: indexer, delegate: nil)
+
+    let addTask = DFIndexControllerAsync.FileTask(&lt;file urls to add&gt;)
+    asyncController.addURLs(async: addTask, complete: { task in
+        &lt;block that is executed when the files have been added to the index&gt;
+    })
+
+    ...
+
+    let removeTask = DFIndexControllerAsync.FileTask(&lt;file urls to remove&gt;)
+    asyncController.removeURLs(async: removeTask, complete: { task in
+        &lt;block that is executed when the files have been removed from the index&gt;
+    })
+
+</code></pre>
+
+<p>Internally the async controller uses an operation queue for handling requests.</p>
+<h2 id='searching' class='heading'>Searching</h2>
+
+<p>There are two methods for search</p>
+<h3 id='search-all' class='heading'>Search all</h3>
+
+<p>The search all is available on the indexer object, and returns all the results it can get.  As such, for large indexes this may take quite a while to return.  It is provided mostly as a convenience function for small indexes.</p>
+<pre class="highlight plaintext"><code>if let indexer = DFIndexData.create()
+{
+    indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
+    indexer.flush()
+    var result = indexer.search("first")
+    indexer.save()
+    indexer.close()
+}
+</code></pre>
+<h3 id='search-progressive' class='heading'>Search progressive</h3>
+
+<p>For large indexes, the results may take quite a while to return.  Thus, the progressive index is more useful by returning limited sets of results progressively, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)</p>
+<pre class="highlight plaintext"><code>    let search = indexer.progressiveSearch(query: "dog")
+    ... load documents ...
+    var hasMoreResults = true
+    repeat
+    {
+        var searchChunk = search.next(10)
+        ... do something with searchChunk...
+        hasMoreResults = searchChunk.moreResults
+    }
+    while hasMoreResults
+</code></pre>
+<h2 id='samples' class='heading'>Samples</h2>
+
+<ul>
+<li><code>SearchToy</code> is a (very!) basic UI to show integration</li>
+<li><code>dfindex</code> is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFFileIndex to create a command line tool interface to the index</li>
+</ul>
+<h2 id='tests' class='heading'>Tests</h2>
+
+<p><code>DFIndexTests.swift</code>, <code>DFSummaryTests.swift</code> and <code>DFSearchKitTests_objc.m</code> contain a small number of tests (so far) that can be used to see how it works in both Swift and Objective-C</p>
+<h2 id='todo' class='heading'>Todo</h2>
+
+<p>Asynchronous search, lots of other stuff! This is a learning project only. Maybe it will be useful to someone</p>
+<h2 id='thanks' class='heading'>Thanks</h2>
+
+<p>Mattt Thompson (NSHipster)</p>
+
+<p><a href="http://nshipster.com/search-kit/">http://nshipster.com/search-kit/</a></p>
+
+<p>Marc Charbonneau</p>
+
+<p><a href="https://blog.mbcharbonneau.com/2009/02/26/searchkit-example-project/">https://blog.mbcharbonneau.com/2009/02/26/searchkit-example-project/</a></p>
+
+<p>Apple</p>
+
+<p><a href="https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/SearchKitConcepts/searchKit_concepts/searchKit_concepts.html">https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/SearchKitConcepts/searchKit_concepts/searchKit_concepts.html</a></p>
+
+<p>Philip Dow (SPSearchStore)</p>
+
+<p><a href="https://github.com/phildow/SPSearchStore">https://github.com/phildow/SPSearchStore</a></p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-06-22)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

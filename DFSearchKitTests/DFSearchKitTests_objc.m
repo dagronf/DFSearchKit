@@ -28,11 +28,10 @@
 
 - (DFIndexData*)createWithDefaults
 {
-	DFIndexCreateProperties* properties = [[DFIndexCreateProperties alloc] initWithIndexType:kSKIndexInverted
-																			   proximityIndexing:NO
-																					   stopWords:[NSSet set]
-																				   minTermLength:0];
-
+	DFIndexCreateProperties* properties = [[DFIndexCreateProperties alloc] initWithIndexType:DFIndexTypeInverted
+																		   proximityIndexing:NO
+																				   stopWords:[NSSet set]
+																			   minTermLength:0];
 	return [DFIndexData createWithProperties:properties];
 }
 

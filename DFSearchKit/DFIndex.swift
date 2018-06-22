@@ -32,6 +32,19 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 	return try body()
 }
 
+/// The type of index to create. Maps directly onto SKIndexType
+@objc public enum DFIndexType: UInt32
+{
+	/// Unknown index type (kSKIndexUnknown)
+	case unknown = 0
+	/// Inverted index, mapping terms to documents (kSKIndexInverted)
+	case inverted = 1
+	/// Vector index, mapping documents to terms (kSKIndexVector)
+	case vector = 2
+	/// Index type with all the capabilities of an inverted and a vector index (kSKIndexInvertedVector)
+	case invertedVector = 3
+}
+
 /// Indexer using SKIndex as the core
 @objc public class DFIndex: NSObject
 {
@@ -39,12 +52,21 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 	@objc(DFIndexCreateProperties)
 	public class CreateProperties: NSObject
 	{
-		@objc public init(indexType: SKIndexType = kSKIndexInverted,
-						  proximityIndexing: Bool = false,
-						  stopWords: Set<String> = [],
-						  minTermLength: Int = 0)
+		/// Create a properties object with the specified creation parameters
+		///
+		/// - Parameters:
+		///   - indexType: The type of index
+		///   - proximityIndexing: A Boolean flag indicating whether or not Search Kit should use proximity indexing
+		///   - stopWords: A set of stopwords — words not to index
+		///   - minTermLength: The minimum term length to index (defaults to 1)
+		@objc public init(
+			indexType: DFIndexType = .inverted,
+			proximityIndexing: Bool = false,
+			stopWords: Set<String> = [],
+			minTermLength: Int = 1
+		)
 		{
-			self.indexType = indexType
+			self.indexType = SKIndexType(indexType.rawValue)
 			self.proximityIndexing = proximityIndexing
 			self.stopWords = stopWords
 			self.minTermLength = minTermLength
@@ -57,19 +79,19 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 				[
 					kSKProximityIndexing: self.proximityIndexing,
 					kSKStopWords: self.stopWords,
-					kSKMinTermLength: self.minTermLength
-			]
+					kSKMinTermLength: self.minTermLength,
+				]
 			return properties as CFDictionary
 		}
 
 		/// The type of the index to be created
-		var indexType: SKIndexType = kSKIndexInverted
+		private(set) var indexType: SKIndexType = kSKIndexInverted
 		/// Whether the index should use proximity indexing
-		var proximityIndexing: Bool = false
+		private(set) var proximityIndexing: Bool = false
 		/// The stop words for the index
-		var stopWords: Set<String> = Set<String>()
+		private(set) var stopWords: Set<String> = Set<String>()
 		/// The minimum size of word to add to the index
-		var minTermLength: Int = 0
+		private(set) var minTermLength: Int = 1
 	}
 
 	fileprivate var index: SKIndex?
@@ -282,6 +304,7 @@ extension DFIndex
 
 extension DFIndex
 {
+	/// A class to contain a term and the count of times it appears
 	@objc(DFIndexTermCount)
 	public class TermCount: NSObject
 	{
@@ -291,6 +314,7 @@ extension DFIndex
 			self.count = count
 			super.init()
 		}
+
 		@objc public let term: String
 		@objc public let count: Int
 	}
@@ -303,7 +327,7 @@ extension DFIndex
 		case notEmpty = 2
 	}
 
-	/// Returns all the document URLs loaded into the index
+	/// Returns all the document URLs loaded into the index matching the specified term state
 	///
 	/// - Parameter termState: Only return documents matching the specified document state
 	/// - Returns: An array containing all the document URLs
@@ -312,7 +336,7 @@ extension DFIndex
 		return self.fullDocuments(termState: termState).map { $0.0 }
 	}
 
-	/// Returns the number of terms for the specified document
+	/// Returns the number of terms for the specified document url
 	@objc public func termCount(for url: URL) -> Int
 	{
 		if let index = self.index,
@@ -349,7 +373,7 @@ extension DFIndex
 
 		guard let termVals = SKIndexCopyTermIDArrayForDocumentID(index, documentID),
 			let terms = termVals.takeUnretainedValue() as? Array<CFIndex>
-			else
+		else
 		{
 			return []
 		}
@@ -378,7 +402,8 @@ extension DFIndex
 	@objc(DFIndexSearchResult)
 	public class SearchResult: NSObject
 	{
-		public init(url: URL, score: Float) {
+		public init(url: URL, score: Float)
+		{
 			self.url = url
 			self.score = score
 			super.init()
@@ -389,8 +414,10 @@ extension DFIndex
 	}
 
 	/// Start a progressive search
-	@objc public func progressiveSearch(query: String,
-										options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> ProgressiveSearch
+	@objc public func progressiveSearch(
+		query: String,
+		options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)
+	) -> ProgressiveSearch
 	{
 		return ProgressiveSearch(self, query: query, options: options)
 	}
@@ -398,6 +425,7 @@ extension DFIndex
 	@objc(DFIndexProgressiveSearch)
 	public class ProgressiveSearch: NSObject
 	{
+		/// Progressive search result.
 		@objc(DFIndexProgressiveSearchResults)
 		public class Results: NSObject
 		{
@@ -451,7 +479,7 @@ extension DFIndex
 			let partialResults: [SearchResult] = zip(urls[0 ..< foundCount], scores).compactMap({
 				(cfurl, score) -> SearchResult? in
 				guard let url = cfurl?.takeUnretainedValue() as URL?
-					else { return nil }
+				else { return nil }
 				return SearchResult(url: url, score: score)
 			})
 
@@ -471,10 +499,12 @@ extension DFIndex
 	///   - limit: The maximum number of results to return
 	///   - timeout: How long to wait for a search to complete before stopping
 	/// - Returns: An array containing match URLs and their corresponding 'score' (how relevant the match)
-	@objc public func search(_ query: String,
-							 limit: Int = 10,
-							 timeout: TimeInterval = 1.0,
-							 options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)) -> [SearchResult]
+	@objc public func search(
+		_ query: String,
+		limit: Int = 10,
+		timeout: TimeInterval = 1.0,
+		options: SKSearchOptions = SKSearchOptions(kSKSearchOptionDefault)
+	) -> [SearchResult]
 	{
 		let search = self.progressiveSearch(query: query, options: options)
 
@@ -486,7 +516,7 @@ extension DFIndex
 			results.append(contentsOf: result.results)
 			moreResultsAvailable = result.moreResultsAvailable
 		}
-			while moreResultsAvailable
+		while moreResultsAvailable
 
 		return results
 	}
@@ -542,9 +572,11 @@ private extension DFIndex
 	/// - Returns: the mime type of the url if able to detect, nil otherwise
 	private func detectMimeType(_ url: URL) -> String?
 	{
-		if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
-														   url.pathExtension as CFString,
-														   nil)?.takeUnretainedValue(),
+		if let UTI = UTTypeCreatePreferredIdentifierForTag(
+			kUTTagClassFilenameExtension,
+			url.pathExtension as CFString,
+			nil
+		)?.takeUnretainedValue(),
 			let mimeType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeUnretainedValue()
 		{
 			return mimeType as String
@@ -559,7 +591,7 @@ private extension DFIndex
 		{
 			return synchronized(self)
 			{
-				return SKIndexRemoveDocument(index, document)
+				SKIndexRemoveDocument(index, document)
 			}
 		}
 		return false
@@ -617,7 +649,7 @@ private extension DFIndex
 			isLeaf = false
 			self.addLeafURLs(index: index, inParentDocument: skDocument.takeUnretainedValue(), docs: &docs)
 		}
-		
+
 		if isLeaf && inParentDocument != nil && kSKDocumentStateNotIndexed != SKIndexGetDocumentState(index, inParentDocument)
 		{
 			if let temp = SKDocumentCopyURL(inParentDocument)
@@ -628,7 +660,6 @@ private extension DFIndex
 			}
 		}
 	}
-
 
 	/// Return an array of all the documents contained within the index
 	///

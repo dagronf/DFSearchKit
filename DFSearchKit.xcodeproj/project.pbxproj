@@ -270,6 +270,23 @@
 		};
 /* End PBXHeadersBuildPhase section */
 
+/* Begin PBXLegacyTarget section */
+		23BFA9F020DD20EA002D3176 /* Generate Documentation */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "";
+			buildConfigurationList = 23BFA9F320DD20EA002D3176 /* Build configuration list for PBXLegacyTarget "Generate Documentation" */;
+			buildPhases = (
+			);
+			buildToolPath = jazzy;
+			buildWorkingDirectory = "";
+			dependencies = (
+			);
+			name = "Generate Documentation";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Generate Documentation";
+		};
+/* End PBXLegacyTarget section */
+
 /* Begin PBXNativeTarget section */
 		2340800220CB87310031D43A /* DFSearchKit */ = {
 			isa = PBXNativeTarget;
@@ -365,6 +382,9 @@
 					238FAD7120A11B5F00092FCD = {
 						CreatedOnToolsVersion = 9.3;
 					};
+					23BFA9F020DD20EA002D3176 = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
 				};
 			};
 			buildConfigurationList = 23D90839209E71F60096E42A /* Build configuration list for PBXProject "DFSearchKit" */;
@@ -384,6 +404,7 @@
 				2340800220CB87310031D43A /* DFSearchKit */,
 				2340801220CB88350031D43A /* SearchToy */,
 				2369FC5C20D6085E00EFD944 /* DFSearchKitTests */,
+				23BFA9F020DD20EA002D3176 /* Generate Documentation */,
 			);
 		};
 /* End PBXProject section */
@@ -642,6 +663,31 @@
 			};
 			name = Release;
 		};
+		23BFA9F120DD20EA002D3176 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		23BFA9F220DD20EA002D3176 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		23D90851209E71F70096E42A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -796,6 +842,15 @@
 			buildConfigurations = (
 				238FAD7620A11B5F00092FCD /* Debug */,
 				238FAD7720A11B5F00092FCD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		23BFA9F320DD20EA002D3176 /* Build configuration list for PBXLegacyTarget "Generate Documentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				23BFA9F120DD20EA002D3176 /* Debug */,
+				23BFA9F220DD20EA002D3176 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

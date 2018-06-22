@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DFIndex Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/DFIndex" class="dashAnchor"></a>
+    <a title="DFIndex Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html"> Docs</a> (62% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        DFIndex Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndex.html">DFIndex</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndex/CreateProperties.html">– CreateProperties</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndex/TermCount.html">– TermCount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndex/TermState.html">– TermState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndex/SearchResult.html">– SearchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndex/ProgressiveSearch.html">– ProgressiveSearch</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndexControllerAsync.html">DFIndexControllerAsync</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndexControllerAsync/TextTask.html">– TextTask</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndexControllerAsync/FileTask.html">– FileTask</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndexControllerAsync/SearchTask.html">– SearchTask</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndexData.html">DFIndexData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFIndexFile.html">DFIndexFile</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFSummary.html">DFSummary</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFSummary/Sentence.html">– Sentence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DFSummary/Paragraph.html">– Paragraph</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/DFIndexType.html">DFIndexType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/DFIndexControllerAsyncProtocol.html">DFIndexControllerAsyncProtocol</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>DFIndex</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">DFIndex</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>Indexer using SKIndex as the core</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7dfindex7DFIndexC16CreatePropertiesC"></a>
+                    <a name="//apple_ref/swift/Class/CreateProperties" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7dfindex7DFIndexC16CreatePropertiesC">CreateProperties</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Container for storing the properties to be used when creating a new index</p>
+
+                        <a href="../Classes/DFIndex/CreateProperties.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexCreateProperties)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">CreateProperties</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@dfindex@objc(cs)DFIndex(im)close"></a>
+                    <a name="//apple_ref/swift/Method/close()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@dfindex@objc(cs)DFIndex(im)close">close()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Close the index</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Add%20and%20remove%20documents%20and%20text"></a>
+                <a name="//apple_ref/swift/Section/Add and remove documents and text" class="dashAnchor"></a>
+                <a href="#/Add%20and%20remove%20documents%20and%20text">
+                  <h3 class="section-name">Add and remove documents and text</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)add:text:canReplace:"></a>
+                    <a name="//apple_ref/swift/Method/add(_:text:canReplace:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)add:text:canReplace:">add(_:text:canReplace:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Add some text to the index</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">add</span><span class="p">(</span><span class="n">_</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">canReplace</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>url</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The identifying URL for the text</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>text</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The text to add</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>canReplace</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>if true, can attempt to replace an existing document with the new one.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>true if the text was successfully added to the index, false otherwise</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)addWithUrl:mimeType:canReplace:"></a>
+                    <a name="//apple_ref/swift/Method/add(url:mimeType:canReplace:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)addWithUrl:mimeType:canReplace:">add(url:mimeType:canReplace:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Add a file as a document to the index</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">add</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">mimeType</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">canReplace</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>url</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The file URL for the document (of the form file:///Users/blahblah&hellip;.doc.txt)</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mimeType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional mimetype.  If nil, attempts to work out the type of file from the extension.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>canReplace</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>if true, can attempt to replace an existing document with the new one.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>true if the command was successful.
+            <strong>NOTE</strong> If the document <em>wasnt</em> updated it also returns true!</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)addFolderContentWithFolderURL:canReplace:"></a>
+                    <a name="//apple_ref/swift/Method/addFolderContent(folderURL:canReplace:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)addFolderContentWithFolderURL:canReplace:">addFolderContent(folderURL:canReplace:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Recursively add the files contained within a folder to the search index</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">addFolderContent</span><span class="p">(</span><span class="nv">folderURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">canReplace</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">URL</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>folderURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The folder to be indexed.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>canReplace</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If the document already exists within the index, can it be replaced?</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The URLs of documents added to the index.  If folderURL isn&rsquo;t a folder, returns empty</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)removeWithUrl:"></a>
+                    <a name="//apple_ref/swift/Method/remove(url:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)removeWithUrl:">remove(url:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Remove a document from the index</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">remove</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>url</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The identifying URL for the document</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>true if the document was successfully removed, false otherwise.
+       <strong>NOTE</strong> if the document didn&rsquo;t exist, this returns true as well</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)removeWithUrls:"></a>
+                    <a name="//apple_ref/swift/Method/remove(urls:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)removeWithUrls:">remove(urls:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">remove</span><span class="p">(</span><span class="nv">urls</span><span class="p">:</span> <span class="p">[</span><span class="kt">URL</span><span class="p">])</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)documentState:"></a>
+                    <a name="//apple_ref/swift/Method/documentState(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)documentState:">documentState(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the indexing state for the specified URL.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">documentState</span><span class="p">(</span><span class="n">_</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">SKDocumentIndexState</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Add%20and%20remove%20documents%20and%20text2"></a>
+                <a name="//apple_ref/swift/Section/Add and remove documents and text" class="dashAnchor"></a>
+                <a href="#/Add%20and%20remove%20documents%20and%20text2">
+                  <h3 class="section-name">Add and remove documents and text</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)documentIndexed:"></a>
+                    <a name="//apple_ref/swift/Method/documentIndexed(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)documentIndexed:">documentIndexed(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns true if the document represented by url has been indexed, false otherwise.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">documentIndexed</span><span class="p">(</span><span class="n">_</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Set/Get%20additional%20properties%20for%20document"></a>
+                <a name="//apple_ref/swift/Section/Set/Get additional properties for document" class="dashAnchor"></a>
+                <a href="#/Set/Get%20additional%20properties%20for%20document">
+                  <h3 class="section-name">Set/Get additional properties for document</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)setDocumentProperties:properties:"></a>
+                    <a name="//apple_ref/swift/Method/setDocumentProperties(_:properties:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)setDocumentProperties:properties:">setDocumentProperties(_:properties:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sets additional properties for the document which are retained in the index.</p>
+
+<p>Document must have been indexed for setting of properties to take effect.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setDocumentProperties</span><span class="p">(</span><span class="n">_</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">properties</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>url</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The identifying URL for the document</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>properties</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The properties to store in the</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>true</code> if the properties were set, <code>false</code> otherwise</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)documentProperties:"></a>
+                    <a name="//apple_ref/swift/Method/documentProperties(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)documentProperties:">documentProperties(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns additional properties for the document</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">documentProperties</span><span class="p">(</span><span class="n">_</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Terms%20and%20documents"></a>
+                <a name="//apple_ref/swift/Section/Terms and documents" class="dashAnchor"></a>
+                <a href="#/Terms%20and%20documents">
+                  <h3 class="section-name">Terms and documents</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7dfindex7DFIndexC9TermCountC"></a>
+                    <a name="//apple_ref/swift/Class/TermCount" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7dfindex7DFIndexC9TermCountC">TermCount</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A class to contain a term and the count of times it appears</p>
+
+                        <a href="../Classes/DFIndex/TermCount.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexTermCount)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">TermCount</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7dfindex7DFIndexC9TermStateO"></a>
+                    <a name="//apple_ref/swift/Enum/TermState" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7dfindex7DFIndexC9TermStateO">TermState</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="../Classes/DFIndex/TermState.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexTermState)</span>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="kt">TermState</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)documentsWithTermState:"></a>
+                    <a name="//apple_ref/swift/Method/documents(termState:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)documentsWithTermState:">documents(termState:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns all the document URLs loaded into the index matching the specified term state</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">documents</span><span class="p">(</span><span class="nv">termState</span><span class="p">:</span> <span class="kt"><a href="../Classes/DFIndex/TermState.html">TermState</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">all</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">URL</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>termState</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Only return documents matching the specified document state</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array containing all the document URLs</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)termCountFor:"></a>
+                    <a name="//apple_ref/swift/Method/termCount(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)termCountFor:">termCount(for:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the number of terms for the specified document url</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">termCount</span><span class="p">(</span><span class="k">for</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)isEmptyFor:"></a>
+                    <a name="//apple_ref/swift/Method/isEmpty(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)isEmptyFor:">isEmpty(for:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Is the specified document empty (ie. it has no terms)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">isEmpty</span><span class="p">(</span><span class="k">for</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)termsFor:"></a>
+                    <a name="//apple_ref/swift/Method/terms(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)termsFor:">terms(for:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns an array containing the terms and counts for a specified URL</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">terms</span><span class="p">(</span><span class="k">for</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/DFIndex/TermCount.html">TermCount</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>url</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The document URL in the index to locate</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of the terms and corresponding counts located in the document.
+       Returns an empty array if the document cannot be located.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Progressive%20search"></a>
+                <a name="//apple_ref/swift/Section/Progressive search" class="dashAnchor"></a>
+                <a href="#/Progressive%20search">
+                  <h3 class="section-name">Progressive search</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7dfindex7DFIndexC12SearchResultC"></a>
+                    <a name="//apple_ref/swift/Class/SearchResult" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7dfindex7DFIndexC12SearchResultC">SearchResult</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="../Classes/DFIndex/SearchResult.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexSearchResult)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">SearchResult</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)progressiveSearchWithQuery:options:"></a>
+                    <a name="//apple_ref/swift/Method/progressiveSearch(query:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)progressiveSearchWithQuery:options:">progressiveSearch(query:options:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Start a progressive search</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">progressiveSearch</span><span class="p">(</span>
+	<span class="nv">query</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+	<span class="nv">options</span><span class="p">:</span> <span class="kt">SKSearchOptions</span> <span class="o">=</span> <span class="kt">SKSearchOptions</span><span class="p">(</span><span class="n">kSKSearchOptionDefault</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/DFIndex/ProgressiveSearch.html">ProgressiveSearch</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7dfindex7DFIndexC17ProgressiveSearchC"></a>
+                    <a name="//apple_ref/swift/Class/ProgressiveSearch" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7dfindex7DFIndexC17ProgressiveSearchC">ProgressiveSearch</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="../Classes/DFIndex/ProgressiveSearch.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexProgressiveSearch)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">ProgressiveSearch</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Search"></a>
+                <a name="//apple_ref/swift/Section/Search" class="dashAnchor"></a>
+                <a href="#/Search">
+                  <h3 class="section-name">Search</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)search:limit:timeout:options:"></a>
+                    <a name="//apple_ref/swift/Method/search(_:limit:timeout:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)search:limit:timeout:options:">search(_:limit:timeout:options:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Perform a search</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">search</span><span class="p">(</span>
+	<span class="n">_</span> <span class="nv">query</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+	<span class="nv">limit</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+	<span class="nv">timeout</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+	<span class="nv">options</span><span class="p">:</span> <span class="kt">SKSearchOptions</span> <span class="o">=</span> <span class="kt">SKSearchOptions</span><span class="p">(</span><span class="n">kSKSearchOptionDefault</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/DFIndex/SearchResult.html">SearchResult</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>query</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A string containing the term(s) to be searched for</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>limit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The maximum number of results to return</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>timeout</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>How long to wait for a search to complete before stopping</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array containing match URLs and their corresponding &lsquo;score&rsquo; (how relevant the match)</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Utilities"></a>
+                <a name="//apple_ref/swift/Section/Utilities" class="dashAnchor"></a>
+                <a href="#/Utilities">
+                  <h3 class="section-name">Utilities</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)flush"></a>
+                    <a name="//apple_ref/swift/Method/flush()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)flush">flush()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Flush any pending commands to the search index. A flush should ALWAYS be called before performing a search</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">flush</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)compact"></a>
+                    <a name="//apple_ref/swift/Method/compact()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)compact">compact()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Reduce the size of the index where possible.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">compact</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@dfindex@objc(cs)DFIndex(im)pruneWithProgress:"></a>
+                    <a name="//apple_ref/swift/Method/prune(progress:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@dfindex@objc(cs)DFIndex(im)pruneWithProgress:">prune(progress:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Remove any documents that have no search terms</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">prune</span><span class="p">(</span><span class="nv">progress</span><span class="p">:</span> <span class="p">((</span><span class="kt">Int</span><span class="p">,</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-06-22)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

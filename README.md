@@ -6,20 +6,22 @@ I was interesting in learning about SKSearchKit and wanted a nice simple object 
 
 ## Usage
 
+Find API references here -- [https://github.com/dagronf/DFSearckKit/blob/master/docs/index.html](https://github.com/dagronf/DFSearckKit/blob/master/docs/index.html)
+
 The base library is split into three classes and an async controller
 
 ### Core
 
-#### DFIndex
+#### DFSearchIndex
 
 Core indexing library, wrapper around SKIndex and related methods.  Generally, you won't need to use this class directly unless you want to interface to your own SKIndex object.
 
-#### DFIndexData
+#### DFSearchIndexData
 
 A class inheriting from DFIndex that implements an in-memory index.
 
 ```
-if let indexer = DFIndexData.create()
+if let indexer = DFSearchIndexData.create()
 {
 	let documentURL = URL(string: ("doc-url://d1.txt")!
 	indexer.add(documentURL, text: "This is my first document")
@@ -33,9 +35,9 @@ if let indexer = DFIndexData.create()
 }
 ```
 
-`DFIndexData` provides methods to get the raw index data for storing, and to load from data
+`DFSearchIndexData` provides methods to get the raw index data for storing, and to load from data
 
-`let indexer = DFIndexData.load(from: myData)`
+`let indexer = DFSearchIndexData.load(from: myData)`
 
 `let newIndexData = indexer.save()`
 
@@ -47,7 +49,7 @@ A class inheriting from DFIndex that allows the creation and use of an index on 
 * Create a new index file on disk and add some items to id
 
 ```
-if let indexer = DFIndexFile.create(with: file.fileURL)
+if let indexer = DFSearchIndexFile.create(with: file.fileURL)
 {
    let documentURL = URL(string: ("doc-url://d1.txt")!
 	indexer.add(documentURL, text: "This is my first document"))
@@ -64,22 +66,22 @@ if let indexer = DFIndexFile.create(with: file.fileURL)
 
 ### Async controller
 
-`DFIndexControllerAsync` is a simple controller that takes an index object, and provides a safe method for handling async requests.
+`DFSearchIndexAsyncController` is a simple controller that takes an index object, and provides a safe method for handling async requests.
 
 For example, to add a number of files asynchronously
 
 ```
-	let indexer = DFIndexData.create()
-	let asyncController = DFIndexControllerAsync(index: indexer, delegate: nil)
+	let indexer = DFSearchIndexData.create()
+	let asyncController = DFSearchIndexAsyncController(index: indexer, delegate: nil)
 
-	let addTask = DFIndexControllerAsync.FileTask(<file urls to add>)
+	let addTask = DFSearchIndexAsyncController.FileTask(<file urls to add>)
 	asyncController.addURLs(async: addTask, complete: { task in
 		<block that is executed when the files have been added to the index>
 	})
 	
 	...
 	
-	let removeTask = DFIndexControllerAsync.FileTask(<file urls to remove>)
+	let removeTask = DFSearchIndexAsyncController.FileTask(<file urls to remove>)
 	asyncController.removeURLs(async: removeTask, complete: { task in
 		<block that is executed when the files have been removed from the index>
 	})
@@ -96,7 +98,7 @@ There are two methods for search
 The search all is available on the indexer object, and returns all the results it can get.  As such, for large indexes this may take quite a while to return.  It is provided mostly as a convenience function for small indexes.
 
 ```
-if let indexer = DFIndexData.create()
+if let indexer = DFSearchIndexData.create()
 {
 	indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
 	indexer.flush()
@@ -130,10 +132,6 @@ For large indexes, the results may take quite a while to return.  Thus, the prog
 ## Tests
 
 `DFIndexTests.swift`, `DFSummaryTests.swift` and `DFSearchKitTests_objc.m` contain a small number of tests (so far) that can be used to see how it works in both Swift and Objective-C
-
-## Todo
-
-Asynchronous search, lots of other stuff! This is a learning project only. Maybe it will be useful to someone
 
 ## Thanks
 

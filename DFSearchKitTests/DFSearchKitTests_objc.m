@@ -26,18 +26,18 @@
     [super tearDown];
 }
 
-- (DFIndexData*)createWithDefaults
+- (DFSearchIndexData*)createWithDefaults
 {
 	DFIndexCreateProperties* properties = [[DFIndexCreateProperties alloc] initWithIndexType:DFIndexTypeInverted
 																		   proximityIndexing:NO
 																				   stopWords:[NSSet set]
 																			   minTermLength:0];
-	return [DFIndexData createWithProperties:properties];
+	return [DFSearchIndexData createWithProperties:properties];
 }
 
 - (void)testBasicDataIndex
 {
-	DFIndexData* index = [self createWithDefaults];
+	DFSearchIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	NSURL* d1 = [NSURL URLWithString:@"doc://temp.txt"];
@@ -56,7 +56,7 @@
 
 - (void)testBasicDocumentProperties
 {
-	DFIndexData* index = [self createWithDefaults];
+	DFSearchIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	NSURL* d1 = [NSURL URLWithString:@"doc://temp.txt"];
@@ -75,7 +75,7 @@
 	[index close];
 	index = nil;
 
-	DFIndexData* loaded = [DFIndexData loadFrom:saved];
+	DFSearchIndexData* loaded = [DFSearchIndexData loadFrom:saved];
 	XCTAssertNotNil(loaded);
 
 	NSDictionary* savedProps = [loaded documentProperties:d1];
@@ -84,7 +84,7 @@
 
 - (void)testLoad
 {
-	DFIndexData* index = [self createWithDefaults];
+	DFSearchIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	NSURL* d1 = [NSURL URLWithString:@"doc://temp.txt"];
@@ -104,7 +104,7 @@
 	XCTAssertNotNil(saved);
 	index = nil;
 
-	DFIndexData* loaded = [DFIndexData loadFrom:saved];
+	DFSearchIndexData* loaded = [DFSearchIndexData loadFrom:saved];
 	results = [loaded search:@"test" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
 	XCTAssertEqual(1, [results count]);
 	if ([results count] != 1)
@@ -117,7 +117,7 @@
 
 - (void)testLoadFileURLIntoIndex
 {
-	DFIndexData* index = [self createWithDefaults];
+	DFSearchIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	// File on disk resource
@@ -157,7 +157,7 @@
 
 - (void)testProgressiveSearch
 {
-	DFIndexData* index = [self createWithDefaults];
+	DFSearchIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	// File on disk resource
@@ -189,7 +189,7 @@
 	[index close];
 	index = nil;
 
-	DFIndexData* i3 = [DFIndexData loadFrom:newSaved];
+	DFSearchIndexData* i3 = [DFSearchIndexData loadFrom:newSaved];
 	XCTAssertNotNil(i3);
 
 	NSArray<DFIndexSearchResult*>* results = [i3 search:@"the" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
@@ -202,7 +202,7 @@
 
 - (void)testTermsAndCounts
 {
-	DFIndexData* index = [self createWithDefaults];
+	DFSearchIndexData* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	// File on disk resource

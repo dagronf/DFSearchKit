@@ -17,7 +17,7 @@
 		<key>DFSearchKitTests.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Generate Documentation.xcscheme</key>
 		<dict>
@@ -27,12 +27,12 @@
 		<key>SearchToy.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
-		<key>dfindex.xcscheme</key>
+		<key>dfsearchindex.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>

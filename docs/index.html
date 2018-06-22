@@ -13,7 +13,7 @@
     <a title="  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html"> Docs</a> (62% documented)</p>
+        <p><a href="index.html"> Docs</a> (69% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -30,40 +30,40 @@
             <a href="Classes.html">Classes</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="Classes/DFIndex.html">DFIndex</a>
+                <a href="Classes/DFSearchIndex.html">DFSearchIndex</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndex/CreateProperties.html">– CreateProperties</a>
+                <a href="Classes/DFSearchIndex/CreateProperties.html">– CreateProperties</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndex/TermCount.html">– TermCount</a>
+                <a href="Classes/DFSearchIndex/TermCount.html">– TermCount</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndex/TermState.html">– TermState</a>
+                <a href="Classes/DFSearchIndex/TermState.html">– TermState</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndex/SearchResult.html">– SearchResult</a>
+                <a href="Classes/DFSearchIndex/SearchResult.html">– SearchResult</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndex/ProgressiveSearch.html">– ProgressiveSearch</a>
+                <a href="Classes/DFSearchIndex/ProgressiveSearch.html">– ProgressiveSearch</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndexControllerAsync.html">DFIndexControllerAsync</a>
+                <a href="Classes/DFSearchIndexAsyncController.html">DFSearchIndexAsyncController</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndexControllerAsync/TextTask.html">– TextTask</a>
+                <a href="Classes/DFSearchIndexAsyncController/TextTask.html">– TextTask</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndexControllerAsync/FileTask.html">– FileTask</a>
+                <a href="Classes/DFSearchIndexAsyncController/FileTask.html">– FileTask</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndexControllerAsync/SearchTask.html">– SearchTask</a>
+                <a href="Classes/DFSearchIndexAsyncController/SearchTask.html">– SearchTask</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndexData.html">DFIndexData</a>
+                <a href="Classes/DFSearchIndexData.html">DFSearchIndexData</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFIndexFile.html">DFIndexFile</a>
+                <a href="Classes/DFSearchIndexFile.html">DFSearchIndexFile</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/DFSummary.html">DFSummary</a>
@@ -88,7 +88,7 @@
             <a href="Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="Protocols/DFIndexControllerAsyncProtocol.html">DFIndexControllerAsyncProtocol</a>
+                <a href="Protocols/DFSearchIndexAsyncControllerProtocol.html">DFSearchIndexAsyncControllerProtocol</a>
               </li>
             </ul>
           </li>
@@ -106,15 +106,17 @@
 <p>I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift</p>
 <h2 id='usage' class='heading'>Usage</h2>
 
+<p>Find API references here &ndash; <a href="https://github.com/dagronf/DFSearckKit/blob/master/docs/index.html">https://github.com/dagronf/DFSearckKit/blob/master/docs/index.html</a></p>
+
 <p>The base library is split into three classes and an async controller</p>
 <h3 id='core' class='heading'>Core</h3>
-<h4 id='dfindex' class='heading'>DFIndex</h4>
+<h4 id='dfsearchindex' class='heading'>DFSearchIndex</h4>
 
 <p>Core indexing library, wrapper around SKIndex and related methods.  Generally, you won&rsquo;t need to use this class directly unless you want to interface to your own SKIndex object.</p>
-<h4 id='dfindexdata' class='heading'>DFIndexData</h4>
+<h4 id='dfsearchindexdata' class='heading'>DFSearchIndexData</h4>
 
 <p>A class inheriting from DFIndex that implements an in-memory index.</p>
-<pre class="highlight plaintext"><code>if let indexer = DFIndexData.create()
+<pre class="highlight plaintext"><code>if let indexer = DFSearchIndexData.create()
 {
     let documentURL = URL(string: ("doc-url://d1.txt")!
     indexer.add(documentURL, text: "This is my first document")
@@ -128,9 +130,9 @@
 }
 </code></pre>
 
-<p><code><a href="Classes/DFIndexData.html">DFIndexData</a></code> provides methods to get the raw index data for storing, and to load from data</p>
+<p><code><a href="Classes/DFSearchIndexData.html">DFSearchIndexData</a></code> provides methods to get the raw index data for storing, and to load from data</p>
 
-<p><code>let indexer = DFIndexData.load(from: myData)</code></p>
+<p><code>let indexer = DFSearchIndexData.load(from: myData)</code></p>
 
 <p><code>let newIndexData = indexer.save()</code></p>
 <h4 id='dfindexfile' class='heading'>DFIndexFile</h4>
@@ -140,7 +142,7 @@
 <ul>
 <li>Create a new index file on disk and add some items to id</li>
 </ul>
-<pre class="highlight plaintext"><code>if let indexer = DFIndexFile.create(with: file.fileURL)
+<pre class="highlight plaintext"><code>if let indexer = DFSearchIndexFile.create(with: file.fileURL)
 {
    let documentURL = URL(string: ("doc-url://d1.txt")!
     indexer.add(documentURL, text: "This is my first document"))
@@ -156,20 +158,20 @@
 </code></pre>
 <h3 id='async-controller' class='heading'>Async controller</h3>
 
-<p><code><a href="Classes/DFIndexControllerAsync.html">DFIndexControllerAsync</a></code> is a simple controller that takes an index object, and provides a safe method for handling async requests.</p>
+<p><code><a href="Classes/DFSearchIndexAsyncController.html">DFSearchIndexAsyncController</a></code> is a simple controller that takes an index object, and provides a safe method for handling async requests.</p>
 
 <p>For example, to add a number of files asynchronously</p>
-<pre class="highlight plaintext"><code>    let indexer = DFIndexData.create()
-    let asyncController = DFIndexControllerAsync(index: indexer, delegate: nil)
+<pre class="highlight plaintext"><code>    let indexer = DFSearchIndexData.create()
+    let asyncController = DFSearchIndexAsyncController(index: indexer, delegate: nil)
 
-    let addTask = DFIndexControllerAsync.FileTask(&lt;file urls to add&gt;)
+    let addTask = DFSearchIndexAsyncController.FileTask(&lt;file urls to add&gt;)
     asyncController.addURLs(async: addTask, complete: { task in
         &lt;block that is executed when the files have been added to the index&gt;
     })
 
     ...
 
-    let removeTask = DFIndexControllerAsync.FileTask(&lt;file urls to remove&gt;)
+    let removeTask = DFSearchIndexAsyncController.FileTask(&lt;file urls to remove&gt;)
     asyncController.removeURLs(async: removeTask, complete: { task in
         &lt;block that is executed when the files have been removed from the index&gt;
     })
@@ -183,7 +185,7 @@
 <h3 id='search-all' class='heading'>Search all</h3>
 
 <p>The search all is available on the indexer object, and returns all the results it can get.  As such, for large indexes this may take quite a while to return.  It is provided mostly as a convenience function for small indexes.</p>
-<pre class="highlight plaintext"><code>if let indexer = DFIndexData.create()
+<pre class="highlight plaintext"><code>if let indexer = DFSearchIndexData.create()
 {
     indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
     indexer.flush()
@@ -215,9 +217,6 @@
 <h2 id='tests' class='heading'>Tests</h2>
 
 <p><code>DFIndexTests.swift</code>, <code>DFSummaryTests.swift</code> and <code>DFSearchKitTests_objc.m</code> contain a small number of tests (so far) that can be used to see how it works in both Swift and Objective-C</p>
-<h2 id='todo' class='heading'>Todo</h2>
-
-<p>Asynchronous search, lots of other stuff! This is a learning project only. Maybe it will be useful to someone</p>
 <h2 id='thanks' class='heading'>Thanks</h2>
 
 <p>Mattt Thompson (NSHipster)</p>

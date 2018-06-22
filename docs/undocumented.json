@@ -1,170 +1,114 @@
 {
   "warnings": [
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 231,
-      "symbol": "DFIndex.remove(urls:)",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndex.swift",
+      "line": 315,
+      "symbol": "DFSearchIndex.TermCount.init(term:count:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 311,
-      "symbol": "DFIndex.TermCount.init(term:count:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 318,
-      "symbol": "DFIndex.TermCount.term",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndex.swift",
+      "line": 322,
+      "symbol": "DFSearchIndex.TermCount.term",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 319,
-      "symbol": "DFIndex.TermCount.count",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndex.swift",
       "line": 323,
-      "symbol": "DFIndex.TermState",
+      "symbol": "DFSearchIndex.TermCount.count",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndex.swift",
+      "line": 327,
+      "symbol": "DFSearchIndex.TermState",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 325,
-      "symbol": "DFIndex.TermState.all",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndex.swift",
+      "line": 329,
+      "symbol": "DFSearchIndex.TermState.all",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 326,
-      "symbol": "DFIndex.TermState.empty",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndex.swift",
+      "line": 330,
+      "symbol": "DFSearchIndex.TermState.empty",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 327,
-      "symbol": "DFIndex.TermState.notEmpty",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndex.swift",
+      "line": 331,
+      "symbol": "DFSearchIndex.TermState.notEmpty",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 403,
-      "symbol": "DFIndex.SearchResult",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 405,
-      "symbol": "DFIndex.SearchResult.init(url:score:)",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndex.swift",
+      "line": 410,
+      "symbol": "DFSearchIndex.SearchResult.init(url:score:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 412,
-      "symbol": "DFIndex.SearchResult.url",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 413,
-      "symbol": "DFIndex.SearchResult.score",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 426,
-      "symbol": "DFIndex.ProgressiveSearch",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 432,
-      "symbol": "DFIndex.ProgressiveSearch.Results.init(moreResultsAvailable:results:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 439,
-      "symbol": "DFIndex.ProgressiveSearch.Results.moreResultsAvailable",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndex.swift",
-      "line": 440,
-      "symbol": "DFIndex.ProgressiveSearch.Results.results",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndexControllerAsync.swift",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
       "line": 34,
-      "symbol": "DFIndexControllerAsync.init(index:delegate:)",
+      "symbol": "DFSearchIndexAsyncController.init(index:delegate:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndexControllerAsync.swift",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
       "line": 50,
-      "symbol": "DFIndexControllerAsync.observeValue(forKeyPath:of:change:context:)",
+      "symbol": "DFSearchIndexAsyncController.observeValue(forKeyPath:of:change:context:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndexControllerAsync.swift",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
       "line": 112,
-      "symbol": "DFIndexControllerAsync.TextTask.url",
+      "symbol": "DFSearchIndexAsyncController.TextTask.url",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndexControllerAsync.swift",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
       "line": 113,
-      "symbol": "DFIndexControllerAsync.TextTask.text",
+      "symbol": "DFSearchIndexAsyncController.TextTask.text",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndexControllerAsync.swift",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
       "line": 114,
-      "symbol": "DFIndexControllerAsync.TextTask.init(url:text:)",
+      "symbol": "DFSearchIndexAsyncController.TextTask.init(url:text:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndexControllerAsync.swift",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
       "line": 126,
-      "symbol": "DFIndexControllerAsync.FileTask.urls",
+      "symbol": "DFSearchIndexAsyncController.FileTask.urls",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndexControllerAsync.swift",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
       "line": 127,
-      "symbol": "DFIndexControllerAsync.FileTask.init(_:)",
+      "symbol": "DFSearchIndexAsyncController.FileTask.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFIndexControllerAsync.swift",
+      "file": "/Users/dford/Projects/POCs/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
       "line": 156,
-      "symbol": "DFIndexControllerAsync.SearchTask.next(_:timeout:complete:)",
+      "symbol": "DFSearchIndexAsyncController.SearchTask.next(_:timeout:complete:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },

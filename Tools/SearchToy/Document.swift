@@ -131,12 +131,12 @@ extension Document
 		panel.beginSheetModal(for: window!) { (result) in
 			if result == NSApplication.ModalResponse.OK
 			{
-				self.addURLs(DFSearchIndexAsyncController.FileTask(panel.urls))
+				self.addURLs(DFSearchIndexAsyncController.FilesTask(panel.urls))
 			}
 		}
 	}
 	
-	@objc func addURLs(_ fileTask: DFSearchIndexAsyncController.FileTask)
+	@objc func addURLs(_ fileTask: DFSearchIndexAsyncController.FilesTask)
 	{
 		self.indexer?.addURLs(async: fileTask, flushWhenComplete: true, complete: { [weak self] fileTask in
 			if let blockSelf = self {
@@ -149,7 +149,7 @@ extension Document
 		})
 	}
 	
-	@objc func removeURLs(_ fileTask: DFSearchIndexAsyncController.FileTask) {
+	@objc func removeURLs(_ fileTask: DFSearchIndexAsyncController.FilesTask) {
 		self.indexer?.removeURLs(async: fileTask, flushWhenComplete: true, complete: { [weak self] fileTask in
 			if let blockSelf = self {
 				DispatchQueue.main.async {
@@ -221,7 +221,7 @@ extension Document: DFSearchIndexAsyncControllerProtocol
 
 	func updateFiles()
 	{
-		self.files = self.index.documents(termState: .notEmpty)
+		self.files = self.index.documents(termState: .NotEmpty)
 	}
 }
 

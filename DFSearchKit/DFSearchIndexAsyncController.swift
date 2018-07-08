@@ -31,6 +31,7 @@ import Foundation
 	/// The total number of outstanding requests
 	@objc public dynamic var queueSize: Int = 0
 
+	/// Initializer
 	public init(index: DFSearchIndex, delegate: DFSearchIndexAsyncControllerProtocol?)
 	{
 		self.index = index
@@ -47,6 +48,7 @@ import Foundation
 		self.modifyQueue.removeObserver(self, forKeyPath: "operations")
 	}
 
+	/// Queue observer
 	override public func observeValue(forKeyPath keyPath: String?, of _: Any?, change _: [NSKeyValueChangeKey: Any]?, context _: UnsafeMutableRawPointer?)
 	{
 		if keyPath == "operations"
@@ -105,12 +107,18 @@ import Foundation
 
 @objc public extension DFSearchIndexAsyncController
 {
-	/// A task for handling text input
-	@objc(DFIndexControllerAsyncTextTask)
+	/// A task for asynchronously handling the addition of text to the index
+	@objc(DFSearchIndexAsyncControllerTextTask)
 	public class TextTask: NSObject
 	{
 		public let url: URL
 		public let text: String
+
+		/// Create a text async task
+		///
+		/// - Parameters:
+		///   - url: the identifying document URL
+		///   - text: The text to add to the index
 		public init(url: URL, text: String)
 		{
 			self.url = url
@@ -120,10 +128,14 @@ import Foundation
 	}
 
 	/// A task for handling file input
-	@objc(DFIndexControllerAsyncFileTask)
-	public class FileTask: NSObject
+	@objc(DFSearchIndexAsyncControllerFilesTask)
+	public class FilesTask: NSObject
 	{
 		public let urls: [URL]
+
+		/// Add file URLs to the search index
+		///
+		/// - Parameter urls: The urls to add
 		public init(_ urls: [URL])
 		{
 			self.urls = urls
@@ -132,7 +144,7 @@ import Foundation
 	}
 
 	/// A task for handling searches
-	@objc(DFIndexControllerAsyncSearchTask)
+	@objc(DFSearchIndexAsyncControllerSearchTask)
 	public class SearchTask: NSObject
 	{
 		fileprivate let search: DFSearchIndex.ProgressiveSearch
@@ -153,6 +165,12 @@ import Foundation
 			self.search.cancel()
 		}
 
+		/// Return the next chunk of search results
+		///
+		/// - Parameters:
+		///   - maxResults: The maximum number of search results to return in the chunk
+		///   - timeout: How long to 'wait' to receive the results
+		///   - complete: Callback block for when the search is complete
 		public func next(
 			_ maxResults: Int,
 			timeout: TimeInterval = 1.0,
@@ -244,7 +262,7 @@ extension DFSearchIndexAsyncController
 	///   - fileTask: The file operation to complete
 	///   - flushWhenComplete: If true, flushes the index once all of the URLs are added
 	///   - complete: Callback block when the add has completed
-	@objc public func addURLs(async fileTask: FileTask, flushWhenComplete: Bool = false, complete: @escaping (FileTask) -> Void)
+	@objc public func addURLs(async fileTask: FilesTask, flushWhenComplete: Bool = false, complete: @escaping (FilesTask) -> Void)
 	{
 		DispatchQueue.global(qos: .userInitiated).async
 		{ [weak self] in
@@ -290,7 +308,7 @@ extension DFSearchIndexAsyncController
 			let completeOperation = BlockOperation()
 			completeOperation.completionBlock =
 				{
-					complete(FileTask(newUrls))
+					complete(FilesTask(newUrls))
 				}
 
 			if flushWhenComplete,
@@ -344,10 +362,10 @@ extension DFSearchIndexAsyncController
 	/// Remove all documents with zero terms from the index
 	///
 	/// - Parameter complete: called when the task is complete
-	@objc public func prune(complete: @escaping (FileTask) -> Void)
+	@objc public func prune(complete: @escaping (FilesTask) -> Void)
 	{
-		let emptyURLs = self.index.documents(termState: .empty)
-		let fileTask = FileTask(emptyURLs)
+		let emptyURLs = self.index.documents(termState: .Empty)
+		let fileTask = FilesTask(emptyURLs)
 		self.removeURLs(async: fileTask, complete: complete)
 	}
 
@@ -396,7 +414,7 @@ extension DFSearchIndexAsyncController
 	}
 
 	/// Remove documents async
-	@objc public func removeURLs(async operation: FileTask, flushWhenComplete: Bool = false, complete: @escaping (FileTask) -> Void)
+	@objc public func removeURLs(async operation: FilesTask, flushWhenComplete: Bool = false, complete: @escaping (FilesTask) -> Void)
 	{
 		var removeOperations: [BlockOperation] = []
 
@@ -413,7 +431,7 @@ extension DFSearchIndexAsyncController
 		let completeOperation = BlockOperation()
 		completeOperation.completionBlock =
 			{
-				complete(FileTask(operation.urls))
+				complete(FilesTask(operation.urls))
 			}
 
 		if flushWhenComplete

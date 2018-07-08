@@ -2,7 +2,7 @@
 A framework implementing a search index using SKSearchKit for both Swift and Objective-C
 
 ## Why?
-I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift
+I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift using native Swift types
 
 ## Usage
 
@@ -18,7 +18,7 @@ Core indexing library, wrapper around SKIndex and related methods.  Generally, y
 
 #### DFSearchIndexData
 
-A class inheriting from DFIndex that implements an in-memory index.
+A class inheriting from DFSearchIndex that implements an in-memory index.
 
 ```
 if let indexer = DFSearchIndexData.create()
@@ -42,11 +42,9 @@ if let indexer = DFSearchIndexData.create()
 `let newIndexData = indexer.save()`
 
 
-#### DFIndexFile
+#### DFSearchIndexFile
 
-A class inheriting from DFIndex that allows the creation and use of an index on disk
-
-* Create a new index file on disk and add some items to id
+A class inheriting from DFSearchIndex that allows the creation and use of an index on disk
 
 ```
 if let indexer = DFSearchIndexFile.create(with: file.fileURL)
@@ -108,12 +106,12 @@ if let indexer = DFSearchIndexData.create()
 }
 ```
 
-### Search progressive
+### Progressive Search
 For large indexes, the results may take quite a while to return.  Thus, the progressive index is more useful by returning limited sets of results progressively, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)
 
 ```
-	let search = indexer.progressiveSearch(query: "dog")
 	... load documents ...
+	let search = indexer.progressiveSearch(query: "dog")
 	var hasMoreResults = true
 	repeat
 	{
@@ -127,11 +125,25 @@ For large indexes, the results may take quite a while to return.  Thus, the prog
 ## Samples
 
 * `SearchToy` is a (very!) basic UI to show integration
-* `dfindex` is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFFileIndex to create a command line tool interface to the index
+* `dfsearchindex` is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFSearchIndexFile to create a command line tool interface to the index
 
 ## Tests
 
-`DFIndexTests.swift`, `DFSummaryTests.swift` and `DFSearchKitTests_objc.m` contain a small number of tests (so far) that can be used to see how it works in both Swift and Objective-C
+* `DFSearchKitTests.swift`
+
+	Swift tests.  Comprehensive
+
+* `DFSearchKitTests_objc.m` 
+
+	Objective-C tests, mainly for validating objc integration
+
+* `DFSearchIndexAsyncTests.swift`
+
+	Basic test suite to validate the async controller aspect of the library
+
+* `DFSearchIndexSummaryTests.swift`
+
+	Basic summary tests
 
 ## Thanks
 

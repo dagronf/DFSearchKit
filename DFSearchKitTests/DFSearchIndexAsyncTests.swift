@@ -39,7 +39,7 @@ class DFSearchIndexAsyncTests: XCTestCase
 
 		// MARK: Add async
 
-		let fileTask = DFSearchIndexAsyncController.FileTask([filePath, txtPath])
+		let fileTask = DFSearchIndexAsyncController.FilesTask([filePath, txtPath])
 
 		let addExpectation = self.expectation(description: "AsyncAdd")
 		asyncController.addURLs(async: fileTask, flushWhenComplete: true, complete: { task in
@@ -66,7 +66,7 @@ class DFSearchIndexAsyncTests: XCTestCase
 		// MARK: Remove async
 
 		let removeExpectation = self.expectation(description: "AsyncRemove")
-		let removeTask = DFSearchIndexAsyncController.FileTask([txtPath])
+		let removeTask = DFSearchIndexAsyncController.FilesTask([txtPath])
 		asyncController.removeURLs(async: removeTask, complete: { task in
 			if task.urls == [txtPath]
 			{

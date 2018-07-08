@@ -14,7 +14,7 @@
     <a title="DFSearchIndex Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (69% documented)</p>
+        <p><a href="../index.html"> Docs</a> (81% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -55,7 +55,7 @@
                 <a href="../Classes/DFSearchIndexAsyncController/TextTask.html">– TextTask</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/DFSearchIndexAsyncController/FileTask.html">– FileTask</a>
+                <a href="../Classes/DFSearchIndexAsyncController/FilesTask.html">– FilesTask</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/DFSearchIndexAsyncController/SearchTask.html">– SearchTask</a>
@@ -81,7 +81,7 @@
             <a href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="../Enums/DFIndexType.html">DFIndexType</a>
+                <a href="../Enums/DFSearchIndexType.html">DFSearchIndexType</a>
               </li>
             </ul>
           </li>
@@ -133,7 +133,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexCreateProperties)</span>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexCreateProperties)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kt">CreateProperties</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                         </div>
@@ -696,7 +696,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexTermCount)</span>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexTermCount)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kt">TermCount</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                         </div>
@@ -717,7 +717,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>An enum identifying the state of a document.</p>
 
                         <a href="../Classes/DFSearchIndex/TermState.html" class="slightly-smaller">See more</a>
                       </div>
@@ -725,7 +725,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexTermState)</span>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexTermState)</span>
 <span class="kd">public</span> <span class="kd">enum</span> <span class="kt">TermState</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
 
                         </div>
@@ -754,7 +754,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">documents</span><span class="p">(</span><span class="nv">termState</span><span class="p">:</span> <span class="kt"><a href="../Classes/DFSearchIndex/TermState.html">TermState</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">all</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">URL</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">documents</span><span class="p">(</span><span class="nv">termState</span><span class="p">:</span> <span class="kt"><a href="../Classes/DFSearchIndex/TermState.html">TermState</a></span> <span class="o">=</span> <span class="o">.</span><span class="kt">All</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">URL</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -924,7 +924,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexSearchResult)</span>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexSearchResult)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kt">SearchResult</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                         </div>
@@ -984,7 +984,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexProgressiveSearch)</span>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexProgressiveSearch)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kt">ProgressiveSearch</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                         </div>
@@ -1183,7 +1183,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-06-22)</p>
+          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-07-08)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

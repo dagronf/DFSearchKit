@@ -13,7 +13,7 @@
     <a title="  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html"> Docs</a> (69% documented)</p>
+        <p><a href="index.html"> Docs</a> (81% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -54,7 +54,7 @@
                 <a href="Classes/DFSearchIndexAsyncController/TextTask.html">– TextTask</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFSearchIndexAsyncController/FileTask.html">– FileTask</a>
+                <a href="Classes/DFSearchIndexAsyncController/FilesTask.html">– FilesTask</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/DFSearchIndexAsyncController/SearchTask.html">– SearchTask</a>
@@ -80,7 +80,7 @@
             <a href="Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="Enums/DFIndexType.html">DFIndexType</a>
+                <a href="Enums/DFSearchIndexType.html">DFSearchIndexType</a>
               </li>
             </ul>
           </li>
@@ -103,7 +103,7 @@
 <p>A framework implementing a search index using SKSearchKit for both Swift and Objective-C</p>
 <h2 id='why' class='heading'>Why?</h2>
 
-<p>I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift</p>
+<p>I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift using native Swift types</p>
 <h2 id='usage' class='heading'>Usage</h2>
 
 <p>Find API references here &ndash; <a href="https://github.com/dagronf/DFSearckKit/blob/master/docs/index.html">https://github.com/dagronf/DFSearckKit/blob/master/docs/index.html</a></p>
@@ -115,7 +115,7 @@
 <p>Core indexing library, wrapper around SKIndex and related methods.  Generally, you won&rsquo;t need to use this class directly unless you want to interface to your own SKIndex object.</p>
 <h4 id='dfsearchindexdata' class='heading'>DFSearchIndexData</h4>
 
-<p>A class inheriting from DFIndex that implements an in-memory index.</p>
+<p>A class inheriting from DFSearchIndex that implements an in-memory index.</p>
 <pre class="highlight plaintext"><code>if let indexer = DFSearchIndexData.create()
 {
     let documentURL = URL(string: ("doc-url://d1.txt")!
@@ -135,13 +135,9 @@
 <p><code>let indexer = DFSearchIndexData.load(from: myData)</code></p>
 
 <p><code>let newIndexData = indexer.save()</code></p>
-<h4 id='dfindexfile' class='heading'>DFIndexFile</h4>
+<h4 id='dfsearchindexfile' class='heading'>DFSearchIndexFile</h4>
 
-<p>A class inheriting from DFIndex that allows the creation and use of an index on disk</p>
-
-<ul>
-<li>Create a new index file on disk and add some items to id</li>
-</ul>
+<p>A class inheriting from DFSearchIndex that allows the creation and use of an index on disk</p>
 <pre class="highlight plaintext"><code>if let indexer = DFSearchIndexFile.create(with: file.fileURL)
 {
    let documentURL = URL(string: ("doc-url://d1.txt")!
@@ -194,11 +190,11 @@
     indexer.close()
 }
 </code></pre>
-<h3 id='search-progressive' class='heading'>Search progressive</h3>
+<h3 id='progressive-search' class='heading'>Progressive Search</h3>
 
 <p>For large indexes, the results may take quite a while to return.  Thus, the progressive index is more useful by returning limited sets of results progressively, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)</p>
-<pre class="highlight plaintext"><code>    let search = indexer.progressiveSearch(query: "dog")
-    ... load documents ...
+<pre class="highlight plaintext"><code>    ... load documents ...
+    let search = indexer.progressiveSearch(query: "dog")
     var hasMoreResults = true
     repeat
     {
@@ -212,11 +208,24 @@
 
 <ul>
 <li><code>SearchToy</code> is a (very!) basic UI to show integration</li>
-<li><code>dfindex</code> is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFFileIndex to create a command line tool interface to the index</li>
+<li><code>dfsearchindex</code> is a simple command line tool (that is very unforgiving to its parameters at this point!) that uses DFSearchIndexFile to create a command line tool interface to the index</li>
 </ul>
 <h2 id='tests' class='heading'>Tests</h2>
 
-<p><code>DFIndexTests.swift</code>, <code>DFSummaryTests.swift</code> and <code>DFSearchKitTests_objc.m</code> contain a small number of tests (so far) that can be used to see how it works in both Swift and Objective-C</p>
+<ul>
+<li><p><code>DFSearchKitTests.swift</code></p>
+
+<p>Swift tests.  Comprehensive</p></li>
+<li><p><code>DFSearchKitTests_objc.m</code> </p>
+
+<p>Objective-C tests, mainly for validating objc integration</p></li>
+<li><p><code>DFSearchIndexAsyncTests.swift</code></p>
+
+<p>Basic test suite to validate the async controller aspect of the library</p></li>
+<li><p><code>DFSearchIndexSummaryTests.swift</code></p>
+
+<p>Basic summary tests</p></li>
+</ul>
 <h2 id='thanks' class='heading'>Thanks</h2>
 
 <p>Mattt Thompson (NSHipster)</p>
@@ -238,7 +247,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-06-22)</p>
+          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-07-08)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

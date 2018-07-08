@@ -33,7 +33,7 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 }
 
 /// The type of index to create. Maps directly onto SKIndexType
-@objc public enum DFIndexType: UInt32
+@objc public enum DFSearchIndexType: UInt32
 {
 	/// Unknown index type (kSKIndexUnknown)
 	case unknown = 0
@@ -49,7 +49,7 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 @objc public class DFSearchIndex: NSObject
 {
 	/// Container for storing the properties to be used when creating a new index
-	@objc(DFIndexCreateProperties)
+	@objc(DFSearchIndexCreateProperties)
 	public class CreateProperties: NSObject
 	{
 		/// Create a properties object with the specified creation parameters
@@ -60,7 +60,7 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 		///   - stopWords: A set of stopwords — words not to index
 		///   - minTermLength: The minimum term length to index (defaults to 1)
 		@objc public init(
-			indexType: DFIndexType = .inverted,
+			indexType: DFSearchIndexType = .inverted,
 			proximityIndexing: Bool = false,
 			stopWords: Set<String> = [],
 			minTermLength: Int = 1
@@ -308,33 +308,40 @@ extension DFSearchIndex
 extension DFSearchIndex
 {
 	/// A class to contain a term and the count of times it appears
-	@objc(DFIndexTermCount)
+	@objc(DFSearchIndexTermCount)
 	public class TermCount: NSObject
 	{
-		@objc public init(term: String, count: Int)
+		/// Initializer
+		fileprivate init(term: String, count: Int)
 		{
 			self.term = term
 			self.count = count
 			super.init()
 		}
 
+		/// A term within the document
 		@objc public let term: String
+		/// The number of occurrences of 'term'
 		@objc public let count: Int
 	}
 
-	@objc(DFIndexTermState)
+	/// An enum identifying the state of a document.
+	@objc(DFSearchIndexTermState)
 	public enum TermState: Int
 	{
-		case all = 0
-		case empty = 1
-		case notEmpty = 2
+		/// All document states
+		case All = 0
+		/// Only documents that have no terms
+		case Empty = 1
+		/// Only documents that have terms
+		case NotEmpty = 2
 	}
 
 	/// Returns all the document URLs loaded into the index matching the specified term state
 	///
 	/// - Parameter termState: Only return documents matching the specified document state
 	/// - Returns: An array containing all the document URLs
-	@objc public func documents(termState: TermState = .all) -> [URL]
+	@objc public func documents(termState: TermState = .All) -> [URL]
 	{
 		return self.fullDocuments(termState: termState).map { $0.0 }
 	}
@@ -403,10 +410,10 @@ extension DFSearchIndex
 extension DFSearchIndex
 {
 	/// A search result
-	@objc(DFIndexSearchResult)
+	@objc(DFSearchIndexSearchResult)
 	public class SearchResult: NSObject
 	{
-		public init(url: URL, score: Float)
+		fileprivate init(url: URL, score: Float)
 		{
 			self.url = url
 			self.score = score
@@ -429,11 +436,11 @@ extension DFSearchIndex
 	}
 
 	/// A progressive search container
-	@objc(DFIndexProgressiveSearch)
+	@objc(DFSearchIndexProgressiveSearch)
 	public class ProgressiveSearch: NSObject
 	{
 		/// Progressive search result.
-		@objc(DFIndexProgressiveSearchResults)
+		@objc(DFSearchIndexProgressiveSearchResults)
 		public class Results: NSObject
 		{
 			/// Create a search result
@@ -561,7 +568,7 @@ extension DFSearchIndex
 	/// Remove any documents that have no search terms
 	@objc public func prune(progress: ((Int, Int) -> Void)?) -> Int
 	{
-		let allDocs = self.fullDocuments(termState: .empty)
+		let allDocs = self.fullDocuments(termState: .Empty)
 		let totalCount = allDocs.count
 		var pruneCount = 0
 		for docID in allDocs
@@ -679,7 +686,7 @@ private extension DFSearchIndex
 	///
 	/// - Parameter termState: the termstate of documents to be returned (eg. all, empty only, non-empty only)
 	/// - Returns: An array containing all the documents matching the termstate
-	private func fullDocuments(termState: TermState = .all) -> [DocumentID]
+	private func fullDocuments(termState: TermState = .All) -> [DocumentID]
 	{
 		guard let index = self.index else
 		{
@@ -691,10 +698,10 @@ private extension DFSearchIndex
 
 		switch termState
 		{
-		case .notEmpty:
+		case .NotEmpty:
 			allDocs = allDocs.filter { !self.isEmpty(for: $0.2) }
 			break
-		case .empty:
+		case .Empty:
 			allDocs = allDocs.filter { self.isEmpty(for: $0.2) }
 			break
 		default:

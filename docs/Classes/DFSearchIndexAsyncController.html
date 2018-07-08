@@ -14,7 +14,7 @@
     <a title="DFSearchIndexAsyncController Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (69% documented)</p>
+        <p><a href="../index.html"> Docs</a> (81% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -55,7 +55,7 @@
                 <a href="../Classes/DFSearchIndexAsyncController/TextTask.html">– TextTask</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/DFSearchIndexAsyncController/FileTask.html">– FileTask</a>
+                <a href="../Classes/DFSearchIndexAsyncController/FilesTask.html">– FilesTask</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/DFSearchIndexAsyncController/SearchTask.html">– SearchTask</a>
@@ -81,7 +81,7 @@
             <a href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="../Enums/DFIndexType.html">DFIndexType</a>
+                <a href="../Enums/DFSearchIndexType.html">DFSearchIndexType</a>
               </li>
             </ul>
           </li>
@@ -181,7 +181,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Initializer</p>
 
                       </div>
                       <div class="declaration">
@@ -208,7 +208,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Queue observer</p>
 
                       </div>
                       <div class="declaration">
@@ -342,7 +342,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A task for handling text input</p>
+                        <p>A task for asynchronously handling the addition of text to the index</p>
 
                         <a href="../Classes/DFSearchIndexAsyncController/TextTask.html" class="slightly-smaller">See more</a>
                       </div>
@@ -350,7 +350,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexControllerAsyncTextTask)</span>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexAsyncControllerTextTask)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kt">TextTask</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                         </div>
@@ -361,9 +361,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13dfsearchindex28DFSearchIndexAsyncControllerC8FileTaskC"></a>
-                    <a name="//apple_ref/swift/Class/FileTask" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13dfsearchindex28DFSearchIndexAsyncControllerC8FileTaskC">FileTask</a>
+                    <a name="/s:13dfsearchindex28DFSearchIndexAsyncControllerC9FilesTaskC"></a>
+                    <a name="//apple_ref/swift/Class/FilesTask" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex28DFSearchIndexAsyncControllerC9FilesTaskC">FilesTask</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -373,14 +373,14 @@
                       <div class="abstract">
                         <p>A task for handling file input</p>
 
-                        <a href="../Classes/DFSearchIndexAsyncController/FileTask.html" class="slightly-smaller">See more</a>
+                        <a href="../Classes/DFSearchIndexAsyncController/FilesTask.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexControllerAsyncFileTask)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">FileTask</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexAsyncControllerFilesTask)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">FilesTask</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                         </div>
                       </div>
@@ -408,7 +408,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc(DFIndexControllerAsyncSearchTask)</span>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexAsyncControllerSearchTask)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kt">SearchTask</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                         </div>
@@ -519,7 +519,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">addURLs</span><span class="p">(</span><span class="n">async</span> <span class="nv">fileTask</span><span class="p">:</span> <span class="kt"><a href="../Classes/DFSearchIndexAsyncController/FileTask.html">FileTask</a></span><span class="p">,</span> <span class="nv">flushWhenComplete</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/DFSearchIndexAsyncController/FileTask.html">FileTask</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">addURLs</span><span class="p">(</span><span class="n">async</span> <span class="nv">fileTask</span><span class="p">:</span> <span class="kt"><a href="../Classes/DFSearchIndexAsyncController/FilesTask.html">FilesTask</a></span><span class="p">,</span> <span class="nv">flushWhenComplete</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/DFSearchIndexAsyncController/FilesTask.html">FilesTask</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -601,7 +601,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">prune</span><span class="p">(</span><span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/DFSearchIndexAsyncController/FileTask.html">FileTask</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">prune</span><span class="p">(</span><span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/DFSearchIndexAsyncController/FilesTask.html">FilesTask</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -676,7 +676,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeURLs</span><span class="p">(</span><span class="n">async</span> <span class="nv">operation</span><span class="p">:</span> <span class="kt"><a href="../Classes/DFSearchIndexAsyncController/FileTask.html">FileTask</a></span><span class="p">,</span> <span class="nv">flushWhenComplete</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/DFSearchIndexAsyncController/FileTask.html">FileTask</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeURLs</span><span class="p">(</span><span class="n">async</span> <span class="nv">operation</span><span class="p">:</span> <span class="kt"><a href="../Classes/DFSearchIndexAsyncController/FilesTask.html">FilesTask</a></span><span class="p">,</span> <span class="nv">flushWhenComplete</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/DFSearchIndexAsyncController/FilesTask.html">FilesTask</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -727,7 +727,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-06-22)</p>
+          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-07-08)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

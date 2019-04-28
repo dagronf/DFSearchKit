@@ -21,11 +21,10 @@
 //  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import XCTest
 @testable import DFSearchKit
+import XCTest
 
-class DFSearchKitTests: XCTestCase
-{
+class DFSearchKitTests: XCTestCase {
 	fileprivate func addApacheLicenseFile(indexer: DFSearchIndex, canReplace: Bool) -> URL {
 		let testBundle = Bundle(for: type(of: self))
 		let filePath = testBundle.url(forResource: "APACHE_LICENSE", withExtension: "pdf")
@@ -175,7 +174,7 @@ class DFSearchKitTests: XCTestCase
 
 		let d1 = DFUtils.url("doc-url://d1.txt")
 		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine, thankyou!"))
-		
+
 		let d2 = DFUtils.url("doc-url://d2.txt")
 		XCTAssertTrue(indexer.add(d2, text: "Today I am feeling blue!"))
 		indexer.flush()
@@ -280,7 +279,7 @@ class DFSearchKitTests: XCTestCase
 	}
 
 	func testSimpleBadData() {
-		let str: NSString = NSString.init(string: "hello")
+		let str: NSString = NSString(string: "hello")
 		guard let data = str.data(using: String.Encoding.utf8.rawValue) else {
 			XCTFail()
 			return
@@ -350,8 +349,8 @@ class DFSearchKitTests: XCTestCase
 		XCTAssertEqual(1, indexer.search("BLUE").count)
 
 		// Save and close
-		indexer.save();
-		indexer.close();
+		indexer.save()
+		indexer.close()
 
 		// Check to see we can't add after we close
 		let d3 = DFUtils.url("doc-url://d3.txt")
@@ -418,7 +417,7 @@ class DFSearchKitTests: XCTestCase
 	}
 
 	func testLoadDocumentFromFile() {
-		let props = DFSearchIndex.CreateProperties.init(stopWords: gStopWords)
+		let props = DFSearchIndex.CreateProperties(stopWords: gStopWords)
 		guard let indexer = DFSearchIndex.Memory.Create(properties: props) else {
 			XCTFail()
 			return
@@ -427,7 +426,7 @@ class DFSearchKitTests: XCTestCase
 		// Write the text to a temporary file and add.
 		// Note the mimetype cannot be inferred as the file has no extension
 		let tempFile = DFUtils.TempFile()
-		let text = NSString.init(string: "Caterpillar and gourds!")
+		let text = NSString(string: "Caterpillar and gourds!")
 		XCTAssertNoThrow(try? text.write(to: tempFile.fileURL as URL, atomically: true, encoding: String.Encoding.utf8.rawValue))
 		XCTAssertTrue(indexer.add(fileURL: tempFile.fileURL, mimeType: "text/plain"))
 
@@ -470,7 +469,7 @@ class DFSearchKitTests: XCTestCase
 	}
 
 	func testTermFrequenciesSimple() {
-		let props = DFSearchIndex.CreateProperties.init(stopWords: [ "the" ])
+		let props = DFSearchIndex.CreateProperties(stopWords: ["the"])
 		guard let indexer = DFSearchIndex.Memory.Create(properties: props) else {
 			XCTFail()
 			return
@@ -491,20 +490,19 @@ class DFSearchKitTests: XCTestCase
 		let termFreq = indexer.terms(for: d1)
 		XCTAssertEqual(3, termFreq.count)
 
-		var term = termFreq.filter({ $0.term == "cat" })
+		var term = termFreq.filter { $0.term == "cat" }
 		XCTAssertEqual(1, term.count)
 		XCTAssertEqual(1, term.first?.count)
-		term = termFreq.filter({ $0.term == "dog" })
+		term = termFreq.filter { $0.term == "dog" }
 		XCTAssertEqual(1, term.count)
 		XCTAssertEqual(2, term.first?.count)
-		term = termFreq.filter({ $0.term == "fish" })
+		term = termFreq.filter { $0.term == "fish" }
 		XCTAssertEqual(1, term.count)
 		XCTAssertEqual(3, term.first?.count)
 	}
 
-	func testTermFrequenciesComplex()
-	{
-		let props = DFSearchIndex.CreateProperties.init(stopWords: gStopWords)
+	func testTermFrequenciesComplex() {
+		let props = DFSearchIndex.CreateProperties(stopWords: gStopWords)
 		guard let indexer = DFSearchIndex.Memory.Create(properties: props) else {
 			XCTFail()
 			return
@@ -531,8 +529,7 @@ class DFSearchKitTests: XCTestCase
 		XCTAssertEqual(0, theTerm.count)
 	}
 
-	func testProgressiveSearch()
-	{
+	func testProgressiveSearch() {
 		guard let indexer = DFSearchIndex.Memory.Create() else {
 			XCTFail()
 			return
@@ -567,7 +564,6 @@ class DFSearchKitTests: XCTestCase
 	}
 
 	func testMinSearchTerm() {
-
 		/// Check that setting the minimum word length works
 
 		/// Min length = 4

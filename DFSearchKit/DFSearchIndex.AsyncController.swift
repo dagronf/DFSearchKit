@@ -17,88 +17,84 @@ import Foundation
 }
 
 extension DFSearchIndex {
+	/// A controller for a DFSearchIndex object that supports asynchronous calls to the index
+	@objc(DFSearchIndexAsyncController) public class AsyncController: NSObject {
+		let index: DFSearchIndex
+		let delegate: DFSearchIndexAsyncControllerProtocol?
 
-/// A controller for a DFSearchIndex object that supports asynchronous calls to the index
-@objc(DFSearchIndexAsyncController) public class AsyncController: NSObject {
-	let index: DFSearchIndex
-	let delegate: DFSearchIndexAsyncControllerProtocol?
+		/// Queue for handling async modifications to the index
+		fileprivate let modifyQueue = OperationQueue()
 
-	/// Queue for handling async modifications to the index
-	fileprivate let modifyQueue = OperationQueue()
+		/// Is the controller currently processing requests?
+		@objc public dynamic var queueComplete: Bool = true
+		/// The total number of outstanding requests
+		@objc public dynamic var queueSize: Int = 0
 
-	/// Is the controller currently processing requests?
-	@objc public dynamic var queueComplete: Bool = true
-	/// The total number of outstanding requests
-	@objc public dynamic var queueSize: Int = 0
+		/// Initializer
+		public init(index: DFSearchIndex, delegate: DFSearchIndexAsyncControllerProtocol?) {
+			self.index = index
+			self.delegate = delegate
+			super.init()
 
-	/// Initializer
-	public init(index: DFSearchIndex, delegate: DFSearchIndexAsyncControllerProtocol?) {
-		self.index = index
-		self.delegate = delegate
-		super.init()
+			self.modifyQueue.maxConcurrentOperationCount = 6
+			self.modifyQueue.addObserver(self, forKeyPath: "operations", options: .new, context: nil)
+			self.addObserver(self, forKeyPath: "queueComplete", options: .new, context: nil)
+		}
 
-		self.modifyQueue.maxConcurrentOperationCount = 6
-		self.modifyQueue.addObserver(self, forKeyPath: "operations", options: .new, context: nil)
-		self.addObserver(self, forKeyPath: "queueComplete", options: .new, context: nil)
-	}
+		deinit {
+			self.modifyQueue.removeObserver(self, forKeyPath: "operations")
+		}
 
-	deinit {
-		self.modifyQueue.removeObserver(self, forKeyPath: "operations")
-	}
+		/// Queue observer
+		public override func observeValue(
+			forKeyPath keyPath: String?,
+			of _: Any?,
+			change _: [NSKeyValueChangeKey: Any]?,
+			context _: UnsafeMutableRawPointer?
+		) {
+			if keyPath == "operations" {
+				self.willChangeValue(for: \.queueSize)
+				self.willChangeValue(for: \.queueComplete)
+				self.queueSize = self.modifyQueue.operationCount
+				self.queueComplete = (self.queueSize == 0)
+				self.didChangeValue(for: \.queueSize)
+				self.didChangeValue(for: \.queueComplete)
 
-	/// Queue observer
-	override public func observeValue(
-		forKeyPath keyPath: String?,
-		of _: Any?,
-		change _: [NSKeyValueChangeKey: Any]?,
-		context _: UnsafeMutableRawPointer?) {
-		
-		if keyPath == "operations" {
-			self.willChangeValue(for: \.queueSize)
-			self.willChangeValue(for: \.queueComplete)
-			self.queueSize = self.modifyQueue.operationCount
-			self.queueComplete = (self.queueSize == 0)
-			self.didChangeValue(for: \.queueSize)
-			self.didChangeValue(for: \.queueComplete)
-
-			if self.queueSize == 0
-			{
-				if let delegate = self.delegate
-				{
-					delegate.queueDidEmpty(self)
+				if self.queueSize == 0 {
+					if let delegate = self.delegate {
+						delegate.queueDidEmpty(self)
+					}
 				}
+
+				self.delegate?.queueDidChange(self, count: self.modifyQueue.operationCount)
 			}
-
-			self.delegate?.queueDidChange(self, count: self.modifyQueue.operationCount)
 		}
-	}
 
-	/// Cancel all the outstanding requests if they haven't already been started.
-	///
-	/// Note that all tasks waiting on completion that are cancelled will not be called back
-	///
-	/// - Parameter complete: called when the cancel operation is complete
-	@objc public func cancelCurrent(_ complete: @escaping () -> Void) {
-		self.modifyQueue.cancelAllOperations()
-		self.waitUntilQueueIsComplete(complete)
-	}
-
-	/// Call back when the operation queue is complete (ie. empty)
-	///
-	/// - Parameter complete: called when all the operations are complete
-	@objc public func waitUntilQueueIsComplete(_ complete: @escaping () -> Void) {
-		if self.queueComplete {
-			complete()
+		/// Cancel all the outstanding requests if they haven't already been started.
+		///
+		/// Note that all tasks waiting on completion that are cancelled will not be called back
+		///
+		/// - Parameter complete: called when the cancel operation is complete
+		@objc public func cancelCurrent(_ complete: @escaping () -> Void) {
+			self.modifyQueue.cancelAllOperations()
+			self.waitUntilQueueIsComplete(complete)
 		}
-		else {
-			DispatchQueue.global(qos: .userInitiated).async
-			{ [weak self] in
-				self?.modifyQueue.waitUntilAllOperationsAreFinished()
+
+		/// Call back when the operation queue is complete (ie. empty)
+		///
+		/// - Parameter complete: called when all the operations are complete
+		@objc public func waitUntilQueueIsComplete(_ complete: @escaping () -> Void) {
+			if self.queueComplete {
 				complete()
 			}
+			else {
+				DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+					self?.modifyQueue.waitUntilAllOperationsAreFinished()
+					complete()
+				}
+			}
 		}
 	}
-}
 }
 
 // MARK: Async task objects
@@ -180,12 +176,10 @@ extension DFSearchIndex {
 // MARK: Add
 
 @objc(DFSearchIndexAsyncController) public extension DFSearchIndex.AsyncController {
-
 	/// Create a flush operation
 	private func flushOperation() -> BlockOperation {
 		let flushOperation = BlockOperation()
-		flushOperation.addExecutionBlock
-		{ [weak self, weak flushOperation] in
+		flushOperation.addExecutionBlock { [weak self, weak flushOperation] in
 			if flushOperation?.isCancelled == false {
 				_ = self?.index.flush()
 			}
@@ -207,8 +201,7 @@ extension DFSearchIndex {
 		var addOperations: [BlockOperation] = []
 		for task in textTasks {
 			let addBlock = BlockOperation()
-			addBlock.addExecutionBlock
-			{ [weak self, weak addBlock] in
+			addBlock.addExecutionBlock { [weak self, weak addBlock] in
 				if addBlock?.isCancelled == false {
 					_ = self?.index.add(task.url, text: task.text)
 				}
@@ -250,8 +243,7 @@ extension DFSearchIndex {
 		flushWhenComplete: Bool = false,
 		complete: @escaping (FilesTask) -> Void
 	) {
-		DispatchQueue.global(qos: .userInitiated).async
-		{ [weak self] in
+		DispatchQueue.global(qos: .userInitiated).async { [weak self] in
 			var newUrls: [URL] = []
 			var addOperations: [BlockOperation] = []
 
@@ -261,8 +253,7 @@ extension DFSearchIndex {
 					let urls = self?.folderUrls(url)
 					for url in urls! {
 						let addOperation = BlockOperation()
-						addOperation.addExecutionBlock
-						{ [weak self, weak addOperation] in
+						addOperation.addExecutionBlock { [weak self, weak addOperation] in
 							if addOperation?.isCancelled == false {
 								_ = self?.index.add(fileURL: url)
 							}
@@ -273,8 +264,7 @@ extension DFSearchIndex {
 				}
 				else if FileManager.default.fileExists(url: url) {
 					let addOperation = BlockOperation()
-					addOperation.addExecutionBlock
-					{ [weak self, weak addOperation] in
+					addOperation.addExecutionBlock { [weak self, weak addOperation] in
 						if addOperation?.isCancelled == false {
 							_ = self?.index.add(fileURL: url)
 						}
@@ -331,7 +321,6 @@ extension DFSearchIndex {
 // MARK: Remove
 
 @objc(DFSearchIndexAsyncController) public extension DFSearchIndex.AsyncController {
-
 	/// Remove all documents with zero terms from the index
 	///
 	/// - Parameter complete: called when the task is complete
@@ -351,8 +340,7 @@ extension DFSearchIndex {
 		for task in tasks {
 			let url = task.url
 			let removeOperation = BlockOperation()
-			removeOperation.addExecutionBlock
-			{ [weak self, weak removeOperation] in
+			removeOperation.addExecutionBlock { [weak self, weak removeOperation] in
 				if removeOperation?.isCancelled == false {
 					_ = self?.index.remove(url: url)
 				}
@@ -391,10 +379,8 @@ extension DFSearchIndex {
 	) {
 		var removeOperations: [BlockOperation] = []
 
-		operation.urls.forEach
-		{ url in
-			let removeOperation = BlockOperation
-			{ [weak self] in
+		operation.urls.forEach { url in
+			let removeOperation = BlockOperation { [weak self] in
 				_ = self?.index.remove(url: url)
 			}
 			removeOperations.append(removeOperation)
@@ -427,7 +413,6 @@ extension DFSearchIndex {
 // MARK: Search
 
 @objc(DFSearchIndexAsyncController) public extension DFSearchIndex.AsyncController {
-
 	/// Create a search task
 	@objc func search(async query: String) -> SearchTask {
 		return SearchTask(self.index, query: query)
@@ -437,7 +422,6 @@ extension DFSearchIndex {
 // MARK: Utilities
 
 fileprivate extension FileManager {
-
 	func fileExists(url: URL) -> Bool {
 		return self.urlExists(url: url, isDirectory: false)
 	}

@@ -6,22 +6,18 @@
 //  Copyright © 2019 Darren Ford. All rights reserved.
 //
 
-import XCTest
 @testable import DFSearchKit
+import XCTest
 
-class SpyDelegate: DFSearchIndexAsyncControllerProtocol
-{
-	func queueDidEmpty(_ indexer: DFSearchIndex.AsyncController)
-	{
+class SpyDelegate: DFSearchIndexAsyncControllerProtocol {
+	func queueDidEmpty(_ indexer: DFSearchIndex.AsyncController) {
 	}
 
-	func queueDidChange(_ indexer: DFSearchIndex.AsyncController, count: Int)
-	{
+	func queueDidChange(_ indexer: DFSearchIndex.AsyncController, count: Int) {
 	}
 }
 
 class DFSearchIndexAsyncTests: XCTestCase {
-
 	func testAsync() {
 		guard let indexer = DFSearchIndex.Memory.Create() else {
 			XCTFail()
@@ -40,11 +36,11 @@ class DFSearchIndexAsyncTests: XCTestCase {
 		let fileTask = DFSearchIndex.AsyncController.FilesTask([filePath, txtPath])
 
 		let addExpectation = self.expectation(description: "AsyncAdd")
-		asyncController.addURLs(async: fileTask, flushWhenComplete: true, complete: { task in
+		asyncController.addURLs(async: fileTask, flushWhenComplete: true) { task in
 			if task.urls == [filePath, txtPath] {
 				addExpectation.fulfill()
 			}
-		})
+		}
 
 		waitForExpectations(timeout: 1) { error in
 			if let error = error {
@@ -64,11 +60,11 @@ class DFSearchIndexAsyncTests: XCTestCase {
 
 		let removeExpectation = self.expectation(description: "AsyncRemove")
 		let removeTask = DFSearchIndex.AsyncController.FilesTask([txtPath])
-		asyncController.removeURLs(async: removeTask, complete: { task in
+		asyncController.removeURLs(async: removeTask) { task in
 			if task.urls == [txtPath] {
 				removeExpectation.fulfill()
 			}
-		})
+		}
 
 		waitForExpectations(timeout: 1) { error in
 			if let error = error {
@@ -96,8 +92,7 @@ class DFSearchIndexAsyncTests: XCTestCase {
 		let asyncController = DFSearchIndex.AsyncController(index: indexer, delegate: spyDelegate)
 
 		var tasks: [DFSearchIndex.AsyncController.TextTask] = []
-		for count in 0 ..< 2500
-		{
+		for count in 0 ..< 2500 {
 			let urlstr = "doc-url://d\(count).txt"
 			let d1 = DFUtils.url(urlstr)
 			tasks.append(DFSearchIndex.AsyncController.TextTask(url: d1, text: "cat dog fish"))

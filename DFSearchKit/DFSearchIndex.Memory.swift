@@ -24,10 +24,8 @@
 import Foundation
 
 extension DFSearchIndex {
-
 	/// A memory-based index using NSMutableData as the backing.
-	@objc(DFSearchIndexMemory) public class Memory: DFSearchIndex
-	{
+	@objc(DFSearchIndexMemory) public class Memory: DFSearchIndex {
 		// The data index store
 		private var store = NSMutableData()
 
@@ -46,7 +44,7 @@ extension DFSearchIndex {
 				data, nil,
 				properties.indexType,
 				properties.properties()
-				) {
+			) {
 				return DFSearchIndex.Memory(data: data, index: skIndex.takeUnretainedValue())
 			}
 			return nil

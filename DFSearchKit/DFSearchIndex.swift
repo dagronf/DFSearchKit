@@ -32,7 +32,6 @@ private func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows
 
 /// Indexer using SKIndex as the core
 @objc public class DFSearchIndex: NSObject {
-
 	/// The type of index to create. Maps directly onto SKIndexType
 	@objc(DFSearchIndexType) public enum IndexType: UInt32 {
 		/// Unknown index type (kSKIndexUnknown)
@@ -222,7 +221,6 @@ extension DFSearchIndex {
 }
 
 extension DFSearchIndex {
-
 	/// Returns true if the document represented by url has been indexed, false otherwise.
 	@objc public func documentIndexed(_ url: URL) -> Bool {
 		if let index = self.index,
@@ -236,7 +234,6 @@ extension DFSearchIndex {
 // MARK: Set/Get additional properties for document
 
 extension DFSearchIndex {
-
 	/// Sets additional properties for the document which are retained in the index.
 	///
 	/// Document must have been indexed for setting of properties to take effect.
@@ -272,11 +269,9 @@ extension DFSearchIndex {
 // MARK: Terms and documents
 
 extension DFSearchIndex {
-
 	/// A class to contain a term and the count of times it appears
 	@objc(DFSearchIndexTermCount)
 	public class TermCount: NSObject {
-
 		/// A term within the document
 		@objc public let term: String
 		/// The number of occurrences of 'term'
@@ -365,11 +360,9 @@ extension DFSearchIndex {
 // MARK: Progressive search
 
 extension DFSearchIndex {
-
 	/// A search result
 	@objc(DFSearchIndexSearchResult)
 	public class SearchResult: NSObject {
-
 		/// The identifying url for the document
 		@objc public let url: URL
 		/// The search 'score' for the document result.  Higher means more relevant
@@ -397,7 +390,6 @@ extension DFSearchIndex {
 	/// A progressive search container
 	@objc(DFSearchIndexProgressiveSearch)
 	public class ProgressiveSearch: NSObject {
-
 		/// Progressive search result.
 		@objc(DFSearchIndexProgressiveSearchResults)
 		public class Results: NSObject {
@@ -450,12 +442,12 @@ extension DFSearchIndex {
 			let hasMore = SKSearchFindMatches(self.search, limit, &documentIDs, &scores, timeout, &foundCount)
 			SKIndexCopyDocumentURLsForDocumentIDs(self.index.index, foundCount, &documentIDs, &urls)
 
-			let partialResults: [SearchResult] = zip(urls[0 ..< foundCount], scores).compactMap({
+			let partialResults: [SearchResult] = zip(urls[0 ..< foundCount], scores).compactMap {
 				(cfurl, score) -> SearchResult? in
 				guard let url = cfurl?.takeUnretainedValue() as URL?
 				else { return nil }
 				return SearchResult(url: url, score: score)
-			})
+			}
 
 			return Results(moreResultsAvailable: hasMore, results: partialResults)
 		}
@@ -465,7 +457,6 @@ extension DFSearchIndex {
 // MARK: Search
 
 extension DFSearchIndex {
-
 	/// Perform a search
 	///
 	/// - Parameters:
@@ -497,7 +488,6 @@ extension DFSearchIndex {
 // MARK: Utilities
 
 extension DFSearchIndex {
-
 	/// Flush any pending commands to the search index. A flush should ALWAYS be called before performing a search
 	@objc public func flush() {
 		if let index = self.index {
@@ -529,7 +519,6 @@ extension DFSearchIndex {
 // MARK: Private methods
 
 private extension DFSearchIndex {
-
 	typealias DocumentID = (URL, SKDocument, SKDocumentID)
 
 	/// Returns the mime type for the url, or nil if the mime type couldn't be ascertained from the extension

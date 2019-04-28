@@ -24,10 +24,8 @@
 import Foundation
 
 extension DFSearchIndex {
-
 	/// A file-based index
 	@objc(DFSearchIndexFile) public class File: DFSearchIndex {
-
 		/// The file url where the index is located
 		@objc public let fileURL: URL
 

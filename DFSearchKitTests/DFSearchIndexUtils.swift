@@ -3,7 +3,7 @@
 //  DFSearchKitTests
 //
 //  Created by Darren Ford on 9/6/18.
-//  Copyright © 2018 Darren Ford. All rights reserved.
+//  Copyright © 2019 Darren Ford. All rights reserved.
 //
 //  MIT license
 //
@@ -23,10 +23,8 @@
 
 import Foundation
 
-class DFUtils
-{
-	class TempFile
-	{
+class DFUtils {
+	class TempFile {
 		let fileURL: URL = {
 			let directory = NSTemporaryDirectory()
 			let fileName = NSUUID().uuidString
@@ -35,14 +33,12 @@ class DFUtils
 			return NSURL.fileURL(withPathComponents: [directory, fileName])! as URL
 		}()
 
-		deinit
-		{
+		deinit {
 			try? FileManager.default.removeItem(at: fileURL)
 		}
 	}
 
-	static func url(_ val: String) -> URL
-	{
+	static func url(_ val: String) -> URL {
 		return URL(string: val)!
 	}
 }

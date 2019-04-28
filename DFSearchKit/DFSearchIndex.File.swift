@@ -3,7 +3,7 @@
 //  DFSearchKit
 //
 //  Created by Darren Ford on 26/5/18.
-//  Copyright © 2018 Darren Ford. All rights reserved.
+//  Copyright © 2019 Darren Ford. All rights reserved.
 //
 //  MIT license
 //

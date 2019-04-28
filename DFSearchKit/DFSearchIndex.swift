@@ -3,7 +3,7 @@
 //  DFSearchKit
 //
 //  Created by Darren Ford on 6/5/18.
-//  Copyright © 2018 Darren Ford. All rights reserved.
+//  Copyright © 2019 Darren Ford. All rights reserved.
 //
 //  MIT license
 //
@@ -183,11 +183,11 @@ extension DFSearchIndex {
 		}
 
 		var addedUrls: [URL] = []
-		let enumerator = FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: nil)
+		let enumerator = fileManager.enumerator(at: folderURL, includingPropertiesForKeys: nil)
 		while let fileURL = enumerator?.nextObject() as? URL {
 			if fileManager.fileExists(atPath: fileURL.path, isDirectory: &isDir),
 				isDir.boolValue == false,
-				self.add(fileURL: fileURL) {
+				self.add(fileURL: fileURL, canReplace: canReplace) {
 				addedUrls.append(fileURL)
 			}
 		}
@@ -276,6 +276,12 @@ extension DFSearchIndex {
 	/// A class to contain a term and the count of times it appears
 	@objc(DFSearchIndexTermCount)
 	public class TermCount: NSObject {
+
+		/// A term within the document
+		@objc public let term: String
+		/// The number of occurrences of 'term'
+		@objc public let count: Int
+
 		/// Initializer
 		fileprivate init(term: String, count: Int) {
 			self.term = term
@@ -283,10 +289,9 @@ extension DFSearchIndex {
 			super.init()
 		}
 
-		/// A term within the document
-		@objc public let term: String
-		/// The number of occurrences of 'term'
-		@objc public let count: Int
+		public override var debugDescription: String {
+			return "Term: '\(self.term)', Count: \(self.count)"
+		}
 	}
 
 	/// An enum identifying the state of a document.
@@ -364,16 +369,21 @@ extension DFSearchIndex {
 	/// A search result
 	@objc(DFSearchIndexSearchResult)
 	public class SearchResult: NSObject {
+
+		/// The identifying url for the document
+		@objc public let url: URL
+		/// The search 'score' for the document result.  Higher means more relevant
+		@objc public let score: Float
+
 		fileprivate init(url: URL, score: Float) {
 			self.url = url
 			self.score = score
 			super.init()
 		}
 
-		/// The identifying url for the document
-		@objc public let url: URL
-		/// The search 'score' for the document result.  Higher means more relevant
-		@objc public let score: Float
+		public override var debugDescription: String {
+			return "Score: \(self.score), URL: '\(self.url)'"
+		}
 	}
 
 	/// Start a progressive search

@@ -1,12 +1,11 @@
 # DFSearchKit
-A framework implementing a search index using SKSearchKit for both Swift and Objective-C
+
+A framework implementing a search index and summary generator using SKSearchKit for both Swift and Objective-C
 
 ## Why?
-I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift using native Swift types
+I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift using native Swift types.
 
 ## Usage
-
-Find API references here -- [https://github.com/dagronf/DFSearckKit/blob/master/docs/index.html](https://github.com/dagronf/DFSearckKit/blob/master/docs/index.html)
 
 The base library is split into three classes and an async controller
 
@@ -14,7 +13,7 @@ The base library is split into three classes and an async controller
 
 ### DFSearchIndex.Memory
 
-A class inheriting from DFSearchIndex that implements an in-memory index.
+A class inheriting from DFSearchIndex that implements an in-memory index.  This index exists purely in memory, and will be destroyed when the index is deallocated.
 
 ```swift
 guard let indexer = DFSearchIndex.Memory.Create() else {
@@ -52,7 +51,7 @@ let newIndexData = indexer.data()
 
 ### DFSearchIndex.File
 
-A class inheriting from DFSearchIndex that allows the creation and use of an index on disk
+A class inheriting from DFSearchIndex that allows the creation and use of an index on disk.
 
 ```swift
 // Create a index on disk
@@ -91,19 +90,23 @@ fileIndex.close()
 For example, to add a number of files asynchronously
 
 ```swift
-guard let searchIndex = DDFSearchIndex.Memory.create() else {
+guard let searchIndex = DFSearchIndex.Memory.create() else {
    assert(false)
 }
 
 let asyncController = DFSearchIndex.AsyncController(index: searchIndex, delegate: nil)
 
+// Create a file task containing the URLs to be indexed
 let addTask = DFSearchIndex.AsyncController.FileTask(<file urls to add>)
+
 asyncController.addURLs(async: addTask, complete: { task in
     // <block that is executed when the files have been added to the index>
 })
 	
 ...
-	
+
+// Create a file task containing the URLs to be removed
+
 let removeTask = DFSearchIndex.AsyncController.FileTask(<file urls to remove>)
 asyncController.removeURLs(async: removeTask, complete: { task in
 	// <block that is executed when the files have been removed from the index>
@@ -133,7 +136,10 @@ searchIndex.add(firstURL, text: "This is my first document"))
 searchIndex.flush()
 
 // Search for the word 'first'
-let result1 = indexer.search("first")
+let searchResult = indexer.search("first")
+	// searchResult.count == 1
+	// searchResult[0].url == firstURL
+	// searchResult[0].score == 1
 
 searchIndex.save()
 searchIndex.close()
@@ -156,14 +162,20 @@ repeat {
 while hasMoreResults
 ```
 
-## Summarization
+## Summary Generation
+
+The `DFSearchIndex.Summarizer` class provides a wrapper around the `SKSummary` interface, providing text rankings and orderings.
 
 ```swift
 let text = // <some text
 let summary = DFSummarizer(text)
 
 // Get the number of sentences in the text
-let count = summary.sentenceCount()
+let sentenceCount = summary.sentenceCount()
+
+// Get the number of paragraphs in the text
+let paragraphCount = summary.paragraphCount()
+
 ```
 
 ## Samples

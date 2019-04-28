@@ -3,7 +3,7 @@
 //  DFSearchKitTests
 //
 //  Created by Darren Ford on 22/6/18.
-//  Copyright © 2018 Darren Ford. All rights reserved.
+//  Copyright © 2019 Darren Ford. All rights reserved.
 //
 
 import XCTest
@@ -20,12 +20,10 @@ class SpyDelegate: DFSearchIndexAsyncControllerProtocol
 	}
 }
 
-class DFSearchIndexAsyncTests: XCTestCase
-{
-	func testAsync()
-	{
-		guard let indexer = DFSearchIndex.Memory.Create() else
-		{
+class DFSearchIndexAsyncTests: XCTestCase {
+
+	func testAsync() {
+		guard let indexer = DFSearchIndex.Memory.Create() else {
 			XCTFail()
 			return
 		}
@@ -43,8 +41,7 @@ class DFSearchIndexAsyncTests: XCTestCase
 
 		let addExpectation = self.expectation(description: "AsyncAdd")
 		asyncController.addURLs(async: fileTask, flushWhenComplete: true, complete: { task in
-			if task.urls == [filePath, txtPath]
-			{
+			if task.urls == [filePath, txtPath] {
 				addExpectation.fulfill()
 			}
 		})
@@ -68,8 +65,7 @@ class DFSearchIndexAsyncTests: XCTestCase
 		let removeExpectation = self.expectation(description: "AsyncRemove")
 		let removeTask = DFSearchIndex.AsyncController.FilesTask([txtPath])
 		asyncController.removeURLs(async: removeTask, complete: { task in
-			if task.urls == [txtPath]
-			{
+			if task.urls == [txtPath] {
 				removeExpectation.fulfill()
 			}
 		})
@@ -90,10 +86,8 @@ class DFSearchIndexAsyncTests: XCTestCase
 		XCTAssertEqual(0, result.count)
 	}
 
-	func testAsyncCancel()
-	{
-		guard let indexer = DFSearchIndex.Memory.Create() else
-		{
+	func testAsyncCancel() {
+		guard let indexer = DFSearchIndex.Memory.Create() else {
 			XCTFail()
 			return
 		}

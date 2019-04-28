@@ -3,7 +3,7 @@
 //  DFSearchKitTests
 //
 //  Created by Darren Ford on 11/6/18.
-//  Copyright © 2018 Darren Ford. All rights reserved.
+//  Copyright © 2019 Darren Ford. All rights reserved.
 //
 
 import Foundation
@@ -47,7 +47,12 @@ extension DFSearchIndex {
 	}
 
 	/// Queue observer
-	override public func observeValue(forKeyPath keyPath: String?, of _: Any?, change _: [NSKeyValueChangeKey: Any]?, context _: UnsafeMutableRawPointer?) {
+	override public func observeValue(
+		forKeyPath keyPath: String?,
+		of _: Any?,
+		change _: [NSKeyValueChangeKey: Any]?,
+		context _: UnsafeMutableRawPointer?) {
+		
 		if keyPath == "operations" {
 			self.willChangeValue(for: \.queueSize)
 			self.willChangeValue(for: \.queueComplete)

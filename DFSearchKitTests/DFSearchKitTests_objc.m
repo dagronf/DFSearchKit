@@ -3,7 +3,7 @@
 //  DFSearchKitTests-objc
 //
 //  Created by Darren Ford on 17/6/18.
-//  Copyright © 2018 Darren Ford. All rights reserved.
+//  Copyright © 2019 Darren Ford. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
@@ -223,6 +223,29 @@
 	// Apache document has 453 terms
 	NSArray<DFSearchIndexTermCount*>* terms = [index termsFor:apacheURL];
 	XCTAssertEqual(453, [terms count]);
+}
+
+- (void)testSummary
+{
+	NSBundle* bun = [NSBundle bundleForClass:[self class]];
+	NSURL* shortStoryURL = [bun URLForResource:@"the_school_short_story" withExtension:@"txt"];
+	XCTAssertNotNil(shortStoryURL);
+	NSString* content = [NSString stringWithContentsOfURL:shortStoryURL encoding:NSUTF8StringEncoding error:NULL];
+
+	DFSearchIndexSummarizer* summary = [[DFSearchIndexSummarizer alloc] init:content];
+	XCTAssertNotNil(summary);
+
+	NSUInteger count = [summary sentenceCount];
+	XCTAssertEqual(91, count);
+
+	NSArray<DFSearchIndexSummarizerSentence*>* sentences = [summary sentenceSummaryWithMaxSentences:4];
+	XCTAssertEqual(4, [sentences count]);
+
+	NSUInteger paraCount = [summary paragraphCount];
+	XCTAssertEqual(25, paraCount);
+
+	NSArray<DFSearchIndexSummarizerParagraph*>* paragraphs = [summary paragraphSummaryWithMaxParagraphs:2];
+	XCTAssertEqual(2, [paragraphs count]);
 }
 
 @end

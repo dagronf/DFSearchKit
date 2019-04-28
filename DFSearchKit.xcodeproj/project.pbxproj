@@ -12,7 +12,7 @@
 		2340800B20CB873A0031D43A /* DFSearchIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D90859209E72250096E42A /* DFSearchIndex.swift */; };
 		2340800C20CB873A0031D43A /* DFSearchIndex.Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBE20B978A1001F187F /* DFSearchIndex.Memory.swift */; };
 		2340800D20CB873A0031D43A /* DFSearchIndex.File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DC120B978C0001F187F /* DFSearchIndex.File.swift */; };
-		2340800E20CB873A0031D43A /* DFSummarizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233C768C20CB18DA00589CB4 /* DFSummarizer.swift */; };
+		2340800E20CB873A0031D43A /* DFSearchIndex.Summarizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233C768C20CB18DA00589CB4 /* DFSearchIndex.Summarizer.swift */; };
 		2340801620CB88350031D43A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2340801520CB88350031D43A /* AppDelegate.swift */; };
 		2340801820CB88350031D43A /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2340801720CB88350031D43A /* Document.swift */; };
 		2340801B20CB88350031D43A /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2340801920CB88350031D43A /* Document.xib */; };
@@ -22,7 +22,7 @@
 		2340802820CB88620031D43A /* DFSearchIndex.swift in Headers */ = {isa = PBXBuildFile; fileRef = 23D90859209E72250096E42A /* DFSearchIndex.swift */; };
 		2340802920CB88620031D43A /* DFSearchIndex.Memory.swift in Headers */ = {isa = PBXBuildFile; fileRef = 23614DBE20B978A1001F187F /* DFSearchIndex.Memory.swift */; };
 		2340802A20CB88620031D43A /* DFSearchIndex.File.swift in Headers */ = {isa = PBXBuildFile; fileRef = 23614DC120B978C0001F187F /* DFSearchIndex.File.swift */; };
-		2340802B20CB88620031D43A /* DFSummarizer.swift in Headers */ = {isa = PBXBuildFile; fileRef = 233C768C20CB18DA00589CB4 /* DFSummarizer.swift */; };
+		2340802B20CB88620031D43A /* DFSearchIndex.Summarizer.swift in Headers */ = {isa = PBXBuildFile; fileRef = 233C768C20CB18DA00589CB4 /* DFSearchIndex.Summarizer.swift */; };
 		2369FC6220D6085E00EFD944 /* DFSearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2340800320CB87310031D43A /* DFSearchKit.framework */; };
 		2369FC6820D608A300EFD944 /* DFSearchKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D9084D209E71F70096E42A /* DFSearchKitTests.swift */; };
 		2369FC6920D608A300EFD944 /* DFSearchIndexSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23407FCE20CB68100031D43A /* DFSearchIndexSummaryTests.swift */; };
@@ -36,7 +36,7 @@
 		239424A120D5FA0400211170 /* DFSearchIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D90859209E72250096E42A /* DFSearchIndex.swift */; };
 		239424A220D5FA0B00211170 /* DFSearchIndex.Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBE20B978A1001F187F /* DFSearchIndex.Memory.swift */; };
 		239424A320D5FA0B00211170 /* DFSearchIndex.File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DC120B978C0001F187F /* DFSearchIndex.File.swift */; };
-		239424A420D5FA0B00211170 /* DFSummarizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233C768C20CB18DA00589CB4 /* DFSummarizer.swift */; };
+		239424A420D5FA0B00211170 /* DFSearchIndex.Summarizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233C768C20CB18DA00589CB4 /* DFSearchIndex.Summarizer.swift */; };
 		239424A520D5FA0B00211170 /* DFSearchIndex.AsyncController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFSearchIndex.AsyncController.swift */; };
 		23CE76D120BCB3EC007C8BA8 /* StopWords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23614DBA20B95F45001F187F /* StopWords.swift */; };
 		23E5A03120CE078000D1B2B5 /* DFSearchIndex.AsyncController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E5A02E20CE05A900D1B2B5 /* DFSearchIndex.AsyncController.swift */; };
@@ -91,7 +91,7 @@
 
 /* Begin PBXFileReference section */
 		2311F48120D5D8E600826F5B /* DFSearchKitTests_objc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DFSearchKitTests_objc.m; path = ../DFSearchKitTests/DFSearchKitTests_objc.m; sourceTree = "<group>"; };
-		233C768C20CB18DA00589CB4 /* DFSummarizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSummarizer.swift; sourceTree = "<group>"; };
+		233C768C20CB18DA00589CB4 /* DFSearchIndex.Summarizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSearchIndex.Summarizer.swift; sourceTree = "<group>"; };
 		23407FCC20CB243D0031D43A /* the_school_short_story.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = the_school_short_story.txt; sourceTree = "<group>"; };
 		23407FCE20CB68100031D43A /* DFSearchIndexSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSearchIndexSummaryTests.swift; sourceTree = "<group>"; };
 		23407FD020CB686F0031D43A /* DFSearchIndexUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSearchIndexUtils.swift; sourceTree = "<group>"; };
@@ -180,7 +180,7 @@
 				23614DC120B978C0001F187F /* DFSearchIndex.File.swift */,
 				23614DBE20B978A1001F187F /* DFSearchIndex.Memory.swift */,
 				23E5A02E20CE05A900D1B2B5 /* DFSearchIndex.AsyncController.swift */,
-				233C768C20CB18DA00589CB4 /* DFSummarizer.swift */,
+				233C768C20CB18DA00589CB4 /* DFSearchIndex.Summarizer.swift */,
 				2340800520CB87310031D43A /* DFSearchKit.h */,
 				2340800620CB87310031D43A /* Info.plist */,
 			);
@@ -274,7 +274,7 @@
 				2340802820CB88620031D43A /* DFSearchIndex.swift in Headers */,
 				2340802920CB88620031D43A /* DFSearchIndex.Memory.swift in Headers */,
 				2340802A20CB88620031D43A /* DFSearchIndex.File.swift in Headers */,
-				2340802B20CB88620031D43A /* DFSummarizer.swift in Headers */,
+				2340802B20CB88620031D43A /* DFSearchIndex.Summarizer.swift in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,7 +457,7 @@
 				2340800D20CB873A0031D43A /* DFSearchIndex.File.swift in Sources */,
 				2340800C20CB873A0031D43A /* DFSearchIndex.Memory.swift in Sources */,
 				23E5A03120CE078000D1B2B5 /* DFSearchIndex.AsyncController.swift in Sources */,
-				2340800E20CB873A0031D43A /* DFSummarizer.swift in Sources */,
+				2340800E20CB873A0031D43A /* DFSearchIndex.Summarizer.swift in Sources */,
 				2340800B20CB873A0031D43A /* DFSearchIndex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -488,7 +488,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				239424A420D5FA0B00211170 /* DFSummarizer.swift in Sources */,
+				239424A420D5FA0B00211170 /* DFSearchIndex.Summarizer.swift in Sources */,
 				239424A220D5FA0B00211170 /* DFSearchIndex.Memory.swift in Sources */,
 				238FAD7520A11B5F00092FCD /* main.swift in Sources */,
 				239424A320D5FA0B00211170 /* DFSearchIndex.File.swift in Sources */,

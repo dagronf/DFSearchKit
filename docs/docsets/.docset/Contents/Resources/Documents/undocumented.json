@@ -1,0 +1,75 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/dford/Projects/Projects/DFSearchKit/DFSearchKit/DFSearchIndex.swift",
+      "line": 114,
+      "symbol": "DFSearchIndex.deinit",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dford/Projects/Projects/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
+      "line": 45,
+      "symbol": "DFSearchIndex.AsyncController.deinit",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dford/Projects/Projects/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
+      "line": 105,
+      "symbol": "DFSearchIndex.AsyncController.TextTask.url",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dford/Projects/Projects/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
+      "line": 106,
+      "symbol": "DFSearchIndex.AsyncController.TextTask.text",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dford/Projects/Projects/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
+      "line": 123,
+      "symbol": "DFSearchIndex.AsyncController.FilesTask.urls",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dford/Projects/Projects/DFSearchKit/DFSearchKit/DFSearchIndexAsyncController.swift",
+      "line": 149,
+      "symbol": "DFSearchIndex.AsyncController.SearchTask.deinit",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dford/Projects/Projects/DFSearchKit/DFSearchKit/DFSummarizer.swift",
+      "line": 26,
+      "symbol": "DFSummarizer",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dford/Projects/Projects/DFSearchKit/DFSearchKit/DFSummarizer.swift",
+      "line": 31,
+      "symbol": "DFSummarizer.Sentence",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dford/Projects/Projects/DFSearchKit/DFSearchKit/DFSummarizer.swift",
+      "line": 51,
+      "symbol": "DFSummarizer.Paragraph",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dford/Projects/Projects/DFSearchKit/DFSearchKit/DFSummarizer.swift",
+      "line": 67,
+      "symbol": "DFSummarizer.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/dford/Projects/Projects/DFSearchKit"
+}

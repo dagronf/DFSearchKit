@@ -24,6 +24,11 @@
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
+		<key>Generate Documentation.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>SearchToy.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -53,6 +58,11 @@
 			<true/>
 		</dict>
 		<key>238FAD7120A11B5F00092FCD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>23BFA9F020DD20EA002D3176</key>
 		<dict>
 			<key>primary</key>
 			<true/>

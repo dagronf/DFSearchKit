@@ -13,7 +13,7 @@
     <a title="  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html"> Docs</a> (81% documented)</p>
+        <p><a href="index.html"> Docs</a> (90% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -33,6 +33,9 @@
                 <a href="Classes/DFSearchIndex.html">DFSearchIndex</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/DFSearchIndex/IndexType.html">– IndexType</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/DFSearchIndex/CreateProperties.html">– CreateProperties</a>
               </li>
               <li class="nav-group-task">
@@ -48,39 +51,22 @@
                 <a href="Classes/DFSearchIndex/ProgressiveSearch.html">– ProgressiveSearch</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFSearchIndexAsyncController.html">DFSearchIndexAsyncController</a>
+                <a href="Classes/DFSearchIndex/AsyncController.html">– AsyncController</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFSearchIndexAsyncController/TextTask.html">– TextTask</a>
+                <a href="Classes/DFSearchIndex/File.html">– File</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFSearchIndexAsyncController/FilesTask.html">– FilesTask</a>
+                <a href="Classes/DFSearchIndex/Memory.html">– Memory</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFSearchIndexAsyncController/SearchTask.html">– SearchTask</a>
+                <a href="Classes/DFSummarizer.html">DFSummarizer</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFSearchIndexData.html">DFSearchIndexData</a>
+                <a href="Classes/DFSummarizer/Sentence.html">– Sentence</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/DFSearchIndexFile.html">DFSearchIndexFile</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Classes/DFSummary.html">DFSummary</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Classes/DFSummary/Sentence.html">– Sentence</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Classes/DFSummary/Paragraph.html">– Paragraph</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name">
-            <a href="Enums.html">Enumerations</a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a href="Enums/DFSearchIndexType.html">DFSearchIndexType</a>
+                <a href="Classes/DFSummarizer/Paragraph.html">– Paragraph</a>
               </li>
             </ul>
           </li>
@@ -109,68 +95,91 @@
 <p>Find API references here &ndash; <a href="https://github.com/dagronf/DFSearckKit/blob/master/docs/index.html">https://github.com/dagronf/DFSearckKit/blob/master/docs/index.html</a></p>
 
 <p>The base library is split into three classes and an async controller</p>
-<h3 id='core' class='heading'>Core</h3>
-<h4 id='dfsearchindex' class='heading'>DFSearchIndex</h4>
-
-<p>Core indexing library, wrapper around SKIndex and related methods.  Generally, you won&rsquo;t need to use this class directly unless you want to interface to your own SKIndex object.</p>
-<h4 id='dfsearchindexdata' class='heading'>DFSearchIndexData</h4>
+<h2 id='classes' class='heading'>Classes</h2>
+<h3 id='dfsearchindex-memory' class='heading'>DFSearchIndex.Memory</h3>
 
 <p>A class inheriting from DFSearchIndex that implements an in-memory index.</p>
-<pre class="highlight plaintext"><code>if let indexer = DFSearchIndexData.create()
-{
-    let documentURL = URL(string: ("doc-url://d1.txt")!
-    indexer.add(documentURL, text: "This is my first document")
+<pre class="highlight swift"><code><span class="k">guard</span> <span class="k">let</span> <span class="nv">indexer</span> <span class="o">=</span> <span class="kt">DFSearchIndex</span><span class="o">.</span><span class="kt">Memory</span><span class="o">.</span><span class="kt">Create</span><span class="p">()</span> <span class="k">else</span> <span class="p">{</span>
+   <span class="nf">assert</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+<span class="p">}</span>
 
-    let fileURL = &lt;the url for some file on disk&gt;
-    indexer.add(fileURL, mimeType: "application/pdf")
+<span class="k">let</span> <span class="nv">documentURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="p">(</span><span class="s">"doc-url://d1.txt"</span><span class="p">)</span><span class="o">!</span>
+<span class="n">indexer</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="n">documentURL</span><span class="p">,</span> <span class="nv">text</span><span class="p">:</span> <span class="s">"This is my first document"</span><span class="p">)</span>
 
-    indexer.flush()
-    let searchresult = indexer.search("first")
-    ...
-}
+<span class="k">let</span> <span class="nv">fileURL</span> <span class="o">=</span> <span class="c1">// &lt;the url for some file on disk&gt;</span>
+<span class="n">indexer</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="n">fileURL</span><span class="p">,</span> <span class="nv">mimeType</span><span class="p">:</span> <span class="s">"application/pdf"</span><span class="p">)</span>
+
+<span class="c1">// ... add more documents</span>
+
+<span class="n">indexer</span><span class="o">.</span><span class="nf">flush</span><span class="p">()</span>
+
+<span class="k">let</span> <span class="nv">searchresult</span> <span class="o">=</span> <span class="n">indexer</span><span class="o">.</span><span class="nf">search</span><span class="p">(</span><span class="s">"first"</span><span class="p">)</span>
+
+<span class="c1">// Do something with the search results</span>
+
 </code></pre>
 
-<p><code><a href="Classes/DFSearchIndexData.html">DFSearchIndexData</a></code> provides methods to get the raw index data for storing, and to load from data</p>
-
-<p><code>let indexer = DFSearchIndexData.load(from: myData)</code></p>
-
-<p><code>let newIndexData = indexer.save()</code></p>
-<h4 id='dfsearchindexfile' class='heading'>DFSearchIndexFile</h4>
+<p><code><a href="Classes/DFSearchIndex/Memory.html">DFSearchIndex.Memory</a></code> provides methods to get the raw index data for storing, and to load from data</p>
+<h5 id='load-from-a-raw-data-object' class='heading'>Load from a raw Data object</h5>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">indexData</span> <span class="o">=</span> <span class="kt">Data</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">indexer</span> <span class="o">=</span> <span class="kt">DFSearchIndex</span><span class="o">.</span><span class="kt">Memory</span><span class="o">.</span><span class="kt">Load</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">indexData</span><span class="p">)</span>
+</code></pre>
+<h5 id='extract-the-raw-data-object-from-the-search-index' class='heading'>Extract the raw Data object from the search index</h5>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">newIndexData</span> <span class="o">=</span> <span class="n">indexer</span><span class="o">.</span><span class="nf">data</span><span class="p">()</span>
+</code></pre>
+<h3 id='dfsearchindex-file' class='heading'>DFSearchIndex.File</h3>
 
 <p>A class inheriting from DFSearchIndex that allows the creation and use of an index on disk</p>
-<pre class="highlight plaintext"><code>if let indexer = DFSearchIndexFile.create(with: file.fileURL)
-{
-   let documentURL = URL(string: ("doc-url://d1.txt")!
-    indexer.add(documentURL, text: "This is my first document"))
+<pre class="highlight swift"><code><span class="c1">// Create a index on disk</span>
+<span class="k">let</span> <span class="nv">newFileURL</span> <span class="o">=</span> <span class="c1">// &lt;some file url&gt;</span>
+<span class="k">guard</span> <span class="k">let</span> <span class="nv">newIndex</span> <span class="o">=</span> <span class="kt">DFSearchIndex</span><span class="o">.</span><span class="kt">File</span><span class="o">.</span><span class="kt">Create</span><span class="p">(</span><span class="n">newFileURL</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
+   <span class="nf">assert</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+<span class="p">}</span>
 
-    let fileURL = &lt;the url for some file on disk&gt;
-    indexer.add(fileURL, mimeType: "application/pdf")
+<span class="c1">// Open a file index</span>
+<span class="k">let</span> <span class="nv">existingFileURL</span> <span class="o">=</span> <span class="c1">// &lt;some file url&gt;</span>
+<span class="k">guard</span> <span class="k">let</span> <span class="nv">fileIndex</span> <span class="o">=</span> <span class="kt">DFSearchIndex</span><span class="o">.</span><span class="kt">File</span><span class="o">.</span><span class="kt">Open</span><span class="p">(</span><span class="n">existingFileURL</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
+   <span class="nf">assert</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+<span class="p">}</span>
 
-    indexer.flush()
-    var result = indexer.search("first")
-    indexer.save()
-    indexer.close()
-}
+<span class="k">let</span> <span class="nv">documentURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="p">(</span><span class="s">"doc-url://d1.txt"</span><span class="p">)</span><span class="o">!</span>
+<span class="n">fileIndex</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="n">documentURL</span><span class="p">,</span> <span class="nv">text</span><span class="p">:</span> <span class="s">"This is my first document"</span><span class="p">))</span>
+
+<span class="k">let</span> <span class="nv">fileURL</span> <span class="o">=</span> <span class="c1">// &lt;the url for some file on disk&gt;</span>
+<span class="n">fileIndex</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="n">fileURL</span><span class="p">,</span> <span class="nv">mimeType</span><span class="p">:</span> <span class="s">"application/pdf"</span><span class="p">)</span>
+
+<span class="c1">// Flush the index so that it is updated for searching</span>
+<span class="n">fileIndex</span><span class="o">.</span><span class="nf">flush</span><span class="p">()</span>
+
+<span class="c1">// Perform a basic search for the work 'first'</span>
+<span class="k">var</span> <span class="nv">result</span> <span class="o">=</span> <span class="n">indexer</span><span class="o">.</span><span class="nf">search</span><span class="p">(</span><span class="s">"first"</span><span class="p">)</span>
+
+<span class="n">fileIndex</span><span class="o">.</span><span class="nf">save</span><span class="p">()</span>
+<span class="n">fileIndex</span><span class="o">.</span><span class="nf">close</span><span class="p">()</span>
+
 </code></pre>
-<h3 id='async-controller' class='heading'>Async controller</h3>
+<h3 id='dfsearchindex-asynccontroller' class='heading'>DFSearchIndex.AsyncController</h3>
 
-<p><code><a href="Classes/DFSearchIndexAsyncController.html">DFSearchIndexAsyncController</a></code> is a simple controller that takes an index object, and provides a safe method for handling async requests.</p>
+<p><code><a href="Classes/DFSearchIndex/AsyncController.html">DFSearchIndex.AsyncController</a></code> is a simple controller that takes an index object, and provides a safe method for handling async requests.</p>
 
 <p>For example, to add a number of files asynchronously</p>
-<pre class="highlight plaintext"><code>    let indexer = DFSearchIndexData.create()
-    let asyncController = DFSearchIndexAsyncController(index: indexer, delegate: nil)
+<pre class="highlight swift"><code><span class="k">guard</span> <span class="k">let</span> <span class="nv">searchIndex</span> <span class="o">=</span> <span class="kt">DDFSearchIndex</span><span class="o">.</span><span class="kt">Memory</span><span class="o">.</span><span class="nf">create</span><span class="p">()</span> <span class="k">else</span> <span class="p">{</span>
+   <span class="nf">assert</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+<span class="p">}</span>
 
-    let addTask = DFSearchIndexAsyncController.FileTask(&lt;file urls to add&gt;)
-    asyncController.addURLs(async: addTask, complete: { task in
-        &lt;block that is executed when the files have been added to the index&gt;
-    })
+<span class="k">let</span> <span class="nv">asyncController</span> <span class="o">=</span> <span class="kt">DFSearchIndex</span><span class="o">.</span><span class="kt">AsyncController</span><span class="p">(</span><span class="nv">index</span><span class="p">:</span> <span class="n">searchIndex</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
 
-    ...
+<span class="k">let</span> <span class="nv">addTask</span> <span class="o">=</span> <span class="kt">DFSearchIndex</span><span class="o">.</span><span class="kt">AsyncController</span><span class="o">.</span><span class="kt">FileTask</span><span class="p">(</span><span class="o">&lt;</span><span class="n">file</span> <span class="n">urls</span> <span class="n">to</span> <span class="n">add</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="n">asyncController</span><span class="o">.</span><span class="nf">addURLs</span><span class="p">(</span><span class="nv">async</span><span class="p">:</span> <span class="n">addTask</span><span class="p">,</span> <span class="nv">complete</span><span class="p">:</span> <span class="p">{</span> <span class="n">task</span> <span class="k">in</span>
+    <span class="c1">// &lt;block that is executed when the files have been added to the index&gt;</span>
+<span class="p">})</span>
 
-    let removeTask = DFSearchIndexAsyncController.FileTask(&lt;file urls to remove&gt;)
-    asyncController.removeURLs(async: removeTask, complete: { task in
-        &lt;block that is executed when the files have been removed from the index&gt;
-    })
+<span class="o">...</span>
+
+<span class="k">let</span> <span class="nv">removeTask</span> <span class="o">=</span> <span class="kt">DFSearchIndex</span><span class="o">.</span><span class="kt">AsyncController</span><span class="o">.</span><span class="kt">FileTask</span><span class="p">(</span><span class="o">&lt;</span><span class="n">file</span> <span class="n">urls</span> <span class="n">to</span> <span class="n">remove</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="n">asyncController</span><span class="o">.</span><span class="nf">removeURLs</span><span class="p">(</span><span class="nv">async</span><span class="p">:</span> <span class="n">removeTask</span><span class="p">,</span> <span class="nv">complete</span><span class="p">:</span> <span class="p">{</span> <span class="n">task</span> <span class="k">in</span>
+    <span class="c1">// &lt;block that is executed when the files have been removed from the index&gt;</span>
+<span class="p">})</span>
 
 </code></pre>
 
@@ -181,28 +190,44 @@
 <h3 id='search-all' class='heading'>Search all</h3>
 
 <p>The search all is available on the indexer object, and returns all the results it can get.  As such, for large indexes this may take quite a while to return.  It is provided mostly as a convenience function for small indexes.</p>
-<pre class="highlight plaintext"><code>if let indexer = DFSearchIndexData.create()
-{
-    indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
-    indexer.flush()
-    var result = indexer.search("first")
-    indexer.save()
-    indexer.close()
-}
+<pre class="highlight swift"><code><span class="k">guard</span> <span class="k">let</span> <span class="nv">searchIndex</span> <span class="o">=</span> <span class="kt">DFSearchIndex</span><span class="o">.</span><span class="kt">Memory</span><span class="o">.</span><span class="kt">Create</span><span class="p">()</span> <span class="k">else</span> <span class="p">{</span>
+   <span class="nf">assert</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Add some documents...</span>
+<span class="k">let</span> <span class="nv">firstURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="p">(</span><span class="s">"doc-url://d1.txt"</span><span class="p">))</span><span class="o">!</span>
+<span class="n">searchIndex</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="n">firstURL</span><span class="p">,</span> <span class="nv">text</span><span class="p">:</span> <span class="s">"This is my first document"</span><span class="p">))</span>
+
+<span class="c1">// Flush the index</span>
+<span class="n">searchIndex</span><span class="o">.</span><span class="nf">flush</span><span class="p">()</span>
+
+<span class="c1">// Search for the word 'first'</span>
+<span class="k">let</span> <span class="nv">result1</span> <span class="o">=</span> <span class="n">indexer</span><span class="o">.</span><span class="nf">search</span><span class="p">(</span><span class="s">"first"</span><span class="p">)</span>
+
+<span class="n">searchIndex</span><span class="o">.</span><span class="nf">save</span><span class="p">()</span>
+<span class="n">searchIndex</span><span class="o">.</span><span class="nf">close</span><span class="p">()</span>
 </code></pre>
 <h3 id='progressive-search' class='heading'>Progressive Search</h3>
 
 <p>For large indexes, the results may take quite a while to return.  Thus, the progressive index is more useful by returning limited sets of results progressively, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)</p>
-<pre class="highlight plaintext"><code>    ... load documents ...
-    let search = indexer.progressiveSearch(query: "dog")
-    var hasMoreResults = true
-    repeat
-    {
-        var searchChunk = search.next(10)
-        ... do something with searchChunk...
-        hasMoreResults = searchChunk.moreResults
-    }
-    while hasMoreResults
+<pre class="highlight swift"><code><span class="c1">/// ... load documents ...</span>
+<span class="k">let</span> <span class="nv">search</span> <span class="o">=</span> <span class="n">indexer</span><span class="o">.</span><span class="nf">progressiveSearch</span><span class="p">(</span><span class="nv">query</span><span class="p">:</span> <span class="s">"dog"</span><span class="p">)</span>
+<span class="k">var</span> <span class="nv">hasMoreResults</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="k">repeat</span> <span class="p">{</span>
+   <span class="k">var</span> <span class="nv">searchChunk</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="nf">next</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+   <span class="c1">// ... do something with searchChunk...</span>
+
+   <span class="n">hasMoreResults</span> <span class="o">=</span> <span class="n">searchChunk</span><span class="o">.</span><span class="n">moreResults</span>
+<span class="p">}</span>
+<span class="k">while</span> <span class="n">hasMoreResults</span>
+</code></pre>
+<h2 id='summarization' class='heading'>Summarization</h2>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">text</span> <span class="o">=</span> <span class="c1">// &lt;some text</span>
+<span class="k">let</span> <span class="nv">summary</span> <span class="o">=</span> <span class="kt">DFSummarizer</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c1">// Get the number of sentences in the text</span>
+<span class="k">let</span> <span class="nv">count</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="nf">sentenceCount</span><span class="p">()</span>
 </code></pre>
 <h2 id='samples' class='heading'>Samples</h2>
 
@@ -247,7 +272,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-07-08)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-04-28)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

@@ -11,11 +11,11 @@ import XCTest
 
 class SpyDelegate: DFSearchIndexAsyncControllerProtocol
 {
-	func queueDidEmpty(_ indexer: DFSearchIndexAsyncController)
+	func queueDidEmpty(_ indexer: DFSearchIndex.AsyncController)
 	{
 	}
 
-	func queueDidChange(_ indexer: DFSearchIndexAsyncController, count: Int)
+	func queueDidChange(_ indexer: DFSearchIndex.AsyncController, count: Int)
 	{
 	}
 }
@@ -24,7 +24,7 @@ class DFSearchIndexAsyncTests: XCTestCase
 {
 	func testAsync()
 	{
-		guard let indexer = DFSearchIndexData.create() else
+		guard let indexer = DFSearchIndex.Memory.Create() else
 		{
 			XCTFail()
 			return
@@ -35,11 +35,11 @@ class DFSearchIndexAsyncTests: XCTestCase
 		let txtPath = testBundle.url(forResource: "the_school_short_story", withExtension: "txt")!
 
 		let spyDelegate = SpyDelegate()
-		let asyncController = DFSearchIndexAsyncController(index: indexer, delegate: spyDelegate)
+		let asyncController = DFSearchIndex.AsyncController(index: indexer, delegate: spyDelegate)
 
 		// MARK: Add async
 
-		let fileTask = DFSearchIndexAsyncController.FilesTask([filePath, txtPath])
+		let fileTask = DFSearchIndex.AsyncController.FilesTask([filePath, txtPath])
 
 		let addExpectation = self.expectation(description: "AsyncAdd")
 		asyncController.addURLs(async: fileTask, flushWhenComplete: true, complete: { task in
@@ -66,7 +66,7 @@ class DFSearchIndexAsyncTests: XCTestCase
 		// MARK: Remove async
 
 		let removeExpectation = self.expectation(description: "AsyncRemove")
-		let removeTask = DFSearchIndexAsyncController.FilesTask([txtPath])
+		let removeTask = DFSearchIndex.AsyncController.FilesTask([txtPath])
 		asyncController.removeURLs(async: removeTask, complete: { task in
 			if task.urls == [txtPath]
 			{
@@ -92,21 +92,21 @@ class DFSearchIndexAsyncTests: XCTestCase
 
 	func testAsyncCancel()
 	{
-		guard let indexer = DFSearchIndexData.create() else
+		guard let indexer = DFSearchIndex.Memory.Create() else
 		{
 			XCTFail()
 			return
 		}
 
 		let spyDelegate = SpyDelegate()
-		let asyncController = DFSearchIndexAsyncController(index: indexer, delegate: spyDelegate)
+		let asyncController = DFSearchIndex.AsyncController(index: indexer, delegate: spyDelegate)
 
-		var tasks: [DFSearchIndexAsyncController.TextTask] = []
+		var tasks: [DFSearchIndex.AsyncController.TextTask] = []
 		for count in 0 ..< 2500
 		{
 			let urlstr = "doc-url://d\(count).txt"
 			let d1 = DFUtils.url(urlstr)
-			tasks.append(DFSearchIndexAsyncController.TextTask(url: d1, text: "cat dog fish"))
+			tasks.append(DFSearchIndex.AsyncController.TextTask(url: d1, text: "cat dog fish"))
 		}
 
 		let completeExpectation = self.expectation(description: "completeExpectation")

@@ -35,8 +35,8 @@ class Document: NSDocument {
 	@IBOutlet weak var queryField: NSTextField!
 	@IBOutlet var queryResultView: NSTextView!
 
-	private var index: DFSearchIndexData = DFSearchIndexData.create()!
-	private var indexer: DFSearchIndexAsyncController?
+	private var index: DFSearchIndex.Memory = DFSearchIndex.Memory.Create()!
+	private var indexer: DFSearchIndex.AsyncController?
 
 	@objc dynamic fileprivate var operationCount: Int = 0
 	@objc dynamic fileprivate var files: [URL] = []
@@ -45,7 +45,7 @@ class Document: NSDocument {
 		super.init()
 
 		// Create a blank index for empty documents
-		self.indexer = DFSearchIndexAsyncController.init(index: index, delegate: self)
+		self.indexer = DFSearchIndex.AsyncController.init(index: index, delegate: self)
 
 	}
 
@@ -62,17 +62,24 @@ class Document: NSDocument {
 
 // MARK: - Read/Write
 
+enum OpenError: Error {
+	case runtimeError(String)
+}
+
 extension Document
 {
 	override func data(ofType typeName: String) throws -> Data
 	{
-		return self.index.save()!
+		return self.index.data()!
 	}
 	
 	override func read(from data: Data, ofType typeName: String) throws
 	{
-		self.index = DFSearchIndexData.load(from: data)!
-		self.indexer = DFSearchIndexAsyncController.init(index: index, delegate: self)
+		guard let index = DFSearchIndex.Memory.Load(from: data) else {
+			throw OpenError.runtimeError("Unable to load index file")
+		}
+		self.index = DFSearchIndex.Memory.Load(from: data)!
+		self.indexer = DFSearchIndex.AsyncController.init(index: index, delegate: self)
 	}
 }
 
@@ -85,11 +92,11 @@ extension Document
 		if let url = URL(string: self.urlField.stringValue)
 		{
 			let text = self.docContentView.string
-			self.addTextOperation([DFSearchIndexAsyncController.TextTask(url: url, text: text)])
+			self.addTextOperation([DFSearchIndex.AsyncController.TextTask(url: url, text: text)])
 		}
 	}
 	
-	@objc func addTextOperation(_ textTasks: [DFSearchIndexAsyncController.TextTask])
+	@objc func addTextOperation(_ textTasks: [DFSearchIndex.AsyncController.TextTask])
 	{
 		self.indexer?.addText(async: textTasks, complete: { [weak self] textTasks in
 			if let blockSelf = self {
@@ -102,7 +109,7 @@ extension Document
 		})
 	}
 	
-	@objc func removeTextOperation(_ textTasks: [DFSearchIndexAsyncController.TextTask])
+	@objc func removeTextOperation(_ textTasks: [DFSearchIndex.AsyncController.TextTask])
 	{
 		self.indexer?.removeText(async: textTasks, complete: { [weak self] textTasks in
 			if let blockSelf = self {
@@ -131,12 +138,12 @@ extension Document
 		panel.beginSheetModal(for: window!) { (result) in
 			if result == NSApplication.ModalResponse.OK
 			{
-				self.addURLs(DFSearchIndexAsyncController.FilesTask(panel.urls))
+				self.addURLs(DFSearchIndex.AsyncController.FilesTask(panel.urls))
 			}
 		}
 	}
 	
-	@objc func addURLs(_ fileTask: DFSearchIndexAsyncController.FilesTask)
+	@objc func addURLs(_ fileTask: DFSearchIndex.AsyncController.FilesTask)
 	{
 		self.indexer?.addURLs(async: fileTask, flushWhenComplete: true, complete: { [weak self] fileTask in
 			if let blockSelf = self {
@@ -149,7 +156,7 @@ extension Document
 		})
 	}
 	
-	@objc func removeURLs(_ fileTask: DFSearchIndexAsyncController.FilesTask) {
+	@objc func removeURLs(_ fileTask: DFSearchIndex.AsyncController.FilesTask) {
 		self.indexer?.removeURLs(async: fileTask, flushWhenComplete: true, complete: { [weak self] fileTask in
 			if let blockSelf = self {
 				DispatchQueue.main.async {
@@ -167,7 +174,7 @@ extension Document
 extension Document
 {
 
-	func searchNext(_ searchTask: DFSearchIndexAsyncController.SearchTask)
+	func searchNext(_ searchTask: DFSearchIndex.AsyncController.SearchTask)
 	{
 		searchTask.next(10) { [weak self] (searchTask, results) in
 
@@ -208,11 +215,11 @@ extension Document
 
 extension Document: DFSearchIndexAsyncControllerProtocol
 {
-	func queueDidEmpty(_ indexer: DFSearchIndexAsyncController)
+	func queueDidEmpty(_ indexer: DFSearchIndex.AsyncController)
 	{
 	}
 
-	func queueDidChange(_ indexer: DFSearchIndexAsyncController, count: Int)
+	func queueDidChange(_ indexer: DFSearchIndex.AsyncController, count: Int)
 	{
 		DispatchQueue.main.async { [weak self] in
 			self?.operationCount = count

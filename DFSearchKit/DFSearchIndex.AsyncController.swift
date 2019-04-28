@@ -9,17 +9,17 @@
 import Foundation
 
 /// Protocol for notifying a delegate when the operation queue changes state
-@objc public protocol DFSearchIndexAsyncControllerProtocol
-{
+@objc public protocol DFSearchIndexAsyncControllerProtocol {
 	/// The queue is now empty
-	func queueDidEmpty(_ indexer: DFSearchIndexAsyncController)
+	func queueDidEmpty(_ indexer: DFSearchIndex.AsyncController)
 	/// The queue's operation count did change
-	func queueDidChange(_ indexer: DFSearchIndexAsyncController, count: Int)
+	func queueDidChange(_ indexer: DFSearchIndex.AsyncController, count: Int)
 }
 
+extension DFSearchIndex {
+
 /// A controller for a DFSearchIndex object that supports asynchronous calls to the index
-@objc public class DFSearchIndexAsyncController: NSObject
-{
+@objc(DFSearchIndexAsyncController) public class AsyncController: NSObject {
 	let index: DFSearchIndex
 	let delegate: DFSearchIndexAsyncControllerProtocol?
 
@@ -32,8 +32,7 @@ import Foundation
 	@objc public dynamic var queueSize: Int = 0
 
 	/// Initializer
-	public init(index: DFSearchIndex, delegate: DFSearchIndexAsyncControllerProtocol?)
-	{
+	public init(index: DFSearchIndex, delegate: DFSearchIndexAsyncControllerProtocol?) {
 		self.index = index
 		self.delegate = delegate
 		super.init()
@@ -43,16 +42,13 @@ import Foundation
 		self.addObserver(self, forKeyPath: "queueComplete", options: .new, context: nil)
 	}
 
-	deinit
-	{
+	deinit {
 		self.modifyQueue.removeObserver(self, forKeyPath: "operations")
 	}
 
 	/// Queue observer
-	override public func observeValue(forKeyPath keyPath: String?, of _: Any?, change _: [NSKeyValueChangeKey: Any]?, context _: UnsafeMutableRawPointer?)
-	{
-		if keyPath == "operations"
-		{
+	override public func observeValue(forKeyPath keyPath: String?, of _: Any?, change _: [NSKeyValueChangeKey: Any]?, context _: UnsafeMutableRawPointer?) {
+		if keyPath == "operations" {
 			self.willChangeValue(for: \.queueSize)
 			self.willChangeValue(for: \.queueComplete)
 			self.queueSize = self.modifyQueue.operationCount
@@ -77,8 +73,7 @@ import Foundation
 	/// Note that all tasks waiting on completion that are cancelled will not be called back
 	///
 	/// - Parameter complete: called when the cancel operation is complete
-	@objc public func cancelCurrent(_ complete: @escaping () -> Void)
-	{
+	@objc public func cancelCurrent(_ complete: @escaping () -> Void) {
 		self.modifyQueue.cancelAllOperations()
 		self.waitUntilQueueIsComplete(complete)
 	}
@@ -86,14 +81,11 @@ import Foundation
 	/// Call back when the operation queue is complete (ie. empty)
 	///
 	/// - Parameter complete: called when all the operations are complete
-	@objc public func waitUntilQueueIsComplete(_ complete: @escaping () -> Void)
-	{
-		if self.queueComplete
-		{
+	@objc public func waitUntilQueueIsComplete(_ complete: @escaping () -> Void) {
+		if self.queueComplete {
 			complete()
 		}
-		else
-		{
+		else {
 			DispatchQueue.global(qos: .userInitiated).async
 			{ [weak self] in
 				self?.modifyQueue.waitUntilAllOperationsAreFinished()
@@ -102,15 +94,14 @@ import Foundation
 		}
 	}
 }
+}
 
 // MARK: Async task objects
 
-@objc public extension DFSearchIndexAsyncController
-{
+@objc(DFSearchIndexAsyncController) public extension DFSearchIndex.AsyncController {
 	/// A task for asynchronously handling the addition of text to the index
 	@objc(DFSearchIndexAsyncControllerTextTask)
-	public class TextTask: NSObject
-	{
+	class TextTask: NSObject {
 		public let url: URL
 		public let text: String
 
@@ -119,8 +110,7 @@ import Foundation
 		/// - Parameters:
 		///   - url: the identifying document URL
 		///   - text: The text to add to the index
-		public init(url: URL, text: String)
-		{
+		public init(url: URL, text: String) {
 			self.url = url
 			self.text = text
 			super.init()
@@ -129,15 +119,13 @@ import Foundation
 
 	/// A task for handling file input
 	@objc(DFSearchIndexAsyncControllerFilesTask)
-	public class FilesTask: NSObject
-	{
+	class FilesTask: NSObject {
 		public let urls: [URL]
 
 		/// Add file URLs to the search index
 		///
 		/// - Parameter urls: The urls to add
-		public init(_ urls: [URL])
-		{
+		public init(_ urls: [URL]) {
 			self.urls = urls
 			super.init()
 		}
@@ -145,23 +133,20 @@ import Foundation
 
 	/// A task for handling searches
 	@objc(DFSearchIndexAsyncControllerSearchTask)
-	public class SearchTask: NSObject
-	{
+	class SearchTask: NSObject {
 		fileprivate let search: DFSearchIndex.ProgressiveSearch
 
 		/// The search term used to create the task
 		public let query: String
 
 		/// Create a search task in the specified index
-		fileprivate init(_ index: DFSearchIndex, query: String)
-		{
+		fileprivate init(_ index: DFSearchIndex, query: String) {
 			self.query = query
 			self.search = index.progressiveSearch(query: query)
 			super.init()
 		}
 
-		deinit
-		{
+		deinit {
 			self.search.cancel()
 		}
 
@@ -175,14 +160,11 @@ import Foundation
 			_ maxResults: Int,
 			timeout: TimeInterval = 1.0,
 			complete: @escaping (SearchTask, DFSearchIndex.ProgressiveSearch.Results) -> Void
-		)
-		{
-			DispatchQueue.global(qos: .userInitiated).async
-			{
+		) {
+			DispatchQueue.global(qos: .userInitiated).async {
 				let results = self.search.next(maxResults, timeout: timeout)
 				let searchResults = DFSearchIndex.ProgressiveSearch.Results(moreResultsAvailable: results.moreResultsAvailable, results: results.results)
-				DispatchQueue.main.async
-				{
+				DispatchQueue.main.async {
 					complete(self, searchResults)
 				}
 			}
@@ -192,16 +174,14 @@ import Foundation
 
 // MARK: Add
 
-extension DFSearchIndexAsyncController
-{
+@objc(DFSearchIndexAsyncController) public extension DFSearchIndex.AsyncController {
+
 	/// Create a flush operation
-	private func flushOperation() -> BlockOperation
-	{
+	private func flushOperation() -> BlockOperation {
 		let flushOperation = BlockOperation()
 		flushOperation.addExecutionBlock
 		{ [weak self, weak flushOperation] in
-			if flushOperation?.isCancelled == false
-			{
+			if flushOperation?.isCancelled == false {
 				_ = self?.index.flush()
 			}
 		}
@@ -214,16 +194,17 @@ extension DFSearchIndexAsyncController
 	///   - textTasks: the texts to add
 	///   - flushWhenComplete: If true, flushes the index once all of the URLs are added
 	///   - complete: Callback block when the add has completed
-	@objc public func addText(async textTasks: [TextTask], flushWhenComplete: Bool = false, complete: @escaping ([TextTask]) -> Void)
-	{
+	@objc func addText(
+		async textTasks: [TextTask],
+		flushWhenComplete: Bool = false,
+		complete: @escaping ([TextTask]) -> Void
+	) {
 		var addOperations: [BlockOperation] = []
-		for task in textTasks
-		{
+		for task in textTasks {
 			let addBlock = BlockOperation()
 			addBlock.addExecutionBlock
 			{ [weak self, weak addBlock] in
-				if addBlock?.isCancelled == false
-				{
+				if addBlock?.isCancelled == false {
 					_ = self?.index.add(task.url, text: task.text)
 				}
 			}
@@ -232,13 +213,11 @@ extension DFSearchIndexAsyncController
 
 		// Create our 'we've finished' operation
 		let completeOperation = BlockOperation()
-		completeOperation.completionBlock =
-			{
-				complete(textTasks)
-			}
+		completeOperation.completionBlock = {
+			complete(textTasks)
+		}
 
-		if flushWhenComplete
-		{
+		if flushWhenComplete {
 			let flushOperation = self.flushOperation()
 
 			// The flush operation has to occur when all the add operations are complete
@@ -246,8 +225,7 @@ extension DFSearchIndexAsyncController
 			completeOperation.addDependency(flushOperation)
 			addOperations.append(flushOperation)
 		}
-		else
-		{
+		else {
 			// Make our completion dependent on all the 'add' blocks
 			addOperations.forEach { completeOperation.addDependency($0) }
 		}
@@ -262,41 +240,38 @@ extension DFSearchIndexAsyncController
 	///   - fileTask: The file operation to complete
 	///   - flushWhenComplete: If true, flushes the index once all of the URLs are added
 	///   - complete: Callback block when the add has completed
-	@objc public func addURLs(async fileTask: FilesTask, flushWhenComplete: Bool = false, complete: @escaping (FilesTask) -> Void)
-	{
+	@objc func addURLs(
+		async fileTask: FilesTask,
+		flushWhenComplete: Bool = false,
+		complete: @escaping (FilesTask) -> Void
+	) {
 		DispatchQueue.global(qos: .userInitiated).async
 		{ [weak self] in
 			var newUrls: [URL] = []
 			var addOperations: [BlockOperation] = []
 
-			fileTask.urls.forEach
-			{
+			fileTask.urls.forEach {
 				let url = $0
-				if FileManager.default.folderExists(url: url)
-				{
+				if FileManager.default.folderExists(url: url) {
 					let urls = self?.folderUrls(url)
-					for url in urls!
-					{
+					for url in urls! {
 						let addOperation = BlockOperation()
 						addOperation.addExecutionBlock
 						{ [weak self, weak addOperation] in
-							if addOperation?.isCancelled == false
-							{
-								_ = self?.index.add(url: url)
+							if addOperation?.isCancelled == false {
+								_ = self?.index.add(fileURL: url)
 							}
 						}
 						addOperations.append(addOperation)
 						newUrls.append(url)
 					}
 				}
-				else if FileManager.default.fileExists(url: url)
-				{
+				else if FileManager.default.fileExists(url: url) {
 					let addOperation = BlockOperation()
 					addOperation.addExecutionBlock
 					{ [weak self, weak addOperation] in
-						if addOperation?.isCancelled == false
-						{
-							_ = self?.index.add(url: url)
+						if addOperation?.isCancelled == false {
+							_ = self?.index.add(fileURL: url)
 						}
 					}
 					addOperations.append(addOperation)
@@ -306,21 +281,18 @@ extension DFSearchIndexAsyncController
 
 			// Create our 'we've finished' operation
 			let completeOperation = BlockOperation()
-			completeOperation.completionBlock =
-				{
-					complete(FilesTask(newUrls))
-				}
+			completeOperation.completionBlock = {
+				complete(FilesTask(newUrls))
+			}
 
 			if flushWhenComplete,
-				let flushOperation = self?.flushOperation()
-			{
+				let flushOperation = self?.flushOperation() {
 				// The flush operation has to occur when all the add operations are complete
 				addOperations.forEach { flushOperation.addDependency($0) }
 				completeOperation.addDependency(flushOperation)
 				addOperations.append(flushOperation)
 			}
-			else
-			{
+			else {
 				// Make our completion dependent on all the 'add' blocks
 				addOperations.forEach { completeOperation.addDependency($0) }
 			}
@@ -333,21 +305,17 @@ extension DFSearchIndexAsyncController
 	///
 	/// - Parameter folderURL: The folder to be scanned
 	/// - Returns: An array of all the file URLs contained within the folder
-	private func folderUrls(_ folderURL: URL) -> [URL]
-	{
+	private func folderUrls(_ folderURL: URL) -> [URL] {
 		let fileManager = FileManager.default
 
-		guard fileManager.folderExists(url: folderURL) else
-		{
+		guard fileManager.folderExists(url: folderURL) else {
 			return []
 		}
 
 		var addedUrls: [URL] = []
 		let enumerator = FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: nil)
-		while let fileURL = enumerator?.nextObject() as? URL
-		{
-			if fileManager.fileExists(url: fileURL)
-			{
+		while let fileURL = enumerator?.nextObject() as? URL {
+			if fileManager.fileExists(url: fileURL) {
 				addedUrls.append(fileURL)
 			}
 		}
@@ -357,30 +325,30 @@ extension DFSearchIndexAsyncController
 
 // MARK: Remove
 
-extension DFSearchIndexAsyncController
-{
+@objc(DFSearchIndexAsyncController) public extension DFSearchIndex.AsyncController {
+
 	/// Remove all documents with zero terms from the index
 	///
 	/// - Parameter complete: called when the task is complete
-	@objc public func prune(complete: @escaping (FilesTask) -> Void)
-	{
+	@objc func prune(complete: @escaping (FilesTask) -> Void) {
 		let emptyURLs = self.index.documents(termState: .Empty)
 		let fileTask = FilesTask(emptyURLs)
 		self.removeURLs(async: fileTask, complete: complete)
 	}
 
 	/// Remove text async
-	@objc public func removeText(async tasks: [TextTask], flushWhenComplete: Bool = false, complete: @escaping ([TextTask]) -> Void)
-	{
+	@objc func removeText(
+		async tasks: [TextTask],
+		flushWhenComplete: Bool = false,
+		complete: @escaping ([TextTask]) -> Void
+	) {
 		var removeOperations: [BlockOperation] = []
-		for task in tasks
-		{
+		for task in tasks {
 			let url = task.url
 			let removeOperation = BlockOperation()
 			removeOperation.addExecutionBlock
 			{ [weak self, weak removeOperation] in
-				if removeOperation?.isCancelled == false
-				{
+				if removeOperation?.isCancelled == false {
 					_ = self?.index.remove(url: url)
 				}
 			}
@@ -389,13 +357,11 @@ extension DFSearchIndexAsyncController
 
 		// Create our 'we've finished' operation
 		let completeOperation = BlockOperation()
-		completeOperation.completionBlock =
-			{
-				complete(tasks)
-			}
+		completeOperation.completionBlock = {
+			complete(tasks)
+		}
 
-		if flushWhenComplete
-		{
+		if flushWhenComplete {
 			let flushOperation = self.flushOperation()
 
 			// The flush operation has to occur when all the add operations are complete
@@ -403,8 +369,7 @@ extension DFSearchIndexAsyncController
 			completeOperation.addDependency(flushOperation)
 			removeOperations.append(flushOperation)
 		}
-		else
-		{
+		else {
 			// Make our completion dependent on all the 'add' blocks
 			removeOperations.forEach { completeOperation.addDependency($0) }
 		}
@@ -414,8 +379,11 @@ extension DFSearchIndexAsyncController
 	}
 
 	/// Remove documents async
-	@objc public func removeURLs(async operation: FilesTask, flushWhenComplete: Bool = false, complete: @escaping (FilesTask) -> Void)
-	{
+	@objc func removeURLs(
+		async operation: FilesTask,
+		flushWhenComplete: Bool = false,
+		complete: @escaping (FilesTask) -> Void
+	) {
 		var removeOperations: [BlockOperation] = []
 
 		operation.urls.forEach
@@ -429,13 +397,11 @@ extension DFSearchIndexAsyncController
 
 		// Create our 'we've finished' operation
 		let completeOperation = BlockOperation()
-		completeOperation.completionBlock =
-			{
-				complete(FilesTask(operation.urls))
-			}
+		completeOperation.completionBlock = {
+			complete(FilesTask(operation.urls))
+		}
 
-		if flushWhenComplete
-		{
+		if flushWhenComplete {
 			let flushOperation = self.flushOperation()
 
 			// The flush operation has to occur when all the add operations are complete
@@ -443,8 +409,7 @@ extension DFSearchIndexAsyncController
 			completeOperation.addDependency(flushOperation)
 			removeOperations.append(flushOperation)
 		}
-		else
-		{
+		else {
 			// Make our completion dependent on all the 'add' blocks
 			removeOperations.forEach { completeOperation.addDependency($0) }
 		}
@@ -456,34 +421,29 @@ extension DFSearchIndexAsyncController
 
 // MARK: Search
 
-public extension DFSearchIndexAsyncController
-{
+@objc(DFSearchIndexAsyncController) public extension DFSearchIndex.AsyncController {
+
 	/// Create a search task
-	@objc public func search(async query: String) -> SearchTask
-	{
+	@objc func search(async query: String) -> SearchTask {
 		return SearchTask(self.index, query: query)
 	}
 }
 
 // MARK: Utilities
 
-fileprivate extension FileManager
-{
-	func fileExists(url: URL) -> Bool
-	{
+fileprivate extension FileManager {
+
+	func fileExists(url: URL) -> Bool {
 		return self.urlExists(url: url, isDirectory: false)
 	}
 
-	func folderExists(url: URL) -> Bool
-	{
+	func folderExists(url: URL) -> Bool {
 		return self.urlExists(url: url, isDirectory: true)
 	}
 
-	private func urlExists(url: URL, isDirectory: Bool) -> Bool
-	{
+	private func urlExists(url: URL, isDirectory: Bool) -> Bool {
 		var isDir: ObjCBool = true
-		if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
-		{
+		if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir) {
 			return isDirectory == isDir.boolValue
 		}
 		return false

@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>AsyncController Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/AsyncController" class="dashAnchor"></a>
+    <a title="AsyncController Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html"> Docs</a> (90% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html"> Reference</a>
+        <img id="carat" src="../../img/carat.png" />
+        AsyncController Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex.html">DFSearchIndex</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex/IndexType.html">– IndexType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex/CreateProperties.html">– CreateProperties</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex/TermCount.html">– TermCount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex/TermState.html">– TermState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex/SearchResult.html">– SearchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex/ProgressiveSearch.html">– ProgressiveSearch</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex/AsyncController.html">– AsyncController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex/File.html">– File</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex/Memory.html">– Memory</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSummarizer.html">DFSummarizer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSummarizer/Sentence.html">– Sentence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DFSummarizer/Paragraph.html">– Paragraph</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Protocols/DFSearchIndexAsyncControllerProtocol.html">DFSearchIndexAsyncControllerProtocol</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>AsyncController</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexAsyncController)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">AsyncController</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>A controller for a DFSearchIndex object that supports asynchronous calls to the index</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC13queueCompleteSbvp"></a>
+                    <a name="//apple_ref/swift/Property/queueComplete" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC13queueCompleteSbvp">queueComplete</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Is the controller currently processing requests?</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">dynamic</span> <span class="k">var</span> <span class="nv">queueComplete</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC9queueSizeSivp"></a>
+                    <a name="//apple_ref/swift/Property/queueSize" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC9queueSizeSivp">queueSize</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The total number of outstanding requests</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">dynamic</span> <span class="k">var</span> <span class="nv">queueSize</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC5index8delegateAeC_AA0bcdE8Protocol_pSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(index:delegate:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC5index8delegateAeC_AA0bcdE8Protocol_pSgtcfc">init(index:delegate:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializer</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">index</span><span class="p">:</span> <span class="kt"><a href="../../Classes/DFSearchIndex.html">DFSearchIndex</a></span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../../Protocols/DFSearchIndexAsyncControllerProtocol.html">DFSearchIndexAsyncControllerProtocol</a></span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerCfd"></a>
+                    <a name="//apple_ref/swift/Method/deinit" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerCfd">deinit</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">deinit</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC12observeValue10forKeyPath2of6change7contextySSSg_ypSgSDySo05NSKeyg6ChangeI0aypGSgSvSgtF"></a>
+                    <a name="//apple_ref/swift/Method/observeValue(forKeyPath:of:change:context:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC12observeValue10forKeyPath2of6change7contextySSSg_ypSgSDySo05NSKeyg6ChangeI0aypGSgSvSgtF">observeValue(forKeyPath:of:change:context:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Queue observer</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">override</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">observeValue</span><span class="p">(</span><span class="n">forKeyPath</span> <span class="nv">keyPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="n">of</span> <span class="nv">_</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="n">change</span> <span class="nv">_</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSKeyValueChangeKey</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?,</span> <span class="n">context</span> <span class="nv">_</span><span class="p">:</span> <span class="kt">UnsafeMutableRawPointer</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC13cancelCurrentyyyycF"></a>
+                    <a name="//apple_ref/swift/Method/cancelCurrent(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC13cancelCurrentyyyycF">cancelCurrent(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Cancel all the outstanding requests if they haven&rsquo;t already been started.</p>
+
+<p>Note that all tasks waiting on completion that are cancelled will not be called back</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">cancelCurrent</span><span class="p">(</span><span class="n">_</span> <span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>complete</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>called when the cancel operation is complete</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC24waitUntilQueueIsCompleteyyyycF"></a>
+                    <a name="//apple_ref/swift/Method/waitUntilQueueIsComplete(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC24waitUntilQueueIsCompleteyyyycF">waitUntilQueueIsComplete(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Call back when the operation queue is complete (ie. empty)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">waitUntilQueueIsComplete</span><span class="p">(</span><span class="n">_</span> <span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>complete</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>called when all the operations are complete</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Async%20task%20objects"></a>
+                <a name="//apple_ref/swift/Section/Async task objects" class="dashAnchor"></a>
+                <a href="#/Async%20task%20objects">
+                  <h3 class="section-name">Async task objects</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC8TextTaskC"></a>
+                    <a name="//apple_ref/swift/Class/TextTask" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC8TextTaskC">TextTask</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A task for asynchronously handling the addition of text to the index</p>
+
+                        <a href="../../Classes/DFSearchIndex/AsyncController/TextTask.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexAsyncControllerTextTask)</span>
+<span class="kd">class</span> <span class="kt">TextTask</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC9FilesTaskC"></a>
+                    <a name="//apple_ref/swift/Class/FilesTask" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC9FilesTaskC">FilesTask</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A task for handling file input</p>
+
+                        <a href="../../Classes/DFSearchIndex/AsyncController/FilesTask.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexAsyncControllerFilesTask)</span>
+<span class="kd">class</span> <span class="kt">FilesTask</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC10SearchTaskC"></a>
+                    <a name="//apple_ref/swift/Class/SearchTask" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC10SearchTaskC">SearchTask</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A task for handling searches</p>
+
+                        <a href="../../Classes/DFSearchIndex/AsyncController/SearchTask.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(DFSearchIndexAsyncControllerSearchTask)</span>
+<span class="kd">class</span> <span class="kt">SearchTask</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Add"></a>
+                <a name="//apple_ref/swift/Section/Add" class="dashAnchor"></a>
+                <a href="#/Add">
+                  <h3 class="section-name">Add</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC7addText5async17flushWhenComplete8completeySayAE0G4TaskCG_SbyALctF"></a>
+                    <a name="//apple_ref/swift/Method/addText(async:flushWhenComplete:complete:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC7addText5async17flushWhenComplete8completeySayAE0G4TaskCG_SbyALctF">addText(async:flushWhenComplete:complete:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Add text elements to the index asynchronously</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">addText</span><span class="p">(</span>
+	<span class="n">async</span> <span class="nv">textTasks</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/DFSearchIndex/AsyncController/TextTask.html">TextTask</a></span><span class="p">],</span>
+	<span class="nv">flushWhenComplete</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">([</span><span class="kt"><a href="../../Classes/DFSearchIndex/AsyncController/TextTask.html">TextTask</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>textTasks</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the texts to add</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>flushWhenComplete</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true, flushes the index once all of the URLs are added</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>complete</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Callback block when the add has completed</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC7addURLs5async17flushWhenComplete8completeyAE9FilesTaskC_SbyAKctF"></a>
+                    <a name="//apple_ref/swift/Method/addURLs(async:flushWhenComplete:complete:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC7addURLs5async17flushWhenComplete8completeyAE9FilesTaskC_SbyAKctF">addURLs(async:flushWhenComplete:complete:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Add file urls to the index asynchronously.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">addURLs</span><span class="p">(</span>
+	<span class="n">async</span> <span class="nv">fileTask</span><span class="p">:</span> <span class="kt"><a href="../../Classes/DFSearchIndex/AsyncController/FilesTask.html">FilesTask</a></span><span class="p">,</span>
+	<span class="nv">flushWhenComplete</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../../Classes/DFSearchIndex/AsyncController/FilesTask.html">FilesTask</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fileTask</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The file operation to complete</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>flushWhenComplete</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true, flushes the index once all of the URLs are added</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>complete</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Callback block when the add has completed</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Remove"></a>
+                <a name="//apple_ref/swift/Section/Remove" class="dashAnchor"></a>
+                <a href="#/Remove">
+                  <h3 class="section-name">Remove</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC5prune8completeyyAE9FilesTaskCc_tF"></a>
+                    <a name="//apple_ref/swift/Method/prune(complete:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC5prune8completeyyAE9FilesTaskCc_tF">prune(complete:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Remove all documents with zero terms from the index</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">prune</span><span class="p">(</span><span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../../Classes/DFSearchIndex/AsyncController/FilesTask.html">FilesTask</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>complete</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>called when the task is complete</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC10removeText5async17flushWhenComplete8completeySayAE0G4TaskCG_SbyALctF"></a>
+                    <a name="//apple_ref/swift/Method/removeText(async:flushWhenComplete:complete:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC10removeText5async17flushWhenComplete8completeySayAE0G4TaskCG_SbyALctF">removeText(async:flushWhenComplete:complete:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Remove text async</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">removeText</span><span class="p">(</span>
+	<span class="n">async</span> <span class="nv">tasks</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/DFSearchIndex/AsyncController/TextTask.html">TextTask</a></span><span class="p">],</span>
+	<span class="nv">flushWhenComplete</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">([</span><span class="kt"><a href="../../Classes/DFSearchIndex/AsyncController/TextTask.html">TextTask</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC10removeURLs5async17flushWhenComplete8completeyAE9FilesTaskC_SbyAKctF"></a>
+                    <a name="//apple_ref/swift/Method/removeURLs(async:flushWhenComplete:complete:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC10removeURLs5async17flushWhenComplete8completeyAE9FilesTaskC_SbyAKctF">removeURLs(async:flushWhenComplete:complete:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Remove documents async</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">removeURLs</span><span class="p">(</span>
+	<span class="n">async</span> <span class="nv">operation</span><span class="p">:</span> <span class="kt"><a href="../../Classes/DFSearchIndex/AsyncController/FilesTask.html">FilesTask</a></span><span class="p">,</span>
+	<span class="nv">flushWhenComplete</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="nv">complete</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../../Classes/DFSearchIndex/AsyncController/FilesTask.html">FilesTask</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Search"></a>
+                <a name="//apple_ref/swift/Section/Search" class="dashAnchor"></a>
+                <a href="#/Search">
+                  <h3 class="section-name">Search</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC6search5asyncAE10SearchTaskCSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/search(async:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC15AsyncControllerC6search5asyncAE10SearchTaskCSS_tF">search(async:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a search task</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">func</span> <span class="nf">search</span><span class="p">(</span><span class="n">async</span> <span class="nv">query</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Classes/DFSearchIndex/AsyncController/SearchTask.html">SearchTask</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-04-28)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

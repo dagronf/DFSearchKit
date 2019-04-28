@@ -10,79 +10,104 @@ Find API references here -- [https://github.com/dagronf/DFSearckKit/blob/master/
 
 The base library is split into three classes and an async controller
 
-### Core
+## Classes
 
-#### DFSearchIndex
-
-Core indexing library, wrapper around SKIndex and related methods.  Generally, you won't need to use this class directly unless you want to interface to your own SKIndex object.
-
-#### DFSearchIndexData
+### DFSearchIndex.Memory
 
 A class inheriting from DFSearchIndex that implements an in-memory index.
 
-```
-if let indexer = DFSearchIndexData.create()
-{
-	let documentURL = URL(string: ("doc-url://d1.txt")!
-	indexer.add(documentURL, text: "This is my first document")
-	
-	let fileURL = <the url for some file on disk>
-	indexer.add(fileURL, mimeType: "application/pdf")
-
-	indexer.flush()
-	let searchresult = indexer.search("first")
-	...
+```swift
+guard let indexer = DFSearchIndex.Memory.Create() else {
+   assert(false)
 }
+
+let documentURL = URL(string: ("doc-url://d1.txt")!
+indexer.add(documentURL, text: "This is my first document")
+	
+let fileURL = // <the url for some file on disk>
+indexer.add(fileURL, mimeType: "application/pdf")
+
+// ... add more documents
+
+indexer.flush()
+   
+let searchresult = indexer.search("first")
+
+// Do something with the search results
+
 ```
 
-`DFSearchIndexData` provides methods to get the raw index data for storing, and to load from data
+`DFSearchIndex.Memory` provides methods to get the raw index data for storing, and to load from data
 
-`let indexer = DFSearchIndexData.load(from: myData)`
+##### Load from a raw Data object
+```swift
+let indexData = Data(...)
+let indexer = DFSearchIndex.Memory.Load(from: indexData)
+```
 
-`let newIndexData = indexer.save()`
+##### Extract the raw Data object from the search index
+```swift
+let newIndexData = indexer.data()
+```
 
-
-#### DFSearchIndexFile
+### DFSearchIndex.File
 
 A class inheriting from DFSearchIndex that allows the creation and use of an index on disk
 
-```
-if let indexer = DFSearchIndexFile.create(with: file.fileURL)
-{
-   let documentURL = URL(string: ("doc-url://d1.txt")!
-	indexer.add(documentURL, text: "This is my first document"))
-	
-	let fileURL = <the url for some file on disk>
-	indexer.add(fileURL, mimeType: "application/pdf")
-	
-	indexer.flush()
-	var result = indexer.search("first")
-	indexer.save()
-	indexer.close()
+```swift
+// Create a index on disk
+let newFileURL = // <some file url>
+guard let newIndex = DFSearchIndex.File.Create(newFileURL) else {
+   assert(false)
 }
+
+// Open a file index
+let existingFileURL = // <some file url>
+guard let fileIndex = DFSearchIndex.File.Open(existingFileURL) else {
+   assert(false)
+}
+
+let documentURL = URL(string: ("doc-url://d1.txt")!
+fileIndex.add(documentURL, text: "This is my first document"))
+	
+let fileURL = // <the url for some file on disk>
+fileIndex.add(fileURL, mimeType: "application/pdf")
+
+// Flush the index so that it is updated for searching
+fileIndex.flush()
+
+// Perform a basic search for the work 'first'
+var result = indexer.search("first")
+
+fileIndex.save()
+fileIndex.close()
+
 ```
 
-### Async controller
+### DFSearchIndex.AsyncController
 
-`DFSearchIndexAsyncController` is a simple controller that takes an index object, and provides a safe method for handling async requests.
+`DFSearchIndex.AsyncController` is a simple controller that takes an index object, and provides a safe method for handling async requests.
 
 For example, to add a number of files asynchronously
 
-```
-	let indexer = DFSearchIndexData.create()
-	let asyncController = DFSearchIndexAsyncController(index: indexer, delegate: nil)
+```swift
+guard let searchIndex = DDFSearchIndex.Memory.create() else {
+   assert(false)
+}
 
-	let addTask = DFSearchIndexAsyncController.FileTask(<file urls to add>)
-	asyncController.addURLs(async: addTask, complete: { task in
-		<block that is executed when the files have been added to the index>
-	})
+let asyncController = DFSearchIndex.AsyncController(index: searchIndex, delegate: nil)
+
+let addTask = DFSearchIndex.AsyncController.FileTask(<file urls to add>)
+asyncController.addURLs(async: addTask, complete: { task in
+    // <block that is executed when the files have been added to the index>
+})
 	
-	...
+...
 	
-	let removeTask = DFSearchIndexAsyncController.FileTask(<file urls to remove>)
-	asyncController.removeURLs(async: removeTask, complete: { task in
-		<block that is executed when the files have been removed from the index>
-	})
+let removeTask = DFSearchIndex.AsyncController.FileTask(<file urls to remove>)
+asyncController.removeURLs(async: removeTask, complete: { task in
+	// <block that is executed when the files have been removed from the index>
+})
 		
 ```
 Internally the async controller uses an operation queue for handling requests.
@@ -95,31 +120,50 @@ There are two methods for search
 ### Search all
 The search all is available on the indexer object, and returns all the results it can get.  As such, for large indexes this may take quite a while to return.  It is provided mostly as a convenience function for small indexes.
 
-```
-if let indexer = DFSearchIndexData.create()
-{
-	indexer.add(URL(string: ("doc-url://d1.txt"))!, text: "This is my first document"))
-	indexer.flush()
-	var result = indexer.search("first")
-	indexer.save()
-	indexer.close()
+```swift
+guard let searchIndex = DFSearchIndex.Memory.Create() else {
+   assert(false)
 }
+
+// Add some documents...
+let firstURL = URL(string: ("doc-url://d1.txt"))!
+searchIndex.add(firstURL, text: "This is my first document"))
+
+// Flush the index
+searchIndex.flush()
+
+// Search for the word 'first'
+let result1 = indexer.search("first")
+
+searchIndex.save()
+searchIndex.close()
 ```
 
 ### Progressive Search
 For large indexes, the results may take quite a while to return.  Thus, the progressive index is more useful by returning limited sets of results progressively, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)
 
+```swift 
+/// ... load documents ...
+let search = indexer.progressiveSearch(query: "dog")
+var hasMoreResults = true
+repeat {
+   var searchChunk = search.next(10)
+   
+   // ... do something with searchChunk...
+   
+   hasMoreResults = searchChunk.moreResults
+}
+while hasMoreResults
 ```
-	... load documents ...
-	let search = indexer.progressiveSearch(query: "dog")
-	var hasMoreResults = true
-	repeat
-	{
-		var searchChunk = search.next(10)
-		... do something with searchChunk...
-		hasMoreResults = searchChunk.moreResults
-	}
-	while hasMoreResults
+
+## Summarization
+
+```swift
+let text = // <some text
+let summary = DFSummarizer(text)
+
+// Get the number of sentences in the text
+let count = summary.sentenceCount()
 ```
 
 ## Samples

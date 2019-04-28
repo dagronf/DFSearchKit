@@ -36,15 +36,17 @@ class DFSearchIndexSummaryTests: XCTestCase {
         super.tearDown()
     }
 
-	func testSimpleSummary()
-	{
+	func testSimpleSummary() {
 		let testBundle = Bundle(for: type(of: self))
 		let filePath = testBundle.url(forResource: "the_school_short_story", withExtension: "txt")
 		XCTAssertNotNil(filePath)
 
-		let text = try? String.init(contentsOf: filePath!)
+		guard let text = try? String.init(contentsOf: filePath!) else {
+			XCTAssert(false)
+			return
+		}
 
-		let summary = DFSummary(text!)
+		let summary = DFSummarizer(text)
 
 		let count = summary.sentenceCount()
 		XCTAssertEqual(91, count)

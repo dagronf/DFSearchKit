@@ -35,8 +35,8 @@ if args[1] == "create" {
 
 	let indexFile = args[2]
 
-	let props = DFSearchIndexFile.CreateProperties.init(proximityIndexing: true, stopWords: gStopWords)
-	guard let index = DFSearchIndexFile.create(with: URL(string: indexFile)!, properties: props) else
+	let props = DFSearchIndex.File.CreateProperties.init(proximityIndexing: true, stopWords: gStopWords)
+	guard let index = DFSearchIndex.File.Create(fileURL: URL(string: indexFile)!, properties: props) else
 	{
 		exit(-1)
 	}
@@ -44,7 +44,7 @@ if args[1] == "create" {
 	index.save()
 	index.close()
 
-	exit(1)
+	exit(0)
 }
 else if args[1] == "add_text" {
 
@@ -52,7 +52,7 @@ else if args[1] == "add_text" {
 	let url = args[3]
 	let message = args[4]
 
-	guard let index = DFSearchIndexFile.open(from: URL(string: indexFile)!, writable: true) else
+	guard let index = DFSearchIndex.File.Open(fileURL: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
 	}
@@ -65,21 +65,21 @@ else if args[1] == "add_text" {
 	index.save()
 	index.close()
 
-	exit(1)
+	exit(0)
 }
 else if args[1] == "add_file" {
 
 	let indexFile = args[2]
 	let url = args[3]
 
-	guard let index = DFSearchIndexFile.open(from: URL(string: indexFile)!, writable: true) else
+	guard let index = DFSearchIndex.File.Open(fileURL: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
 	}
 
 	if args.count == 4
 	{
-		guard index.add(url: URL(string: url)!) else
+		guard index.add(fileURL: URL(string: url)!) else
 		{
 			exit(-1)
 		}
@@ -87,7 +87,7 @@ else if args[1] == "add_file" {
 	else
 	{
 		let mimetype = args[4]
-		guard index.add(url: URL(string: url)!, mimeType: mimetype) else
+		guard index.add(fileURL: URL(string: url)!, mimeType: mimetype) else
 		{
 			exit(-1)
 		}
@@ -97,14 +97,14 @@ else if args[1] == "add_file" {
 	index.save()
 	index.close()
 
-	exit(1)
+	exit(0)
 }
 else if args[1] == "add_folder"
 {
 	let indexFile = args[2]
 
 	guard let folderURL = URL(string: args[3]),
-		let index = DFSearchIndexFile.open(from: URL(string: indexFile)!, writable: true) else
+		let index = DFSearchIndex.File.Open(fileURL: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
 	}
@@ -115,11 +115,13 @@ else if args[1] == "add_folder"
 	index.flush()
 	index.compact()
 	index.close()
+
+	exit(0)
 }
 else if args[1] == "prune"
 {
 	let indexFile = args[2]
-	guard let index = DFSearchIndexFile.open(from: URL(string: indexFile)!, writable: true) else
+	guard let index = DFSearchIndex.File.Open(fileURL: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
 	}
@@ -128,12 +130,13 @@ else if args[1] == "prune"
 	})
 	index.compact()
 	index.close()
-	exit(1)
+
+	exit(0)
 }
 else if args[1] == "documents"
 {
 	let indexFile = args[2]
-	guard let index = DFSearchIndexFile.open(from: URL(string: indexFile)!, writable: true) else
+	guard let index = DFSearchIndex.File.Open(fileURL: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
 	}
@@ -145,14 +148,14 @@ else if args[1] == "documents"
 
 	index.close()
 
-	exit(1)
+	exit(0)
 }
 else if args[1] == "terms" {
 
 	let indexFile = args[2]
 	let url = args[3]
 
-	guard let index = DFSearchIndexFile.open(from: URL(string: indexFile)!, writable: true) else
+	guard let index = DFSearchIndex.File.Open(fileURL: URL(string: indexFile)!, writable: true) else
 	{
 		exit(-1)
 	}
@@ -166,13 +169,13 @@ else if args[1] == "terms" {
 
 	index.close()
 
-	exit(1)
+	exit(0)
 }
 else if args[1] == "search" {
 	let indexFile = args[2]
 	let query = args[3].split(separator: " ").map({ "\($0)*" }).joined(separator:" ")
 
-	guard let index = DFSearchIndexFile.open(from: URL(string: indexFile)!, writable: false) else
+	guard let index = DFSearchIndex.File.Open(fileURL: URL(string: indexFile)!, writable: false) else
 	{
 		exit(-1)
 	}
@@ -182,5 +185,5 @@ else if args[1] == "search" {
 	for item in sortedResults {
 		print("\(item.url): \(item.score)")
 	}
-	exit(1)
+	exit(0)
 }

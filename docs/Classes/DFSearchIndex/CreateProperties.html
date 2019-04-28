@@ -14,7 +14,7 @@
     <a title="CreateProperties Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../../index.html"> Docs</a> (81% documented)</p>
+        <p><a href="../../index.html"> Docs</a> (90% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -34,6 +34,9 @@
                 <a href="../../Classes/DFSearchIndex.html">DFSearchIndex</a>
               </li>
               <li class="nav-group-task">
+                <a href="../../Classes/DFSearchIndex/IndexType.html">– IndexType</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../../Classes/DFSearchIndex/CreateProperties.html">– CreateProperties</a>
               </li>
               <li class="nav-group-task">
@@ -49,39 +52,22 @@
                 <a href="../../Classes/DFSearchIndex/ProgressiveSearch.html">– ProgressiveSearch</a>
               </li>
               <li class="nav-group-task">
-                <a href="../../Classes/DFSearchIndexAsyncController.html">DFSearchIndexAsyncController</a>
+                <a href="../../Classes/DFSearchIndex/AsyncController.html">– AsyncController</a>
               </li>
               <li class="nav-group-task">
-                <a href="../../Classes/DFSearchIndexAsyncController/TextTask.html">– TextTask</a>
+                <a href="../../Classes/DFSearchIndex/File.html">– File</a>
               </li>
               <li class="nav-group-task">
-                <a href="../../Classes/DFSearchIndexAsyncController/FilesTask.html">– FilesTask</a>
+                <a href="../../Classes/DFSearchIndex/Memory.html">– Memory</a>
               </li>
               <li class="nav-group-task">
-                <a href="../../Classes/DFSearchIndexAsyncController/SearchTask.html">– SearchTask</a>
+                <a href="../../Classes/DFSummarizer.html">DFSummarizer</a>
               </li>
               <li class="nav-group-task">
-                <a href="../../Classes/DFSearchIndexData.html">DFSearchIndexData</a>
+                <a href="../../Classes/DFSummarizer/Sentence.html">– Sentence</a>
               </li>
               <li class="nav-group-task">
-                <a href="../../Classes/DFSearchIndexFile.html">DFSearchIndexFile</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../../Classes/DFSummary.html">DFSummary</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../../Classes/DFSummary/Sentence.html">– Sentence</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../../Classes/DFSummary/Paragraph.html">– Paragraph</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name">
-            <a href="../../Enums.html">Enumerations</a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a href="../../Enums/DFSearchIndexType.html">DFSearchIndexType</a>
+                <a href="../../Classes/DFSummarizer/Paragraph.html">– Paragraph</a>
               </li>
             </ul>
           </li>
@@ -115,9 +101,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13dfsearchindex13DFSearchIndexC16CreatePropertiesCAeA0bC4TypeO05indexF0_Sb17proximityIndexings3SetVySSG9stopWordsSi13minTermLengthtcfc"></a>
+                    <a name="/s:13dfsearchindex13DFSearchIndexC16CreatePropertiesC9indexType17proximityIndexing9stopWords13minTermLengthAeC0cG0O_SbShySSGSutcfc"></a>
                     <a name="//apple_ref/swift/Method/init(indexType:proximityIndexing:stopWords:minTermLength:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC16CreatePropertiesCAeA0bC4TypeO05indexF0_Sb17proximityIndexings3SetVySSG9stopWordsSi13minTermLengthtcfc">init(indexType:proximityIndexing:stopWords:minTermLength:)</a>
+                    <a class="token" href="#/s:13dfsearchindex13DFSearchIndexC16CreatePropertiesC9indexType17proximityIndexing9stopWords13minTermLengthAeC0cG0O_SbShySSGSutcfc">init(indexType:proximityIndexing:stopWords:minTermLength:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -134,10 +120,10 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
-	<span class="nv">indexType</span><span class="p">:</span> <span class="kt"><a href="../../Enums/DFSearchIndexType.html">DFSearchIndexType</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">inverted</span><span class="p">,</span>
+	<span class="nv">indexType</span><span class="p">:</span> <span class="kt"><a href="../../Classes/DFSearchIndex.html">DFSearchIndex</a></span><span class="o">.</span><span class="kt"><a href="../../Classes/DFSearchIndex/IndexType.html">IndexType</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">inverted</span><span class="p">,</span>
 	<span class="nv">proximityIndexing</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
 	<span class="nv">stopWords</span><span class="p">:</span> <span class="kt">Set</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">[],</span>
-	<span class="nv">minTermLength</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1</span>
+	<span class="nv">minTermLength</span><span class="p">:</span> <span class="kt">UInt</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -205,7 +191,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2018-07-08)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-04-28)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

@@ -26,18 +26,18 @@
     [super tearDown];
 }
 
-- (DFSearchIndexData*)createWithDefaults
+- (DFSearchIndexMemory*)createWithDefaults
 {
 	DFSearchIndexCreateProperties* properties = [[DFSearchIndexCreateProperties alloc] initWithIndexType:DFSearchIndexTypeInverted
 																					   proximityIndexing:NO
 																							   stopWords:[NSSet set]
 																						   minTermLength:0];
-	return [DFSearchIndexData createWithProperties:properties];
+	return [DFSearchIndexMemory CreateWithProperties:properties];
 }
 
 - (void)testBasicDataIndex
 {
-	DFSearchIndexData* index = [self createWithDefaults];
+	DFSearchIndexMemory* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	NSURL* d1 = [NSURL URLWithString:@"doc://temp.txt"];
@@ -56,7 +56,7 @@
 
 - (void)testBasicDocumentProperties
 {
-	DFSearchIndexData* index = [self createWithDefaults];
+	DFSearchIndexMemory* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	NSURL* d1 = [NSURL URLWithString:@"doc://temp.txt"];
@@ -71,11 +71,11 @@
 	NSDictionary* docProps = [index documentProperties:d1];
 	XCTAssertEqualObjects(d1Props, docProps);
 
-	NSData* saved = [index save];
+	NSData* saved = [index data];
 	[index close];
 	index = nil;
 
-	DFSearchIndexData* loaded = [DFSearchIndexData loadFrom:saved];
+	DFSearchIndexMemory* loaded = [DFSearchIndexMemory LoadFrom:saved];
 	XCTAssertNotNil(loaded);
 
 	NSDictionary* savedProps = [loaded documentProperties:d1];
@@ -84,7 +84,7 @@
 
 - (void)testLoad
 {
-	DFSearchIndexData* index = [self createWithDefaults];
+	DFSearchIndexMemory* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	NSURL* d1 = [NSURL URLWithString:@"doc://temp.txt"];
@@ -100,11 +100,11 @@
 	DFSearchIndexSearchResult* result = results[0];
 	XCTAssertEqualObjects(d1, [result url]);
 
-	NSData* saved = [index save];
+	NSData* saved = [index data];
 	XCTAssertNotNil(saved);
 	index = nil;
 
-	DFSearchIndexData* loaded = [DFSearchIndexData loadFrom:saved];
+	DFSearchIndexMemory* loaded = [DFSearchIndexMemory LoadFrom:saved];
 	results = [loaded search:@"test" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
 	XCTAssertEqual(1, [results count]);
 	if ([results count] != 1)
@@ -117,18 +117,18 @@
 
 - (void)testLoadFileURLIntoIndex
 {
-	DFSearchIndexData* index = [self createWithDefaults];
+	DFSearchIndexMemory* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	// File on disk resource
 	NSBundle* bun = [NSBundle bundleForClass:[self class]];
 	NSURL* apacheURL = [bun URLForResource:@"APACHE_LICENSE" withExtension:@"pdf"];
 	XCTAssertNotNil(apacheURL);
-	XCTAssertTrue([index addWithUrl:apacheURL mimeType:nil canReplace:YES]);
+	XCTAssertTrue([index addWithFileURL:apacheURL mimeType:nil canReplace:YES]);
 
 	NSURL* shortStoryURL = [bun URLForResource:@"the_school_short_story" withExtension:@"txt"];
 	XCTAssertNotNil(shortStoryURL);
-	XCTAssertTrue([index addWithUrl:shortStoryURL mimeType:nil canReplace:YES]);
+	XCTAssertTrue([index addWithFileURL:shortStoryURL mimeType:nil canReplace:YES]);
 
 	NSSet* origURLs = [NSSet setWithObjects:apacheURL, shortStoryURL, nil];
 
@@ -157,18 +157,18 @@
 
 - (void)testProgressiveSearch
 {
-	DFSearchIndexData* index = [self createWithDefaults];
+	DFSearchIndexMemory* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	// File on disk resource
 	NSBundle* bun = [NSBundle bundleForClass:[self class]];
 	NSURL* apacheURL = [bun URLForResource:@"APACHE_LICENSE" withExtension:@"pdf"];
 	XCTAssertNotNil(apacheURL);
-	XCTAssertTrue([index addWithUrl:apacheURL mimeType:nil canReplace:YES]);
+	XCTAssertTrue([index addWithFileURL:apacheURL mimeType:nil canReplace:YES]);
 
 	NSURL* shortStoryURL = [bun URLForResource:@"the_school_short_story" withExtension:@"txt"];
 	XCTAssertNotNil(shortStoryURL);
-	XCTAssertTrue([index addWithUrl:shortStoryURL mimeType:nil canReplace:YES]);
+	XCTAssertTrue([index addWithFileURL:shortStoryURL mimeType:nil canReplace:YES]);
 
 	[index flush];
 
@@ -184,12 +184,12 @@
 	XCTAssertEqual(1, [[progRes results] count]);
 
 	[index compact];
-	NSData* newSaved = [index save];
+	NSData* newSaved = [index data];
 
 	[index close];
 	index = nil;
 
-	DFSearchIndexData* i3 = [DFSearchIndexData loadFrom:newSaved];
+	DFSearchIndexMemory* i3 = [DFSearchIndexMemory LoadFrom:newSaved];
 	XCTAssertNotNil(i3);
 
 	NSArray<DFSearchIndexSearchResult*>* results = [i3 search:@"the" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
@@ -202,18 +202,18 @@
 
 - (void)testTermsAndCounts
 {
-	DFSearchIndexData* index = [self createWithDefaults];
+	DFSearchIndexMemory* index = [self createWithDefaults];
 	XCTAssertNotNil(index);
 
 	// File on disk resource
 	NSBundle* bun = [NSBundle bundleForClass:[self class]];
 	NSURL* apacheURL = [bun URLForResource:@"APACHE_LICENSE" withExtension:@"pdf"];
 	XCTAssertNotNil(apacheURL);
-	XCTAssertTrue([index addWithUrl:apacheURL mimeType:nil canReplace:YES]);
+	XCTAssertTrue([index addWithFileURL:apacheURL mimeType:nil canReplace:YES]);
 
 	NSURL* shortStoryURL = [bun URLForResource:@"the_school_short_story" withExtension:@"txt"];
 	XCTAssertNotNil(shortStoryURL);
-	XCTAssertTrue([index addWithUrl:shortStoryURL mimeType:nil canReplace:YES]);
+	XCTAssertTrue([index addWithFileURL:shortStoryURL mimeType:nil canReplace:YES]);
 
 	[index flush];
 

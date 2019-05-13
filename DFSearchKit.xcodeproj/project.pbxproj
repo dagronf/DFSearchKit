@@ -114,6 +114,7 @@
 		238FAD7220A11B5F00092FCD /* dfsearchindex */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dfsearchindex; sourceTree = BUILT_PRODUCTS_DIR; };
 		238FAD7420A11B5F00092FCD /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		2393945B20DD32F0008EC2CC /* DFSearchIndexAsyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSearchIndexAsyncTests.swift; sourceTree = "<group>"; };
+		23ACF96A228A35DA00FF6594 /* DFSearchKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = DFSearchKit.podspec; sourceTree = "<group>"; };
 		23D9084D209E71F70096E42A /* DFSearchKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSearchKitTests.swift; sourceTree = "<group>"; };
 		23D9084F209E71F70096E42A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		23D90859209E72250096E42A /* DFSearchIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSearchIndex.swift; sourceTree = "<group>"; };
@@ -229,6 +230,7 @@
 		23D90835209E71F60096E42A = {
 			isa = PBXGroup;
 			children = (
+				23ACF96A228A35DA00FF6594 /* DFSearchKit.podspec */,
 				23D9085C209E9A4D0096E42A /* README.md */,
 				2340800420CB87310031D43A /* DFSearchKit */,
 				2311F48A20D5DC4600826F5B /* Tests */,
@@ -560,7 +562,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.darrenford.DFSearchKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -586,7 +588,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.darrenford.DFSearchKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

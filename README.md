@@ -3,6 +3,7 @@
 A framework implementing a search index and summary generator using SKSearchKit for both Swift and Objective-C
 
 ## Why?
+
 I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift using native Swift types.
 
 ## Usage
@@ -18,7 +19,6 @@ Copy everything from the `DFSearchKit` sub-folder into your own project
 Add the following to your `Podfiles` file
 
 `pod 'DFSearchKit', :git => 'https://github.com/dagronf/DFSearchKit'`
-
 
 ## Classes
 
@@ -130,6 +130,7 @@ Internally the async controller uses an operation queue for handling requests.
 There are two methods for search
 
 ### Search all
+
 The search all is available on the indexer object, and returns all the results it can get.  As such, for large indexes this may take quite a while to return.  It is provided mostly as a convenience function for small indexes.
 
 ```swift
@@ -154,6 +155,7 @@ searchIndex.close()
 ```
 
 ### Progressive Search
+
 For large indexes, the results may take quite a while to return.  Thus, the progressive index is more useful by returning limited sets of results progressively, and can be used on a background thread (as SKSearchIndex is thread safe) to progressively retrieve results in another thread (for example)
 
 ```swift 

@@ -13,4 +13,5 @@ Pod::Spec.new do |s|
   s.source       = { :git => ".git", :tag => s.version.to_s }
   s.source_files  = "DFSearchKit/*.swift"
   s.frameworks  = "Cocoa"
+  s.swift_version = "5.0"
 end

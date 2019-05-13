@@ -20,8 +20,7 @@ guard let indexer = DFSearchIndex.Memory.Create() else {
    assert(false)
 }
 
-let documentURL = URL(string: ("doc-url://d1.txt")!
-indexer.add(documentURL, text: "This is my first document")
+indexer.add(textURL: "doc-url://d1.txt", text: "This is my first document")
 	
 let fileURL = // <the url for some file on disk>
 indexer.add(fileURL, mimeType: "application/pdf")
@@ -80,7 +79,6 @@ var result = indexer.search("first")
 
 fileIndex.save()
 fileIndex.close()
-
 ```
 
 ### DFSearchIndex.AsyncController
@@ -129,8 +127,7 @@ guard let searchIndex = DFSearchIndex.Memory.Create() else {
 }
 
 // Add some documents...
-let firstURL = URL(string: ("doc-url://d1.txt"))!
-searchIndex.add(firstURL, text: "This is my first document"))
+searchIndex.add(textURL: "doc-url://d1.txt", text: "This is my first document"))
 
 // Flush the index
 searchIndex.flush()

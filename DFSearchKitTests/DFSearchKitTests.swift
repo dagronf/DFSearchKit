@@ -45,11 +45,24 @@ class DFSearchKitTests: XCTestCase {
 	}
 
 	func testSimpleAdd() {
-		let indexer = DFSearchIndex.Memory.Create()
-		XCTAssertNotNil(indexer)
+		guard let indexer = DFSearchIndex.Memory.Create() else {
+			XCTAssert(false)
+			return
+		}
 
 		let d1 = DFUtils.url("doc-url://d1.txt")
-		XCTAssertTrue(indexer!.add(d1, text: "Today I am feeling fine!"))
+		XCTAssertTrue(indexer.add(d1, text: "Today I am feeling fine!"))
+		XCTAssertTrue(indexer.add(textURL: "my-url://text.file", text: "This is some simple text"))
+
+		indexer.flush()
+
+		var result = indexer.search("feeling")
+		XCTAssertEqual(1, result.count)
+		XCTAssertEqual(URL(string: "doc-url://d1.txt")!, result[0].url)
+
+		result = indexer.search("simple")
+		XCTAssertEqual(1, result.count)
+		XCTAssertEqual(URL(string: "my-url://text.file")!, result[0].url)
 	}
 
 	func testSimpleAddWithNoReplace() {

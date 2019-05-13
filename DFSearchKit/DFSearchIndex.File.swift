@@ -61,8 +61,7 @@ extension DFSearchIndex {
 					properties.properties()
 				) {
 				return DFSearchIndex.File(url: fileURL, index: skIndex.takeUnretainedValue())
-			}
-			else {
+			} else {
 				return nil
 			}
 		}

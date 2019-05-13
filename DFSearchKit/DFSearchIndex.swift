@@ -143,6 +143,20 @@ extension DFSearchIndex {
 		}
 	}
 
+	/// Add some text to the index
+	///
+	/// - Parameters:
+	///   - textURL: The identifying URL for the text (must be a valid URL)
+	///   - text: The text to add
+	///   - canReplace: if true, can attempt to replace an existing document with the new one.
+	/// - Returns: true if the text was successfully added to the index, false otherwise
+	@objc public func add(textURL: String, text: String, canReplace: Bool = true) -> Bool {
+		guard let url = URL(string: textURL) else {
+			return false
+		}
+		return self.add(url, text: text, canReplace: canReplace)
+	}
+
 	/// Add a file as a document to the index
 	///
 	/// - Parameters:
@@ -162,7 +176,7 @@ extension DFSearchIndex {
 		let mime = mimeType ?? self.detectMimeType(fileURL)
 
 		return synchronized(self) {
-			SKIndexAddDocument(index, document.takeUnretainedValue(), mime as CFString?, true)
+			SKIndexAddDocument(index, document.takeUnretainedValue(), mime as CFString?, canReplace)
 		}
 	}
 
@@ -339,7 +353,7 @@ extension DFSearchIndex {
 		let documentID = SKIndexGetDocumentID(index, document)
 
 		guard let termVals = SKIndexCopyTermIDArrayForDocumentID(index, documentID),
-			let terms = termVals.takeUnretainedValue() as? Array<CFIndex> else {
+			let terms = termVals.takeUnretainedValue() as? [CFIndex] else {
 			return []
 		}
 
@@ -478,8 +492,7 @@ extension DFSearchIndex {
 			let result = search.next(limit, timeout: timeout)
 			results.append(contentsOf: result.results)
 			moreResultsAvailable = result.moreResultsAvailable
-		}
-		while moreResultsAvailable
+		} while moreResultsAvailable
 
 		return results
 	}
@@ -578,7 +591,7 @@ private extension DFSearchIndex {
 	}
 
 	/// Recurse through the children of a document and return an array containing all the documentids
-	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout Array<DocumentID>) {
+	private func addLeafURLs(index: SKIndex, inParentDocument: SKDocument?, docs: inout [DocumentID]) {
 		guard let index = self.index else {
 			return
 		}
@@ -591,7 +604,7 @@ private extension DFSearchIndex {
 			self.addLeafURLs(index: index, inParentDocument: skDocument.takeUnretainedValue(), docs: &docs)
 		}
 
-		if isLeaf && inParentDocument != nil, kSKDocumentStateNotIndexed != SKIndexGetDocumentState(index, inParentDocument) {
+		if isLeaf, inParentDocument != nil, kSKDocumentStateNotIndexed != SKIndexGetDocumentState(index, inParentDocument) {
 			if let temp = SKDocumentCopyURL(inParentDocument) {
 				let burl = temp.takeUnretainedValue()
 				let bid = SKIndexGetDocumentID(index, inParentDocument)
@@ -609,16 +622,14 @@ private extension DFSearchIndex {
 			return []
 		}
 
-		var allDocs = Array<DocumentID>()
+		var allDocs = [DocumentID]()
 		self.addLeafURLs(index: index, inParentDocument: nil, docs: &allDocs)
 
 		switch termState {
 		case .NotEmpty:
 			allDocs = allDocs.filter { !self.isEmpty(for: $0.2) }
-			break
 		case .Empty:
 			allDocs = allDocs.filter { self.isEmpty(for: $0.2) }
-			break
 		default:
 			break
 		}

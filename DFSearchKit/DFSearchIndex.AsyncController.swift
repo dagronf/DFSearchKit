@@ -86,8 +86,7 @@ extension DFSearchIndex {
 		@objc public func waitUntilQueueIsComplete(_ complete: @escaping () -> Void) {
 			if self.queueComplete {
 				complete()
-			}
-			else {
+			} else {
 				DispatchQueue.global(qos: .userInitiated).async { [weak self] in
 					self?.modifyQueue.waitUntilAllOperationsAreFinished()
 					complete()
@@ -222,8 +221,7 @@ extension DFSearchIndex {
 			addOperations.forEach { flushOperation.addDependency($0) }
 			completeOperation.addDependency(flushOperation)
 			addOperations.append(flushOperation)
-		}
-		else {
+		} else {
 			// Make our completion dependent on all the 'add' blocks
 			addOperations.forEach { completeOperation.addDependency($0) }
 		}
@@ -261,8 +259,7 @@ extension DFSearchIndex {
 						addOperations.append(addOperation)
 						newUrls.append(url)
 					}
-				}
-				else if FileManager.default.fileExists(url: url) {
+				} else if FileManager.default.fileExists(url: url) {
 					let addOperation = BlockOperation()
 					addOperation.addExecutionBlock { [weak self, weak addOperation] in
 						if addOperation?.isCancelled == false {
@@ -286,8 +283,7 @@ extension DFSearchIndex {
 				addOperations.forEach { flushOperation.addDependency($0) }
 				completeOperation.addDependency(flushOperation)
 				addOperations.append(flushOperation)
-			}
-			else {
+			} else {
 				// Make our completion dependent on all the 'add' blocks
 				addOperations.forEach { completeOperation.addDependency($0) }
 			}
@@ -361,8 +357,7 @@ extension DFSearchIndex {
 			removeOperations.forEach { flushOperation.addDependency($0) }
 			completeOperation.addDependency(flushOperation)
 			removeOperations.append(flushOperation)
-		}
-		else {
+		} else {
 			// Make our completion dependent on all the 'add' blocks
 			removeOperations.forEach { completeOperation.addDependency($0) }
 		}
@@ -399,8 +394,7 @@ extension DFSearchIndex {
 			removeOperations.forEach { flushOperation.addDependency($0) }
 			completeOperation.addDependency(flushOperation)
 			removeOperations.append(flushOperation)
-		}
-		else {
+		} else {
 			// Make our completion dependent on all the 'add' blocks
 			removeOperations.forEach { completeOperation.addDependency($0) }
 		}
@@ -421,7 +415,7 @@ extension DFSearchIndex {
 
 // MARK: Utilities
 
-fileprivate extension FileManager {
+private extension FileManager {
 	func fileExists(url: URL) -> Bool {
 		return self.urlExists(url: url, isDirectory: false)
 	}

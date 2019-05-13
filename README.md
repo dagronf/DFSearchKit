@@ -9,6 +9,17 @@ I was interesting in learning about SKSearchKit and wanted a nice simple object 
 
 The base library is split into three classes and an async controller
 
+### Copy
+
+Copy everything from the `DFSearchKit` sub-folder into your own project
+
+### Cocoapods
+
+Add the following to your `Podfiles` file
+
+`pod 'DFSearchKit', :git => 'https://github.com/dagronf/DFSearchKit'`
+
+
 ## Classes
 
 ### DFSearchIndex.Memory

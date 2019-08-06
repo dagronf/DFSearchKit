@@ -45,6 +45,20 @@ class DFSearchKitTests: XCTestCase {
 	}
 
 	func testSimpleAdd() {
+
+		guard let iii = DFSearchIndex.Memory() else {
+			XCTAssert(false)
+			return
+		}
+
+		let d111 = DFUtils.url("doc-url://d1.txt")
+		XCTAssertTrue(iii.add(d111, text: "Noodles and caterpillars"))
+		iii.flush()
+
+		let result111 = iii.search("Noodles")
+		XCTAssertEqual(1, result111.count)
+		XCTAssertEqual(d111, result111[0].url)
+
 		guard let indexer = DFSearchIndex.Memory.Create() else {
 			XCTAssert(false)
 			return
@@ -88,7 +102,7 @@ class DFSearchKitTests: XCTestCase {
 	}
 
 	func testSimpleSearch() {
-		guard let indexer = DFSearchIndex.Memory.Create() else {
+		guard let indexer = DFSearchIndex.Memory() else {
 			XCTFail()
 			return
 		}
@@ -105,7 +119,7 @@ class DFSearchKitTests: XCTestCase {
 
 	func testSetPropertiesForDocument() {
 		let file = DFUtils.TempFile()
-		guard let indexer = DFSearchIndex.File.Create(fileURL: file.fileURL) else {
+		guard let indexer = DFSearchIndex.File(fileURL: file.fileURL) else {
 			XCTFail()
 			return
 		}
@@ -146,8 +160,7 @@ class DFSearchKitTests: XCTestCase {
 	}
 
 	func testSimpleRemove() {
-		let dataIndexer = DFSearchIndex.Memory.Create()
-		guard let indexer = dataIndexer else {
+		guard let indexer = DFSearchIndex.Memory() else {
 			XCTFail()
 			return
 		}
@@ -180,7 +193,7 @@ class DFSearchKitTests: XCTestCase {
 	}
 
 	func testTwoSearch() {
-		guard let indexer = DFSearchIndex.Memory.Create() else {
+		guard let indexer = DFSearchIndex.Memory() else {
 			XCTFail()
 			return
 		}
@@ -227,7 +240,7 @@ class DFSearchKitTests: XCTestCase {
 	}
 
 	func testSimpleSaveLoad() {
-		guard let indexer = DFSearchIndex.Memory.Create() else {
+		guard let indexer = DFSearchIndex.Memory() else {
 			XCTFail()
 			return
 		}
@@ -252,6 +265,17 @@ class DFSearchKitTests: XCTestCase {
 		let saveData = indexer.data()
 		XCTAssertNotNil(saveData)
 		indexer.close()
+
+		// Load from an initializer
+		guard let eee = DFSearchIndex.Memory(data: saveData!) else {
+			XCTFail()
+			return
+		}
+		result = eee.search("feeling")
+		XCTAssertEqual(1, result.count)
+		result = eee.search("chocolate")
+		XCTAssertEqual(0, result.count)
+		eee.close()
 
 		// Load from the data
 		let saveIndex2 = DFSearchIndex.Memory.Load(from: saveData!)
@@ -298,11 +322,12 @@ class DFSearchKitTests: XCTestCase {
 			return
 		}
 		XCTAssertNil(DFSearchIndex.Memory.Load(from: data))
+		XCTAssertNil(DFSearchIndex.Memory(data: data))
 	}
 
 	func testSimpleCreateWithFile() {
 		let file = DFUtils.TempFile()
-		guard let indexer = DFSearchIndex.File.Create(fileURL: file.fileURL) else {
+		guard let indexer = DFSearchIndex.File(fileURL: file.fileURL) else {
 			XCTFail()
 			return
 		}

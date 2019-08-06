@@ -27,7 +27,8 @@ Add the following to your `Podfiles` file
 A class inheriting from DFSearchIndex that implements an in-memory index.  This index exists purely in memory, and will be destroyed when the index is deallocated.
 
 ```swift
-guard let indexer = DFSearchIndex.Memory.Create() else {
+// Create a new memory index using the default settings
+guard let indexer = DFSearchIndex.Memory() else {
    assert(false)
 }
 
@@ -51,7 +52,9 @@ let searchresult = indexer.search("first")
 ##### Load from a raw Data object
 ```swift
 let indexData = Data(...)
-let indexer = DFSearchIndex.Memory.Load(from: indexData)
+guard let indexer = DFSearchIndex.Memory(data: indexData) else {
+   assert(false)
+}
 ```
 
 ##### Extract the raw Data object from the search index
@@ -66,13 +69,13 @@ A class inheriting from DFSearchIndex that allows the creation and use of an ind
 ```swift
 // Create a index on disk
 let newFileURL = // <some file url>
-guard let newIndex = DFSearchIndex.File.Create(newFileURL) else {
+guard let newIndex = DFSearchIndex.File(fileURL: newFileURL) else {
    assert(false)
 }
 
 // Open a file index
 let existingFileURL = // <some file url>
-guard let fileIndex = DFSearchIndex.File.Open(existingFileURL) else {
+guard let fileIndex = DFSearchIndex.File(fileURL: existingFileURL, writable: true) else {
    assert(false)
 }
 
@@ -99,7 +102,7 @@ fileIndex.close()
 For example, to add a number of files asynchronously
 
 ```swift
-guard let searchIndex = DFSearchIndex.Memory.create() else {
+guard let searchIndex = DFSearchIndex.Memory() else {
    assert(false)
 }
 
@@ -134,7 +137,7 @@ There are two methods for search
 The search all is available on the indexer object, and returns all the results it can get.  As such, for large indexes this may take quite a while to return.  It is provided mostly as a convenience function for small indexes.
 
 ```swift
-guard let searchIndex = DFSearchIndex.Memory.Create() else {
+guard let searchIndex = DFSearchIndex.Memory() else {
    assert(false)
 }
 

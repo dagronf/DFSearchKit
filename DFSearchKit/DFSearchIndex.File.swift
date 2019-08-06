@@ -34,6 +34,31 @@ extension DFSearchIndex {
 			super.init(index: index)
 		}
 
+		/// Create a new file-based index
+		/// - Parameter fileURL: The file URL to create the index at
+		/// - Parameter properties: The properties defining the capabilities of the index
+		@objc public convenience init?(fileURL: URL, properties: CreateProperties = CreateProperties()) {
+			if !FileManager.default.fileExists(atPath: fileURL.absoluteString),
+				let skIndex = SKIndexCreateWithURL(fileURL as CFURL, nil, properties.indexType, properties.properties()) {
+				self.init(url: fileURL, index: skIndex.takeUnretainedValue())
+			}
+			else {
+				return nil
+			}
+		}
+
+		/// Load an index from a file url
+		/// - Parameter fileURL: The file URL to load the index from
+		/// - Parameter writable: Can we modify the index?
+		@objc public convenience init?(fileURL: URL, writable: Bool) {
+			if let skIndex = SKIndexOpenWithURL(fileURL as CFURL, nil, writable) {
+				self.init(url: fileURL, index: skIndex.takeUnretainedValue())
+			}
+			else {
+				return nil
+			}
+		}
+
 		/// Open an index from a file url.
 		///
 		/// - Parameters:

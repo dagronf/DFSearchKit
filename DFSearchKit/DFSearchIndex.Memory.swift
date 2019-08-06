@@ -29,9 +29,33 @@ extension DFSearchIndex {
 		// The data index store
 		private var store = NSMutableData()
 
-		private init(data: NSMutableData, index: SKIndex) {
-			super.init(index: index)
-			self.store = data
+		/// Create a new in-memory index
+		/// - Parameter properties: The properties to use in the index
+		@objc public init?(properties: CreateProperties = CreateProperties()) {
+			let data = NSMutableData()
+			if let skIndex = SKIndexCreateWithMutableData(
+				data, nil,
+				properties.indexType,
+				properties.properties()
+			) {
+				super.init(index: skIndex.takeUnretainedValue())
+				self.store = data
+			}
+			else {
+				return nil
+			}
+		}
+
+		/// Create an in-memory index from the data provided
+		/// - Parameter data: The data to load the index data from
+		@objc public convenience init?(data: Data) {
+			if let rawData = (data as NSData).mutableCopy() as? NSMutableData,
+				let skIndex = SKIndexOpenWithMutableData(rawData, nil) {
+				self.init(data: rawData, index: skIndex.takeUnretainedValue())
+			}
+			else {
+				return nil
+			}
 		}
 
 		/// Create an indexer using a new data container for the store
@@ -69,5 +93,11 @@ extension DFSearchIndex {
 			flush()
 			return self.store.copy() as? Data
 		}
+
+		private init(data: NSMutableData, index: SKIndex) {
+			super.init(index: index)
+			self.store = data
+		}
+
 	}
 }

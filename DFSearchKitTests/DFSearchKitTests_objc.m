@@ -200,6 +200,33 @@
 	}
 }
 
+- (void)testInitializers
+{
+	DFSearchIndexCreateProperties* properties = [[DFSearchIndexCreateProperties alloc] initWithIndexType:DFSearchIndexTypeInverted
+																												  proximityIndexing:NO
+																															 stopWords:[NSSet set]
+																														minTermLength:0];
+	DFSearchIndexMemory* memIndex = [[DFSearchIndexMemory alloc] initWithProperties:properties];
+	XCTAssertNotNil(memIndex);
+
+	NSURL* d1 = [NSURL URLWithString:@"doc://temp.txt"];
+	XCTAssertTrue([memIndex add:d1 text:@"This is a test!" canReplace:NO]);
+	[memIndex flush];
+
+	NSArray<DFSearchIndexSearchResult*>* results = [memIndex search:@"test" limit:10 timeout:1.0 options:kSKSearchOptionDefault];
+	XCTAssertEqual(1, [results count]);
+	if ([results count] != 1) {
+		return;
+	}
+	DFSearchIndexSearchResult* result = results[0];
+	XCTAssertEqualObjects(d1, [result url]);
+
+	NSData* d = [memIndex data];
+	XCTAssertNotNil(d);
+	XCTAssert([d length] > 0);
+	[memIndex close];
+}
+
 - (void)testTermsAndCounts
 {
 	DFSearchIndexMemory* index = [self createWithDefaults];

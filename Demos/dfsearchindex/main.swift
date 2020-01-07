@@ -25,6 +25,8 @@
 
 import Foundation
 
+import DFSearchKit
+
 let args = CommandLine.arguments
 
 if args.count < 2 {

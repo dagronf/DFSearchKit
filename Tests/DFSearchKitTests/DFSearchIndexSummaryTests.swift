@@ -25,6 +25,15 @@ import DFSearchKit
 import XCTest
 
 class DFSearchIndexSummaryTests: XCTestCase {
+
+	fileprivate func bundleResourceURL(forResource name: String, withExtension ext: String) -> URL {
+		let thisSourceFile = URL(fileURLWithPath: #file)
+		var thisDirectory = thisSourceFile.deletingLastPathComponent()
+		thisDirectory = thisDirectory.appendingPathComponent("Resources")
+		thisDirectory = thisDirectory.appendingPathComponent(name + "." + ext)
+		return thisDirectory
+	}
+
 	override func setUp() {
 		super.setUp()
 		// Put setup code here. This method is called before the invocation of each test method in the class.
@@ -64,11 +73,7 @@ class DFSearchIndexSummaryTests: XCTestCase {
 	}
 
 	func testSimpleSummary() {
-		let testBundle = Bundle(for: type(of: self))
-		guard let filePath = testBundle.url(forResource: "the_school_short_story", withExtension: "txt") else {
-			XCTAssert(false, "Couldn't locate support file")
-			return
-		}
+		let filePath = bundleResourceURL(forResource: "the_school_short_story", withExtension: "txt")
 
 		guard let text = try? String(contentsOf: filePath) else {
 			XCTAssert(false, "Couldn't open support file")

@@ -18,15 +18,23 @@ class SpyDelegate: DFSearchIndexAsyncControllerProtocol {
 }
 
 class DFSearchIndexAsyncTests: XCTestCase {
+
+	fileprivate func bundleResourceURL(forResource name: String, withExtension ext: String) -> URL {
+		let thisSourceFile = URL(fileURLWithPath: #file)
+		var thisDirectory = thisSourceFile.deletingLastPathComponent()
+		thisDirectory = thisDirectory.appendingPathComponent("Resources")
+		thisDirectory = thisDirectory.appendingPathComponent(name + "." + ext)
+		return thisDirectory
+	}
+
 	func testAsync() {
 		guard let indexer = DFSearchIndex.Memory.Create() else {
 			XCTFail()
 			return
 		}
 
-		let testBundle = Bundle(for: type(of: self))
-		let filePath = testBundle.url(forResource: "APACHE_LICENSE", withExtension: "pdf")!
-		let txtPath = testBundle.url(forResource: "the_school_short_story", withExtension: "txt")!
+		let filePath = bundleResourceURL(forResource: "APACHE_LICENSE", withExtension: "pdf")
+		let txtPath = bundleResourceURL(forResource: "the_school_short_story", withExtension: "txt")
 
 		let spyDelegate = SpyDelegate()
 		let asyncController = DFSearchIndex.AsyncController(index: indexer, delegate: spyDelegate)

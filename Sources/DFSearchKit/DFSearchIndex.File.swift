@@ -37,7 +37,7 @@ extension DFSearchIndex {
 		/// Create a new file-based index
 		/// - Parameter fileURL: The file URL to create the index at
 		/// - Parameter properties: The properties defining the capabilities of the index
-		@objc public convenience init?(fileURL: URL, properties: CreateProperties = CreateProperties()) {
+		@objc public convenience init?(fileURL: URL, properties: CreateProperties) {
 			if !FileManager.default.fileExists(atPath: fileURL.absoluteString),
 				let skIndex = SKIndexCreateWithURL(fileURL as CFURL, nil, properties.indexType, properties.properties()) {
 				self.init(url: fileURL, index: skIndex.takeUnretainedValue())

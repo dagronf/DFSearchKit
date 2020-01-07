@@ -25,13 +25,20 @@
 import XCTest
 
 class DFSearchKitTests: XCTestCase {
-	fileprivate func addApacheLicenseFile(indexer: DFSearchIndex, canReplace: Bool) -> URL {
-		let testBundle = Bundle(for: type(of: self))
-		let filePath = testBundle.url(forResource: "APACHE_LICENSE", withExtension: "pdf")
-		XCTAssertNotNil(filePath)
 
-		XCTAssertTrue(indexer.add(fileURL: filePath!, mimeType: "application/pdf", canReplace: canReplace))
-		return filePath!
+	fileprivate func bundleResourceURL(forResource name: String, withExtension ext: String) -> URL {
+		let thisSourceFile = URL(fileURLWithPath: #file)
+		var thisDirectory = thisSourceFile.deletingLastPathComponent()
+		thisDirectory = thisDirectory.appendingPathComponent("Resources")
+		thisDirectory = thisDirectory.appendingPathComponent(name + "." + ext)
+		return thisDirectory
+	}
+
+	fileprivate func addApacheLicenseFile(indexer: DFSearchIndex, canReplace: Bool) -> URL {
+
+		let filePath = bundleResourceURL(forResource: "APACHE_LICENSE", withExtension: "pdf")
+		XCTAssertTrue(indexer.add(fileURL: filePath, mimeType: "application/pdf", canReplace: canReplace))
+		return filePath
 	}
 
 	override func setUp() {
@@ -119,7 +126,7 @@ class DFSearchKitTests: XCTestCase {
 
 	func testSetPropertiesForDocument() {
 		let file = DFUtils.TempFile()
-		guard let indexer = DFSearchIndex.File(fileURL: file.fileURL) else {
+		guard let indexer = DFSearchIndex.File(fileURL: file.fileURL, properties: DFSearchIndex.CreateProperties()) else {
 			XCTFail()
 			return
 		}
@@ -327,7 +334,7 @@ class DFSearchKitTests: XCTestCase {
 
 	func testSimpleCreateWithFile() {
 		let file = DFUtils.TempFile()
-		guard let indexer = DFSearchIndex.File(fileURL: file.fileURL) else {
+		guard let indexer = DFSearchIndex.File(fileURL: file.fileURL, properties: DFSearchIndex.CreateProperties()) else {
 			XCTFail()
 			return
 		}
@@ -473,10 +480,8 @@ class DFSearchKitTests: XCTestCase {
 		XCTAssertTrue(indexer.add(fileURL: apacheURL))
 
 		// Load in stored text document.  As the extension is specified, we can infer the mime type
-		let testBundle = Bundle(for: type(of: self))
-		let fileURL = testBundle.url(forResource: "the_school_short_story", withExtension: "txt")
-		XCTAssertNotNil(fileURL)
-		XCTAssertTrue(indexer.add(fileURL: fileURL!))
+		let fileURL = bundleResourceURL(forResource: "the_school_short_story", withExtension: "txt")
+		XCTAssertTrue(indexer.add(fileURL: fileURL))
 
 		indexer.flush()
 

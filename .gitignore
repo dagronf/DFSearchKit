@@ -1,1 +1,6 @@
 docs/
+.build
+Demos/Pods
+IDEWorkspaceChecks.plist
+Podfile.lock
+.swiftpm

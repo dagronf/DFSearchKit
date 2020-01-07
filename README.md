@@ -2,6 +2,9 @@
 
 A framework implementing a search index and summary generator using SKSearchKit for both Swift and Objective-C
 
+![](https://img.shields.io/github/v/tag/dagronf/DFSearchKit) ![](https://img.shields.io/badge/macOS-10.11+-red) ![](https://img.shields.io/badge/Swift-5.0-orange.svg)
+![](https://img.shields.io/badge/License-MIT-lightgrey) [![](https://img.shields.io/badge/pod-compatible-informational)](https://cocoapods.org) [![](https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat)](https://swift.org/package-manager)
+
 ## Why?
 
 I was interesting in learning about SKSearchKit and wanted a nice simple object to abstract away some of the unpleasantries when dealing with a C-style interface in Swift using native Swift types.
@@ -69,7 +72,8 @@ A class inheriting from DFSearchIndex that allows the creation and use of an ind
 ```swift
 // Create a index on disk
 let newFileURL = // <some file url>
-guard let newIndex = DFSearchIndex.File(fileURL: newFileURL) else {
+let createProperties = DSFSearchIndex.CreateProperties() // search index properties
+guard let newIndex = DFSearchIndex.File(fileURL: newFileURL, properties: createProperties) else {
    assert(false)
 }
 

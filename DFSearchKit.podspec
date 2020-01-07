@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "DFSearchKit"
-  s.version      = "1.1"
+  s.version      = "1.5"
   s.summary      = "A framework implementing a search index and summary generator using SKSearchKit for both Swift and Objective-C"
   s.description  = <<-DESC
     A framework implementing a search index and summary generator using SKSearchKit for both Swift and Objective-C
